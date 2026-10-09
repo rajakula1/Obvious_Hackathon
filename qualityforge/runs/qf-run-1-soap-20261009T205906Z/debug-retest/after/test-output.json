@@ -1,0 +1,896 @@
+{
+  "artifact_type": "test_output",
+  "run_id": "qf-run-1-soap-20261009T205906Z",
+  "stage": "6. Debug (\u00a77.7 Debugging Agent, D1)",
+  "recorded_at": "2026-10-09T23:48:59Z",
+  "phase": "after",
+  "attempt": 1,
+  "suite": {
+    "command": "python -m pytest qualityforge/",
+    "total": 175,
+    "passed": 175,
+    "failed": 0,
+    "generated_suite_total": 10,
+    "generated_suite_passed": 10,
+    "generated_suite_failed": 0,
+    "ruff_0_16_10": "clean",
+    "in_process_test_violations_r6": "CLEAN"
+  },
+  "results": [
+    {
+      "test": "test_S_01",
+      "outcome": "passed",
+      "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+    },
+    {
+      "test": "test_S_02",
+      "outcome": "passed",
+      "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+    },
+    {
+      "test": "test_O_01",
+      "outcome": "passed",
+      "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+    },
+    {
+      "test": "test_O_02",
+      "outcome": "passed",
+      "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+    },
+    {
+      "test": "test_A_01",
+      "outcome": "passed",
+      "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+    },
+    {
+      "test": "test_P_01",
+      "outcome": "passed",
+      "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+    },
+    {
+      "test": "test_P_02",
+      "outcome": "passed",
+      "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+    },
+    {
+      "test": "test_X_01",
+      "outcome": "passed",
+      "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+    },
+    {
+      "test": "test_R4_repeat_calls_byte_identical",
+      "outcome": "passed",
+      "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+    },
+    {
+      "test": "test_api_contract_422_health_and_seam_consistency",
+      "outcome": "passed",
+      "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+    },
+    {
+      "test": "test_remove_section_check_drops_only_that_sections_findings",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_remove_section_check_unknown_section_raises",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_drop_evidence_spans_empties_present_and_partial_only",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_flip_finding_statuses_swaps_and_recomputes_overall",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_skip_criterion_check_drops_only_that_criterion",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_skip_criterion_check_unknown_id_raises",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_skip_plan_relation_check_targets_p02",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_skip_plan_relation_check_rejects_mismatched_configs",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_operators_never_mutate_the_base_evaluator_or_the_request",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_registry_rebuilds_behaviorally_identical_mutants",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_vacuous_mutant_is_flagged_and_excluded_from_the_share",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_baseline_failure_raises_and_never_injects",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_vacuous_but_failing_suite_is_a_consistency_error",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_round_needs_at_least_one_probe",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_report_follows_section_8_5_conventions",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_report_saves_as_json_artifact",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_spec_round_trip_through_evaluator_from_spec",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_inject.py"
+    },
+    {
+      "test": "test_default_load_is_the_pristine_reference_evaluator",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_loader.py"
+    },
+    {
+      "test": "test_env_spec_selects_a_mutant",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_loader.py"
+    },
+    {
+      "test": "test_malformed_env_spec_raises_with_the_variable_named",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_loader.py"
+    },
+    {
+      "test": "test_spec_missing_required_keys_raises",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_loader.py"
+    },
+    {
+      "test": "test_parse_spec_text_rejects_non_objects",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_loader.py"
+    },
+    {
+      "test": "test_spec_with_unknown_operator_raises_before_any_suite_runs",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_loader.py"
+    },
+    {
+      "test": "test_wrong_factory_name_fails_loudly",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_loader.py"
+    },
+    {
+      "test": "test_sections_are_identified_in_document_order",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_reference_evaluator.py"
+    },
+    {
+      "test": "test_every_evidence_span_matches_the_raw_text",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_reference_evaluator.py"
+    },
+    {
+      "test": "test_plan_partially_related_to_assessment_is_partial",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_reference_evaluator.py"
+    },
+    {
+      "test": "test_note_without_any_markers_is_fully_missing",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_reference_evaluator.py"
+    },
+    {
+      "test": "test_determinism_two_calls_are_byte_identical",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_reference_evaluator.py"
+    },
+    {
+      "test": "test_unknown_criterion_id_fails_loudly",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_reference_evaluator.py"
+    },
+    {
+      "test": "test_structure_criterion_spans_each_found_section_header",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_reference_evaluator.py"
+    },
+    {
+      "test": "test_reference_check[check_findings_cover_config_criteria]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_reference_suite.py"
+    },
+    {
+      "test": "test_reference_check[check_findings_match_labels]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_reference_suite.py"
+    },
+    {
+      "test": "test_reference_check[check_overall_matches_label]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_reference_suite.py"
+    },
+    {
+      "test": "test_reference_check[check_present_findings_carry_evidence]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_reference_suite.py"
+    },
+    {
+      "test": "test_reference_check[check_deterministic_responses]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_reference_suite.py"
+    },
+    {
+      "test": "test_criterion_id_accepts_canonical_form[S-01]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_criterion_id_accepts_canonical_form[AC-11]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_criterion_id_accepts_canonical_form[X-01]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_criterion_id_accepts_canonical_form[CRIT-0001]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_criterion_id_rejects_malformed[]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_criterion_id_rejects_malformed[s-01]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_criterion_id_rejects_malformed[S-1]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_criterion_id_rejects_malformed[S-]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_criterion_id_rejects_malformed[-01]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_criterion_id_rejects_malformed[S_01]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_criterion_id_rejects_malformed[S-01-extra]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_justification_ids_extract_and_dedupe",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_justification_ids_empty_without_marker",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_guard_accepts_justified_test_change",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_guard_rejects_unlinked_or_malformed_changes[--- a/tests/test_evaluate.py\\n+++ b/tests/test_evaluate.py\\n@@ -1,3 +0,1 @@\\n-assert old_behavior\\n+assert corrected_behavior  # criteria-ref: P-02-None]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_guard_rejects_unlinked_or_malformed_changes[--- a/tests/test_evaluate.py\\n+++ b/tests/test_evaluate.py\\n@@ -1,3 +0,1 @@\\n-assert old_behavior\\n+assert corrected_behavior  # criteria-ref: P-02-]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_guard_rejects_unlinked_or_malformed_changes[--- a/tests/test_evaluate.py\\n+++ b/tests/test_evaluate.py\\n@@ -1,3 +0,1 @@\\n-assert old_behavior\\n+assert corrected_behavior  # criteria-ref: P-02-the test looked wrong]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_guard_rejects_unlinked_or_malformed_changes[--- a/tests/test_evaluate.py\\n+++ b/tests/test_evaluate.py\\n@@ -1,3 +0,1 @@\\n-assert old_behavior\\n+assert corrected_behavior  # criteria-ref: P-02-criteria-ref: Q-99]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_guard_rejects_unlinked_or_malformed_changes[-criteria-ref: P-02]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_guard_rejects_unlinked_or_malformed_changes[   \\n-criteria-ref: P-02]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_guard_allows_marker_without_known_id_set",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_in_process_clean_testclient_file",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_in_process_violations_detected[uvicorn.run(app, host='0.0.0.0')-uvicorn.run]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_in_process_violations_detected[app.run(host='127.0.0.1')-app.run]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_in_process_violations_detected[sock = socket.socket()-socket.socket]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_in_process_violations_detected[server.bind(('0.0.0.0', 8080))-.bind]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_in_process_violations_detected[from http.server import HTTPServer-HTTPServer]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_in_process_violations_detected[import httpx\\nhttpx.post('http://localhost:8000/evaluate')-localhost]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_in_process_violations_deduplicate",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_phi_scan_clean_synthetic_note",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_phi_scan_flags_markers[MRN: A1B2C3-medical record number]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_phi_scan_flags_markers[SSN on file-SSN]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_phi_scan_flags_markers[id 123-45-6789 issued-SSN-like]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_phi_scan_flags_markers[DOB: 1980-04-12-date-of-birth label]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_phi_scan_flags_markers[patient date of birth recorded-date-of-birth phrase]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_phi_scan_flags_markers[call (555) 123-4567 today-phone-like]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_phi_scan_flags_markers[phone 555-123-4567 on record-phone-like]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_rules.py"
+    },
+    {
+      "test": "test_exactly_the_ten_spec_section_9_statuses",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_run_status.py"
+    },
+    {
+      "test": "test_stage_statuses_map_the_six_pipeline_stages_of_section_6",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_run_status.py"
+    },
+    {
+      "test": "test_gate_status_is_the_human_review_pause_of_section_7_9",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_run_status.py"
+    },
+    {
+      "test": "test_terminal_statuses_partition_the_enum",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_run_status.py"
+    },
+    {
+      "test": "test_is_terminal_holds_for_terminal_only",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_run_status.py"
+    },
+    {
+      "test": "test_is_terminal_accepts_plain_strings_and_rejects_undefined",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_run_status.py"
+    },
+    {
+      "test": "test_every_skill_directory_has_a_registration_record_and_vice_versa",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_registration_record_is_a_successful_sdk_response[acceptance-criteria]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_registration_record_is_a_successful_sdk_response[bounded-repair]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_registration_record_is_a_successful_sdk_response[completeness-criteria]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_registration_record_is_a_successful_sdk_response[criterion-tests]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_registration_record_is_a_successful_sdk_response[in-process-testing]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_registration_record_is_a_successful_sdk_response[run-evidence]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_registration_record_is_a_successful_sdk_response[soap-note-completeness]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_registration_record_is_a_successful_sdk_response[synthetic-data]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_registration_record_is_a_successful_sdk_response[test-integrity]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_agent_yaml_skill_resolves_to_a_registered_skill_file[requirements]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_agent_yaml_skill_resolves_to_a_registered_skill_file[architecture]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_agent_yaml_skill_resolves_to_a_registered_skill_file[coding]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_agent_yaml_skill_resolves_to_a_registered_skill_file[testing]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_agent_yaml_skill_resolves_to_a_registered_skill_file[debugging]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_agent_yaml_skill_resolves_to_a_registered_skill_file[quality]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_prompt_names_exactly_the_skills_its_yaml_lists[requirements]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_prompt_names_exactly_the_skills_its_yaml_lists[architecture]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_prompt_names_exactly_the_skills_its_yaml_lists[coding]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_prompt_names_exactly_the_skills_its_yaml_lists[testing]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_prompt_names_exactly_the_skills_its_yaml_lists[debugging]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_prompt_names_exactly_the_skills_its_yaml_lists[quality]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_skill_file_follows_the_file_convention[acceptance-criteria]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_skill_file_follows_the_file_convention[bounded-repair]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_skill_file_follows_the_file_convention[completeness-criteria]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_skill_file_follows_the_file_convention[criterion-tests]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_skill_file_follows_the_file_convention[in-process-testing]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_skill_file_follows_the_file_convention[run-evidence]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_skill_file_follows_the_file_convention[soap-note-completeness]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_skill_file_follows_the_file_convention[synthetic-data]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_every_skill_file_follows_the_file_convention[test-integrity]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_agent_skill_set_matches_the_spec_wiring_matrix[requirements]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_agent_skill_set_matches_the_spec_wiring_matrix[architecture]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_agent_skill_set_matches_the_spec_wiring_matrix[coding]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_agent_skill_set_matches_the_spec_wiring_matrix[testing]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_agent_skill_set_matches_the_spec_wiring_matrix[debugging]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_agent_skill_set_matches_the_spec_wiring_matrix[quality]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_skill_wiring.py"
+    },
+    {
+      "test": "test_agent_smoke_contract[architecture]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_smoke.py"
+    },
+    {
+      "test": "test_agent_smoke_contract[coding]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_smoke.py"
+    },
+    {
+      "test": "test_agent_smoke_contract[debugging]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_smoke.py"
+    },
+    {
+      "test": "test_agent_smoke_contract[quality]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_smoke.py"
+    },
+    {
+      "test": "test_agent_smoke_contract[requirements]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_smoke.py"
+    },
+    {
+      "test": "test_agent_smoke_contract[testing]",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_smoke.py"
+    },
+    {
+      "test": "test_smoke_cli_all_agents",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_smoke.py"
+    },
+    {
+      "test": "test_smoke_cli_rejects_unknown_agent",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_smoke.py"
+    },
+    {
+      "test": "test_smoke_round_detects_every_injected_fault",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_smoke_round.py"
+    },
+    {
+      "test": "test_blind_suite_reports_zero_detection_honestly",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_smoke_round.py"
+    },
+    {
+      "test": "test_example_criteria_config_validates",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_example_is_the_section_8_2_starting_set",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_missing_required_field_is_rejected",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_unknown_check_type_is_rejected",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_unknown_property_is_rejected",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_assumption_without_note_is_rejected",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_assumption_with_note_is_accepted",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_duplicate_criterion_ids_are_rejected",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_evidence_span_semantics_are_pinned_to_review_r3",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_valid_manifest_passes_schema_and_hash_recheck",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_hash_recheck_detects_tampered_test_file",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_hash_recheck_reports_missing_test_file",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_manifest_rejects_unsafe_paths",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_manifest_rejects_malformed_sha256",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_manifest_rejects_non_iso_timestamp",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_manifest_rejects_duplicate_paths",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_cli_valid_config_exits_zero",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_cli_invalid_config_exits_one",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_cli_missing_file_exits_two",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_cli_manifest_with_repo_root_recheck",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate.py"
+    },
+    {
+      "test": "test_real_corpus_records_are_valid",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate_dataset.py"
+    },
+    {
+      "test": "test_real_corpus_matches_manifest",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate_dataset.py"
+    },
+    {
+      "test": "test_real_corpus_criteria_config_is_valid",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate_dataset.py"
+    },
+    {
+      "test": "test_phi_scan_returns_zero_hits",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate_dataset.py"
+    },
+    {
+      "test": "test_corpus_size_within_contract",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate_dataset.py"
+    },
+    {
+      "test": "test_labels_cover_every_criterion_in_config_order",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate_dataset.py"
+    },
+    {
+      "test": "test_overall_status_consistent_with_findings",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate_dataset.py"
+    },
+    {
+      "test": "test_corpus_spans_all_brief_categories",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate_dataset.py"
+    },
+    {
+      "test": "test_manifest_rehash_detects_drift",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate_dataset.py"
+    },
+    {
+      "test": "test_phi_scan_detects_injected_identifier",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate_dataset.py"
+    },
+    {
+      "test": "test_duplicate_note_id_is_rejected",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_validate_dataset.py"
+    },
+    {
+      "test": "test_criteria_v1_validates_against_scaffold_schema",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_workload_criteria.py"
+    },
+    {
+      "test": "test_criteria_v1_validates_via_documented_cli",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_workload_criteria.py"
+    },
+    {
+      "test": "test_criteria_v1_covers_section_8_2",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_workload_criteria.py"
+    },
+    {
+      "test": "test_criteria_v1_pins_evidence_span_semantics",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_workload_criteria.py"
+    },
+    {
+      "test": "test_criteria_v1_section_detection_is_configured_not_hardcoded",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_workload_criteria.py"
+    },
+    {
+      "test": "test_acceptance_criteria_are_well_formed",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_workload_criteria.py"
+    },
+    {
+      "test": "test_acceptance_criteria_pin_review_amendments",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_workload_criteria.py"
+    },
+    {
+      "test": "test_run_1_requirement_is_verbatim",
+      "outcome": "passed",
+      "file": "qualityforge/tests/test_workload_criteria.py"
+    }
+  ]
+}

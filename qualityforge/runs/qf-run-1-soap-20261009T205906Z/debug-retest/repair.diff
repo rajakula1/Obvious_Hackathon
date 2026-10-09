@@ -1,0 +1,122 @@
+diff --git a/qualityforge/generated/soap_evaluator/app.py b/qualityforge/generated/soap_evaluator/app.py
+index 6783551..9df2227 100644
+--- a/qualityforge/generated/soap_evaluator/app.py
++++ b/qualityforge/generated/soap_evaluator/app.py
+@@ -12,7 +12,8 @@ Wire shapes (spec section 8.3):
+   order IS the wire order — response bodies are built so JSON key order is
+   deterministic (note_id, criteria_version, overall_status, findings, and
+   each finding's keys in declared order).
+-- ``GET /health`` — ``{"status": "ok"}``.
++- ``GET /health`` — ``{"status": "ok", "criteria_version": <loaded config's
++  version>}``.
+ 
+ Config resolution order: the explicit ``config`` argument, then the
+ ``QF_CRITERIA_CONFIG`` environment variable, then the of-record criteria
+@@ -28,7 +29,7 @@ from pathlib import Path
+ from typing import Any
+ 
+ from fastapi import FastAPI
+-from pydantic import BaseModel, ConfigDict
++from pydantic import BaseModel, ConfigDict, Field, StrictStr
+ 
+ from qualityforge.generated.soap_evaluator.config import DEFAULT_CONFIG_PATH, load_criteria
+ from qualityforge.generated.soap_evaluator.evaluator import Evaluator, create_evaluator
+@@ -38,12 +39,16 @@ _ENV_CONFIG = "QF_CRITERIA_CONFIG"
+ 
+ 
+ class EvaluateBody(BaseModel):
+-    """Request body of POST /evaluate — exactly the two wire fields."""
++    """Request body of POST /evaluate — exactly the two wire fields.
++
++    Spec section 1 error semantics: blank strings and non-strings are
++    malformed input (422) — ``min_length=1`` and ``StrictStr``.
++    """
+ 
+     model_config = ConfigDict(extra="forbid")
+ 
+-    note_id: str
+-    note_text: str
++    note_id: StrictStr = Field(min_length=1)
++    note_text: StrictStr = Field(min_length=1)
+ 
+ 
+ def _resolve_config(config: Mapping[str, Any] | None) -> Mapping[str, Any]:
+@@ -58,7 +63,8 @@ def _resolve_config(config: Mapping[str, Any] | None) -> Mapping[str, Any]:
+ 
+ def create_app(config: Mapping[str, Any] | None = None) -> FastAPI:
+     """Build the API app around an evaluator built from the resolved config."""
+-    evaluator: Evaluator = create_evaluator(_resolve_config(config))
++    resolved = _resolve_config(config)
++    evaluator: Evaluator = create_evaluator(resolved)
+     app = FastAPI(title="SOAP note completeness evaluator", version="1.0.0")
+ 
+     @app.post("/evaluate", response_model=EvaluateResponse)
+@@ -67,6 +73,8 @@ def create_app(config: Mapping[str, Any] | None = None) -> FastAPI:
+ 
+     @app.get("/health")
+     def health() -> dict[str, str]:
+-        return {"status": "ok"}
++        # Liveness echoes the loaded config's version — config-driven, never
++        # hardcoded (spec section 1 GET /health; section 8.2).
++        return {"status": "ok", "criteria_version": str(resolved["criteria_version"])}
+ 
+     return app
+diff --git a/qualityforge/generated/soap_evaluator/evaluator.py b/qualityforge/generated/soap_evaluator/evaluator.py
+index f95bc33..1856689 100644
+--- a/qualityforge/generated/soap_evaluator/evaluator.py
++++ b/qualityforge/generated/soap_evaluator/evaluator.py
+@@ -190,8 +190,10 @@ def _check_x01(criterion: Mapping[str, Any], text: str, sections: SectionMap) ->
+         ]
+         return _finding(criterion, PRESENT, evidence)
+     if sections.ambiguous and sections.unclaimed:
+-        evidence = [_span_of(lines_in(text, sections.unclaimed[:1])[0])]
+-        return _finding(criterion, PARTIAL, evidence)
++        # First unattributable span, taken raw: a letterless region has no
++        # lines to point at, and the raw slice is always R3-exact.
++        start, end = sections.unclaimed[0]
++        return _finding(criterion, PARTIAL, [_span_of((start, text[start:end]))])
+     return _finding(criterion, MISSING, [])
+ 
+ 
+diff --git a/qualityforge/generated/soap_evaluator/sections.py b/qualityforge/generated/soap_evaluator/sections.py
+index 339377f..95ec278 100644
+--- a/qualityforge/generated/soap_evaluator/sections.py
++++ b/qualityforge/generated/soap_evaluator/sections.py
+@@ -17,8 +17,9 @@ strategy (review R5): header markers first, the documented fallback second.
+    categories match, in S -> O -> A -> P order.
+ 
+ An ambiguous note — a section still missing while unattributable content
+-remains — surfaces as ``ambiguous`` so the structure criterion (X-01) answers
+-``partial`` instead of guessing (R5; the config fallback rule, verbatim).
++remains, or nothing identified at all (a contentless note) — surfaces as
++``ambiguous`` so the structure criterion (X-01) answers ``partial`` instead
++of guessing (R5; the config fallback rule, verbatim).
+ 
+ Every offset this module emits is a zero-based character offset into the raw
+ text, end-exclusive (R3): ``text[start:end]`` reproduces the reported line or
+@@ -422,12 +423,22 @@ def identify_sections(text: str, section_detection: Mapping[str, object]) -> Sec
+     spans = {section: list(occurrences[section]) for section in occurrences}
+     for section, claimed in claims.items():
+         spans[section] = claimed
+-    ambiguous = bool(missing - set(claims)) and any(
+-        _has_letter(text[start:end]) for start, end in unclaimed
++    outstanding = missing - set(claims)
++    # Ambiguity (R5, config fallback rule): a section is still missing while
++    # unattributable content remains — or nothing was identified at all (no
++    # header named a section and the fallback confidently claimed nothing),
++    # so no section can be named and guessing is forbidden.
++    ambiguous = bool(outstanding) and (
++        any(_has_letter(text[start:end]) for start, end in unclaimed) or not spans
+     )
++    if ambiguous and not unclaimed:
++        # Letterless note (whitespace, garble without letters): there is no
++        # sentence to point at — the whole unattributed text is the textual
++        # basis of the ambiguity, usable as the structure finding's evidence.
++        unclaimed = list(regions)
+     return SectionMap(
+         spans=spans,
+-        missing=frozenset(missing - set(claims)),
++        missing=frozenset(outstanding),
+         ambiguous=ambiguous,
+         unclaimed=tuple(unclaimed),
+     )

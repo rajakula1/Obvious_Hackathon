@@ -1,0 +1,88 @@
+.........F.............................................................. [ 41%]
+........................................................................ [ 82%]
+...............................                                          [100%]
+=================================== FAILURES ===================================
+______________ test_api_contract_422_health_and_seam_consistency _______________
+
+client = <starlette.testclient.TestClient object at 0x7fa7d21f5be0>
+evaluator = <function create_evaluator.<locals>.evaluate at 0x7fa7d22d9940>
+config = {'criteria': [{'check_type': 'behavior_check', 'id': 'S-01', 'section': 'S', 'source': 'requirement', ...}, {'check_ty...ntics': {'end_exclusive': True, 'index_origin': 'zero', 'normalization': 'none', 'offset_base': 'character', ...}, ...}
+corpus = [{'category': 'complete', 'expected': {'findings': [{'criterion_id': 'S-01', 'status': 'present'}, {'criterion_id': 'S... and begin the prescribed antibiotic course as directed. Return if fever, back pain, or vomiting develops.', ...}, ...]
+
+    def test_api_contract_422_health_and_seam_consistency(client, evaluator, config, corpus):
+        """Stage-2 spec section 1, the API contract floor the corpus cannot pin.
+    
+        Malformed input -> 422 (missing required field, blank note_id or
+        note_text under min_length=1, non-string fields under StrictStr). A
+        well-formed string body is never an error however empty the note: content
+        criteria come back missing and X-01 partial (ambiguous, never guessed).
+        GET /health is the liveness surface and echoes the config version. And
+        the endpoint body equals the seam evaluator's response for the same note —
+        one seam, no drift between the harness surface and the API surface."""
+        # Collect every contract-floor violation in one pass — stage 6 gets the
+        # full inventory, not just the first breach (assertion strength unchanged).
+        violations: list[str] = []
+        for bad in (
+            {"note_text": "S: complaint"},
+            {"note_id": "x"},
+            {"note_id": "", "note_text": "S: complaint"},
+            {"note_id": "x", "note_text": ""},
+            {"note_id": 7, "note_text": "S: complaint"},
+            {"note_id": "x", "note_text": ["S: complaint"]},
+        ):
+            resp = client.post("/evaluate", json=bad)
+            if resp.status_code != 422:
+                violations.append(f"malformed input {bad} -> HTTP {resp.status_code}, expected 422")
+    
+        contentless = client.post(
+            "/evaluate", json={"note_id": "soap-contentless", "note_text": "   \n\t  "}
+        )
+        if contentless.status_code != 200:
+            violations.append(
+                f"well-formed contentless body -> HTTP {contentless.status_code}, "
+                "expected 200 (the API is total over well-formed input)"
+            )
+        else:
+            body = contentless.json()
+            assert_response_contract(body, config, "soap-contentless")
+            if finding_for(body, "X-01")["status"] != "partial":
+                violations.append(
+                    "contentless note: X-01 must be partial (no identifiable sections is "
+                    "ambiguous, never guessed)"
+                )
+            for criterion in config["criteria"]:
+                finding = finding_for(body, criterion["id"])
+                if criterion["id"] != "X-01" and finding["status"] != "missing":
+                    violations.append(f"contentless note: {criterion['id']} must be missing")
+    
+        expected_health = {"status": "ok", "criteria_version": config["criteria_version"]}
+        health = client.get("/health")
+        if health.status_code != 200 or health.json() != expected_health:
+            violations.append(
+                f"GET /health -> HTTP {health.status_code} {health.text!r}, "
+                f"expected 200 {expected_health!r}"
+            )
+    
+        record = {r["note_id"]: r for r in corpus}["soap-001"]
+        payload = {"note_id": record["note_id"], "note_text": record["note_text"]}
+        via_endpoint = client.post("/evaluate", json=payload).json()
+        via_seam = evaluate(evaluator, record)
+        if via_endpoint != via_seam:
+            violations.append(
+                "endpoint body must equal the seam evaluator's response (one seam, no drift)"
+            )
+    
+>       assert not violations, "API contract floor violations: " + "; ".join(violations)
+E       AssertionError: API contract floor violations: malformed input {'note_id': '', 'note_text': 'S: complaint'} -> HTTP 200, expected 422; malformed input {'note_id': 'x', 'note_text': ''} -> HTTP 200, expected 422; contentless note: X-01 must be partial (no identifiable sections is ambiguous, never guessed); GET /health -> HTTP 200 '{"status":"ok"}', expected 200 {'status': 'ok', 'criteria_version': '1.0.0'}
+E       assert not ["malformed input {'note_id': '', 'note_text': 'S: complaint'} -> HTTP 200, expected 422", "malformed input {'note_id'...d)', 'GET /health -> HTTP 200 \'{"status":"ok"}\', expected 200 {\'status\': \'ok\', \'criteria_version\': \'1.0.0\'}']
+
+qualityforge/generated/tests/test_soap_evaluator.py:333: AssertionError
+=============================== warnings summary ===============================
+../../venv-qf/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /home/user/venv-qf/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED qualityforge/generated/tests/test_soap_evaluator.py::test_api_contract_422_health_and_seam_consistency
+1 failed, 174 passed, 1 warning in 4.75s

@@ -1,0 +1,268 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-9.0.3, pluggy-1.6.0 -- /home/user/venv-qf/bin/python
+cachedir: .pytest_cache
+rootdir: /home/user/work/Obvious_Hackathon
+plugins: anyio-4.15.1
+collecting ... collected 175 items
+
+qualityforge/generated/tests/test_soap_evaluator.py::test_S_01 PASSED    [  0%]
+qualityforge/generated/tests/test_soap_evaluator.py::test_S_02 PASSED    [  1%]
+qualityforge/generated/tests/test_soap_evaluator.py::test_O_01 PASSED    [  1%]
+qualityforge/generated/tests/test_soap_evaluator.py::test_O_02 PASSED    [  2%]
+qualityforge/generated/tests/test_soap_evaluator.py::test_A_01 PASSED    [  2%]
+qualityforge/generated/tests/test_soap_evaluator.py::test_P_01 PASSED    [  3%]
+qualityforge/generated/tests/test_soap_evaluator.py::test_P_02 PASSED    [  4%]
+qualityforge/generated/tests/test_soap_evaluator.py::test_X_01 PASSED    [  4%]
+qualityforge/generated/tests/test_soap_evaluator.py::test_R4_repeat_calls_byte_identical PASSED [  5%]
+qualityforge/generated/tests/test_soap_evaluator.py::test_api_contract_422_health_and_seam_consistency FAILED [  5%]
+qualityforge/tests/test_inject.py::test_remove_section_check_drops_only_that_sections_findings PASSED [  6%]
+qualityforge/tests/test_inject.py::test_remove_section_check_unknown_section_raises PASSED [  6%]
+qualityforge/tests/test_inject.py::test_drop_evidence_spans_empties_present_and_partial_only PASSED [  7%]
+qualityforge/tests/test_inject.py::test_flip_finding_statuses_swaps_and_recomputes_overall PASSED [  8%]
+qualityforge/tests/test_inject.py::test_skip_criterion_check_drops_only_that_criterion PASSED [  8%]
+qualityforge/tests/test_inject.py::test_skip_criterion_check_unknown_id_raises PASSED [  9%]
+qualityforge/tests/test_inject.py::test_skip_plan_relation_check_targets_p02 PASSED [  9%]
+qualityforge/tests/test_inject.py::test_skip_plan_relation_check_rejects_mismatched_configs PASSED [ 10%]
+qualityforge/tests/test_inject.py::test_operators_never_mutate_the_base_evaluator_or_the_request PASSED [ 10%]
+qualityforge/tests/test_inject.py::test_registry_rebuilds_behaviorally_identical_mutants PASSED [ 11%]
+qualityforge/tests/test_inject.py::test_vacuous_mutant_is_flagged_and_excluded_from_the_share PASSED [ 12%]
+qualityforge/tests/test_inject.py::test_baseline_failure_raises_and_never_injects PASSED [ 12%]
+qualityforge/tests/test_inject.py::test_vacuous_but_failing_suite_is_a_consistency_error PASSED [ 13%]
+qualityforge/tests/test_inject.py::test_round_needs_at_least_one_probe PASSED [ 13%]
+qualityforge/tests/test_inject.py::test_report_follows_section_8_5_conventions PASSED [ 14%]
+qualityforge/tests/test_inject.py::test_report_saves_as_json_artifact PASSED [ 14%]
+qualityforge/tests/test_inject.py::test_spec_round_trip_through_evaluator_from_spec PASSED [ 15%]
+qualityforge/tests/test_loader.py::test_default_load_is_the_pristine_reference_evaluator PASSED [ 16%]
+qualityforge/tests/test_loader.py::test_env_spec_selects_a_mutant PASSED [ 16%]
+qualityforge/tests/test_loader.py::test_malformed_env_spec_raises_with_the_variable_named PASSED [ 17%]
+qualityforge/tests/test_loader.py::test_spec_missing_required_keys_raises PASSED [ 17%]
+qualityforge/tests/test_loader.py::test_parse_spec_text_rejects_non_objects PASSED [ 18%]
+qualityforge/tests/test_loader.py::test_spec_with_unknown_operator_raises_before_any_suite_runs PASSED [ 18%]
+qualityforge/tests/test_loader.py::test_wrong_factory_name_fails_loudly PASSED [ 19%]
+qualityforge/tests/test_reference_evaluator.py::test_sections_are_identified_in_document_order PASSED [ 20%]
+qualityforge/tests/test_reference_evaluator.py::test_every_evidence_span_matches_the_raw_text PASSED [ 20%]
+qualityforge/tests/test_reference_evaluator.py::test_plan_partially_related_to_assessment_is_partial PASSED [ 21%]
+qualityforge/tests/test_reference_evaluator.py::test_note_without_any_markers_is_fully_missing PASSED [ 21%]
+qualityforge/tests/test_reference_evaluator.py::test_determinism_two_calls_are_byte_identical PASSED [ 22%]
+qualityforge/tests/test_reference_evaluator.py::test_unknown_criterion_id_fails_loudly PASSED [ 22%]
+qualityforge/tests/test_reference_evaluator.py::test_structure_criterion_spans_each_found_section_header PASSED [ 23%]
+qualityforge/tests/test_reference_suite.py::test_reference_check[check_findings_cover_config_criteria] PASSED [ 24%]
+qualityforge/tests/test_reference_suite.py::test_reference_check[check_findings_match_labels] PASSED [ 24%]
+qualityforge/tests/test_reference_suite.py::test_reference_check[check_overall_matches_label] PASSED [ 25%]
+qualityforge/tests/test_reference_suite.py::test_reference_check[check_present_findings_carry_evidence] PASSED [ 25%]
+qualityforge/tests/test_reference_suite.py::test_reference_check[check_deterministic_responses] PASSED [ 26%]
+qualityforge/tests/test_rules.py::test_criterion_id_accepts_canonical_form[S-01] PASSED [ 26%]
+qualityforge/tests/test_rules.py::test_criterion_id_accepts_canonical_form[AC-11] PASSED [ 27%]
+qualityforge/tests/test_rules.py::test_criterion_id_accepts_canonical_form[X-01] PASSED [ 28%]
+qualityforge/tests/test_rules.py::test_criterion_id_accepts_canonical_form[CRIT-0001] PASSED [ 28%]
+qualityforge/tests/test_rules.py::test_criterion_id_rejects_malformed[] PASSED [ 29%]
+qualityforge/tests/test_rules.py::test_criterion_id_rejects_malformed[s-01] PASSED [ 29%]
+qualityforge/tests/test_rules.py::test_criterion_id_rejects_malformed[S-1] PASSED [ 30%]
+qualityforge/tests/test_rules.py::test_criterion_id_rejects_malformed[S-] PASSED [ 30%]
+qualityforge/tests/test_rules.py::test_criterion_id_rejects_malformed[-01] PASSED [ 31%]
+qualityforge/tests/test_rules.py::test_criterion_id_rejects_malformed[S_01] PASSED [ 32%]
+qualityforge/tests/test_rules.py::test_criterion_id_rejects_malformed[S-01-extra] PASSED [ 32%]
+qualityforge/tests/test_rules.py::test_justification_ids_extract_and_dedupe PASSED [ 33%]
+qualityforge/tests/test_rules.py::test_justification_ids_empty_without_marker PASSED [ 33%]
+qualityforge/tests/test_rules.py::test_guard_accepts_justified_test_change PASSED [ 34%]
+qualityforge/tests/test_rules.py::test_guard_rejects_unlinked_or_malformed_changes[--- a/tests/test_evaluate.py\n+++ b/tests/test_evaluate.py\n@@ -1,3 +0,1 @@\n-assert old_behavior\n+assert corrected_behavior  # criteria-ref: P-02-None] PASSED [ 34%]
+qualityforge/tests/test_rules.py::test_guard_rejects_unlinked_or_malformed_changes[--- a/tests/test_evaluate.py\n+++ b/tests/test_evaluate.py\n@@ -1,3 +0,1 @@\n-assert old_behavior\n+assert corrected_behavior  # criteria-ref: P-02-] PASSED [ 35%]
+qualityforge/tests/test_rules.py::test_guard_rejects_unlinked_or_malformed_changes[--- a/tests/test_evaluate.py\n+++ b/tests/test_evaluate.py\n@@ -1,3 +0,1 @@\n-assert old_behavior\n+assert corrected_behavior  # criteria-ref: P-02-the test looked wrong] PASSED [ 36%]
+qualityforge/tests/test_rules.py::test_guard_rejects_unlinked_or_malformed_changes[--- a/tests/test_evaluate.py\n+++ b/tests/test_evaluate.py\n@@ -1,3 +0,1 @@\n-assert old_behavior\n+assert corrected_behavior  # criteria-ref: P-02-criteria-ref: Q-99] PASSED [ 36%]
+qualityforge/tests/test_rules.py::test_guard_rejects_unlinked_or_malformed_changes[-criteria-ref: P-02] PASSED [ 37%]
+qualityforge/tests/test_rules.py::test_guard_rejects_unlinked_or_malformed_changes[   \n-criteria-ref: P-02] PASSED [ 37%]
+qualityforge/tests/test_rules.py::test_guard_allows_marker_without_known_id_set PASSED [ 38%]
+qualityforge/tests/test_rules.py::test_in_process_clean_testclient_file PASSED [ 38%]
+qualityforge/tests/test_rules.py::test_in_process_violations_detected[uvicorn.run(app, host='0.0.0.0')-uvicorn.run] PASSED [ 39%]
+qualityforge/tests/test_rules.py::test_in_process_violations_detected[app.run(host='127.0.0.1')-app.run] PASSED [ 40%]
+qualityforge/tests/test_rules.py::test_in_process_violations_detected[sock = socket.socket()-socket.socket] PASSED [ 40%]
+qualityforge/tests/test_rules.py::test_in_process_violations_detected[server.bind(('0.0.0.0', 8080))-.bind] PASSED [ 41%]
+qualityforge/tests/test_rules.py::test_in_process_violations_detected[from http.server import HTTPServer-HTTPServer] PASSED [ 41%]
+qualityforge/tests/test_rules.py::test_in_process_violations_detected[import httpx\nhttpx.post('http://localhost:8000/evaluate')-localhost] PASSED [ 42%]
+qualityforge/tests/test_rules.py::test_in_process_violations_deduplicate PASSED [ 42%]
+qualityforge/tests/test_rules.py::test_phi_scan_clean_synthetic_note PASSED [ 43%]
+qualityforge/tests/test_rules.py::test_phi_scan_flags_markers[MRN: A1B2C3-medical record number] PASSED [ 44%]
+qualityforge/tests/test_rules.py::test_phi_scan_flags_markers[SSN on file-SSN] PASSED [ 44%]
+qualityforge/tests/test_rules.py::test_phi_scan_flags_markers[id 123-45-6789 issued-SSN-like] PASSED [ 45%]
+qualityforge/tests/test_rules.py::test_phi_scan_flags_markers[DOB: 1980-04-12-date-of-birth label] PASSED [ 45%]
+qualityforge/tests/test_rules.py::test_phi_scan_flags_markers[patient date of birth recorded-date-of-birth phrase] PASSED [ 46%]
+qualityforge/tests/test_rules.py::test_phi_scan_flags_markers[call (555) 123-4567 today-phone-like] PASSED [ 46%]
+qualityforge/tests/test_rules.py::test_phi_scan_flags_markers[phone 555-123-4567 on record-phone-like] PASSED [ 47%]
+qualityforge/tests/test_run_status.py::test_exactly_the_ten_spec_section_9_statuses PASSED [ 48%]
+qualityforge/tests/test_run_status.py::test_stage_statuses_map_the_six_pipeline_stages_of_section_6 PASSED [ 48%]
+qualityforge/tests/test_run_status.py::test_gate_status_is_the_human_review_pause_of_section_7_9 PASSED [ 49%]
+qualityforge/tests/test_run_status.py::test_terminal_statuses_partition_the_enum PASSED [ 49%]
+qualityforge/tests/test_run_status.py::test_is_terminal_holds_for_terminal_only PASSED [ 50%]
+qualityforge/tests/test_run_status.py::test_is_terminal_accepts_plain_strings_and_rejects_undefined PASSED [ 50%]
+qualityforge/tests/test_skill_wiring.py::test_every_skill_directory_has_a_registration_record_and_vice_versa PASSED [ 51%]
+qualityforge/tests/test_skill_wiring.py::test_registration_record_is_a_successful_sdk_response[acceptance-criteria] PASSED [ 52%]
+qualityforge/tests/test_skill_wiring.py::test_registration_record_is_a_successful_sdk_response[bounded-repair] PASSED [ 52%]
+qualityforge/tests/test_skill_wiring.py::test_registration_record_is_a_successful_sdk_response[completeness-criteria] PASSED [ 53%]
+qualityforge/tests/test_skill_wiring.py::test_registration_record_is_a_successful_sdk_response[criterion-tests] PASSED [ 53%]
+qualityforge/tests/test_skill_wiring.py::test_registration_record_is_a_successful_sdk_response[in-process-testing] PASSED [ 54%]
+qualityforge/tests/test_skill_wiring.py::test_registration_record_is_a_successful_sdk_response[run-evidence] PASSED [ 54%]
+qualityforge/tests/test_skill_wiring.py::test_registration_record_is_a_successful_sdk_response[soap-note-completeness] PASSED [ 55%]
+qualityforge/tests/test_skill_wiring.py::test_registration_record_is_a_successful_sdk_response[synthetic-data] PASSED [ 56%]
+qualityforge/tests/test_skill_wiring.py::test_registration_record_is_a_successful_sdk_response[test-integrity] PASSED [ 56%]
+qualityforge/tests/test_skill_wiring.py::test_every_agent_yaml_skill_resolves_to_a_registered_skill_file[requirements] PASSED [ 57%]
+qualityforge/tests/test_skill_wiring.py::test_every_agent_yaml_skill_resolves_to_a_registered_skill_file[architecture] PASSED [ 57%]
+qualityforge/tests/test_skill_wiring.py::test_every_agent_yaml_skill_resolves_to_a_registered_skill_file[coding] PASSED [ 58%]
+qualityforge/tests/test_skill_wiring.py::test_every_agent_yaml_skill_resolves_to_a_registered_skill_file[testing] PASSED [ 58%]
+qualityforge/tests/test_skill_wiring.py::test_every_agent_yaml_skill_resolves_to_a_registered_skill_file[debugging] PASSED [ 59%]
+qualityforge/tests/test_skill_wiring.py::test_every_agent_yaml_skill_resolves_to_a_registered_skill_file[quality] PASSED [ 60%]
+qualityforge/tests/test_skill_wiring.py::test_prompt_names_exactly_the_skills_its_yaml_lists[requirements] PASSED [ 60%]
+qualityforge/tests/test_skill_wiring.py::test_prompt_names_exactly_the_skills_its_yaml_lists[architecture] PASSED [ 61%]
+qualityforge/tests/test_skill_wiring.py::test_prompt_names_exactly_the_skills_its_yaml_lists[coding] PASSED [ 61%]
+qualityforge/tests/test_skill_wiring.py::test_prompt_names_exactly_the_skills_its_yaml_lists[testing] PASSED [ 62%]
+qualityforge/tests/test_skill_wiring.py::test_prompt_names_exactly_the_skills_its_yaml_lists[debugging] PASSED [ 62%]
+qualityforge/tests/test_skill_wiring.py::test_prompt_names_exactly_the_skills_its_yaml_lists[quality] PASSED [ 63%]
+qualityforge/tests/test_skill_wiring.py::test_every_skill_file_follows_the_file_convention[acceptance-criteria] PASSED [ 64%]
+qualityforge/tests/test_skill_wiring.py::test_every_skill_file_follows_the_file_convention[bounded-repair] PASSED [ 64%]
+qualityforge/tests/test_skill_wiring.py::test_every_skill_file_follows_the_file_convention[completeness-criteria] PASSED [ 65%]
+qualityforge/tests/test_skill_wiring.py::test_every_skill_file_follows_the_file_convention[criterion-tests] PASSED [ 65%]
+qualityforge/tests/test_skill_wiring.py::test_every_skill_file_follows_the_file_convention[in-process-testing] PASSED [ 66%]
+qualityforge/tests/test_skill_wiring.py::test_every_skill_file_follows_the_file_convention[run-evidence] PASSED [ 66%]
+qualityforge/tests/test_skill_wiring.py::test_every_skill_file_follows_the_file_convention[soap-note-completeness] PASSED [ 67%]
+qualityforge/tests/test_skill_wiring.py::test_every_skill_file_follows_the_file_convention[synthetic-data] PASSED [ 68%]
+qualityforge/tests/test_skill_wiring.py::test_every_skill_file_follows_the_file_convention[test-integrity] PASSED [ 68%]
+qualityforge/tests/test_skill_wiring.py::test_agent_skill_set_matches_the_spec_wiring_matrix[requirements] PASSED [ 69%]
+qualityforge/tests/test_skill_wiring.py::test_agent_skill_set_matches_the_spec_wiring_matrix[architecture] PASSED [ 69%]
+qualityforge/tests/test_skill_wiring.py::test_agent_skill_set_matches_the_spec_wiring_matrix[coding] PASSED [ 70%]
+qualityforge/tests/test_skill_wiring.py::test_agent_skill_set_matches_the_spec_wiring_matrix[testing] PASSED [ 70%]
+qualityforge/tests/test_skill_wiring.py::test_agent_skill_set_matches_the_spec_wiring_matrix[debugging] PASSED [ 71%]
+qualityforge/tests/test_skill_wiring.py::test_agent_skill_set_matches_the_spec_wiring_matrix[quality] PASSED [ 72%]
+qualityforge/tests/test_smoke.py::test_agent_smoke_contract[architecture] PASSED [ 72%]
+qualityforge/tests/test_smoke.py::test_agent_smoke_contract[coding] PASSED [ 73%]
+qualityforge/tests/test_smoke.py::test_agent_smoke_contract[debugging] PASSED [ 73%]
+qualityforge/tests/test_smoke.py::test_agent_smoke_contract[quality] PASSED [ 74%]
+qualityforge/tests/test_smoke.py::test_agent_smoke_contract[requirements] PASSED [ 74%]
+qualityforge/tests/test_smoke.py::test_agent_smoke_contract[testing] PASSED [ 75%]
+qualityforge/tests/test_smoke.py::test_smoke_cli_all_agents PASSED       [ 76%]
+qualityforge/tests/test_smoke.py::test_smoke_cli_rejects_unknown_agent PASSED [ 76%]
+qualityforge/tests/test_smoke_round.py::test_smoke_round_detects_every_injected_fault PASSED [ 77%]
+qualityforge/tests/test_smoke_round.py::test_blind_suite_reports_zero_detection_honestly PASSED [ 77%]
+qualityforge/tests/test_validate.py::test_example_criteria_config_validates PASSED [ 78%]
+qualityforge/tests/test_validate.py::test_example_is_the_section_8_2_starting_set PASSED [ 78%]
+qualityforge/tests/test_validate.py::test_missing_required_field_is_rejected PASSED [ 79%]
+qualityforge/tests/test_validate.py::test_unknown_check_type_is_rejected PASSED [ 80%]
+qualityforge/tests/test_validate.py::test_unknown_property_is_rejected PASSED [ 80%]
+qualityforge/tests/test_validate.py::test_assumption_without_note_is_rejected PASSED [ 81%]
+qualityforge/tests/test_validate.py::test_assumption_with_note_is_accepted PASSED [ 81%]
+qualityforge/tests/test_validate.py::test_duplicate_criterion_ids_are_rejected PASSED [ 82%]
+qualityforge/tests/test_validate.py::test_evidence_span_semantics_are_pinned_to_review_r3 PASSED [ 82%]
+qualityforge/tests/test_validate.py::test_valid_manifest_passes_schema_and_hash_recheck PASSED [ 83%]
+qualityforge/tests/test_validate.py::test_hash_recheck_detects_tampered_test_file PASSED [ 84%]
+qualityforge/tests/test_validate.py::test_hash_recheck_reports_missing_test_file PASSED [ 84%]
+qualityforge/tests/test_validate.py::test_manifest_rejects_unsafe_paths PASSED [ 85%]
+qualityforge/tests/test_validate.py::test_manifest_rejects_malformed_sha256 PASSED [ 85%]
+qualityforge/tests/test_validate.py::test_manifest_rejects_non_iso_timestamp PASSED [ 86%]
+qualityforge/tests/test_validate.py::test_manifest_rejects_duplicate_paths PASSED [ 86%]
+qualityforge/tests/test_validate.py::test_cli_valid_config_exits_zero PASSED [ 87%]
+qualityforge/tests/test_validate.py::test_cli_invalid_config_exits_one PASSED [ 88%]
+qualityforge/tests/test_validate.py::test_cli_missing_file_exits_two PASSED [ 88%]
+qualityforge/tests/test_validate.py::test_cli_manifest_with_repo_root_recheck PASSED [ 89%]
+qualityforge/tests/test_validate_dataset.py::test_real_corpus_records_are_valid PASSED [ 89%]
+qualityforge/tests/test_validate_dataset.py::test_real_corpus_matches_manifest PASSED [ 90%]
+qualityforge/tests/test_validate_dataset.py::test_real_corpus_criteria_config_is_valid PASSED [ 90%]
+qualityforge/tests/test_validate_dataset.py::test_phi_scan_returns_zero_hits PASSED [ 91%]
+qualityforge/tests/test_validate_dataset.py::test_corpus_size_within_contract PASSED [ 92%]
+qualityforge/tests/test_validate_dataset.py::test_labels_cover_every_criterion_in_config_order PASSED [ 92%]
+qualityforge/tests/test_validate_dataset.py::test_overall_status_consistent_with_findings PASSED [ 93%]
+qualityforge/tests/test_validate_dataset.py::test_corpus_spans_all_brief_categories PASSED [ 93%]
+qualityforge/tests/test_validate_dataset.py::test_manifest_rehash_detects_drift PASSED [ 94%]
+qualityforge/tests/test_validate_dataset.py::test_phi_scan_detects_injected_identifier PASSED [ 94%]
+qualityforge/tests/test_validate_dataset.py::test_duplicate_note_id_is_rejected PASSED [ 95%]
+qualityforge/tests/test_workload_criteria.py::test_criteria_v1_validates_against_scaffold_schema PASSED [ 96%]
+qualityforge/tests/test_workload_criteria.py::test_criteria_v1_validates_via_documented_cli PASSED [ 96%]
+qualityforge/tests/test_workload_criteria.py::test_criteria_v1_covers_section_8_2 PASSED [ 97%]
+qualityforge/tests/test_workload_criteria.py::test_criteria_v1_pins_evidence_span_semantics PASSED [ 97%]
+qualityforge/tests/test_workload_criteria.py::test_criteria_v1_section_detection_is_configured_not_hardcoded PASSED [ 98%]
+qualityforge/tests/test_workload_criteria.py::test_acceptance_criteria_are_well_formed PASSED [ 98%]
+qualityforge/tests/test_workload_criteria.py::test_acceptance_criteria_pin_review_amendments PASSED [ 99%]
+qualityforge/tests/test_workload_criteria.py::test_run_1_requirement_is_verbatim PASSED [100%]
+
+=================================== FAILURES ===================================
+______________ test_api_contract_422_health_and_seam_consistency _______________
+
+client = <starlette.testclient.TestClient object at 0x7fd92e319a90>
+evaluator = <function create_evaluator.<locals>.evaluate at 0x7fd92e3e3420>
+config = {'criteria': [{'check_type': 'behavior_check', 'id': 'S-01', 'section': 'S', 'source': 'requirement', ...}, {'check_ty...ntics': {'end_exclusive': True, 'index_origin': 'zero', 'normalization': 'none', 'offset_base': 'character', ...}, ...}
+corpus = [{'category': 'complete', 'expected': {'findings': [{'criterion_id': 'S-01', 'status': 'present'}, {'criterion_id': 'S... and begin the prescribed antibiotic course as directed. Return if fever, back pain, or vomiting develops.', ...}, ...]
+
+    def test_api_contract_422_health_and_seam_consistency(client, evaluator, config, corpus):
+        """Stage-2 spec section 1, the API contract floor the corpus cannot pin.
+    
+        Malformed input -> 422 (missing required field, blank note_id or
+        note_text under min_length=1, non-string fields under StrictStr). A
+        well-formed string body is never an error however empty the note: content
+        criteria come back missing and X-01 partial (ambiguous, never guessed).
+        GET /health is the liveness surface and echoes the config version. And
+        the endpoint body equals the seam evaluator's response for the same note —
+        one seam, no drift between the harness surface and the API surface."""
+        # Collect every contract-floor violation in one pass — stage 6 gets the
+        # full inventory, not just the first breach (assertion strength unchanged).
+        violations: list[str] = []
+        for bad in (
+            {"note_text": "S: complaint"},
+            {"note_id": "x"},
+            {"note_id": "", "note_text": "S: complaint"},
+            {"note_id": "x", "note_text": ""},
+            {"note_id": 7, "note_text": "S: complaint"},
+            {"note_id": "x", "note_text": ["S: complaint"]},
+        ):
+            resp = client.post("/evaluate", json=bad)
+            if resp.status_code != 422:
+                violations.append(f"malformed input {bad} -> HTTP {resp.status_code}, expected 422")
+    
+        contentless = client.post(
+            "/evaluate", json={"note_id": "soap-contentless", "note_text": "   \n\t  "}
+        )
+        if contentless.status_code != 200:
+            violations.append(
+                f"well-formed contentless body -> HTTP {contentless.status_code}, "
+                "expected 200 (the API is total over well-formed input)"
+            )
+        else:
+            body = contentless.json()
+            assert_response_contract(body, config, "soap-contentless")
+            if finding_for(body, "X-01")["status"] != "partial":
+                violations.append(
+                    "contentless note: X-01 must be partial (no identifiable sections is "
+                    "ambiguous, never guessed)"
+                )
+            for criterion in config["criteria"]:
+                finding = finding_for(body, criterion["id"])
+                if criterion["id"] != "X-01" and finding["status"] != "missing":
+                    violations.append(f"contentless note: {criterion['id']} must be missing")
+    
+        expected_health = {"status": "ok", "criteria_version": config["criteria_version"]}
+        health = client.get("/health")
+        if health.status_code != 200 or health.json() != expected_health:
+            violations.append(
+                f"GET /health -> HTTP {health.status_code} {health.text!r}, "
+                f"expected 200 {expected_health!r}"
+            )
+    
+        record = {r["note_id"]: r for r in corpus}["soap-001"]
+        payload = {"note_id": record["note_id"], "note_text": record["note_text"]}
+        via_endpoint = client.post("/evaluate", json=payload).json()
+        via_seam = evaluate(evaluator, record)
+        if via_endpoint != via_seam:
+            violations.append(
+                "endpoint body must equal the seam evaluator's response (one seam, no drift)"
+            )
+    
+>       assert not violations, "API contract floor violations: " + "; ".join(violations)
+E       AssertionError: API contract floor violations: malformed input {'note_id': '', 'note_text': 'S: complaint'} -> HTTP 200, expected 422; malformed input {'note_id': 'x', 'note_text': ''} -> HTTP 200, expected 422; contentless note: X-01 must be partial (no identifiable sections is ambiguous, never guessed); GET /health -> HTTP 200 '{"status":"ok"}', expected 200 {'status': 'ok', 'criteria_version': '1.0.0'}
+E       assert not ["malformed input {'note_id': '', 'note_text': 'S: complaint'} -> HTTP 200, expected 422", "malformed input {'note_id': 'x', 'note_text': ''} -> HTTP 200, expected 422", 'contentless note: X-01 must be partial (no identifiable sections is ambiguous, never guessed)', 'GET /health -> HTTP 200 \'{"status":"ok"}\', expected 200 {\'status\': \'ok\', \'criteria_version\': \'1.0.0\'}']
+
+qualityforge/generated/tests/test_soap_evaluator.py:333: AssertionError
+=============================== warnings summary ===============================
+../../venv-qf/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /home/user/venv-qf/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED qualityforge/generated/tests/test_soap_evaluator.py::test_api_contract_422_health_and_seam_consistency
+=================== 1 failed, 174 passed, 1 warning in 4.50s ===================

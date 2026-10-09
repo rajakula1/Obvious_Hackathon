@@ -12,7 +12,8 @@ Wire shapes (spec section 8.3):
   order IS the wire order — response bodies are built so JSON key order is
   deterministic (note_id, criteria_version, overall_status, findings, and
   each finding's keys in declared order).
-- ``GET /health`` — ``{"status": "ok"}``.
+- ``GET /health`` — ``{"status": "ok", "criteria_version": <loaded config's
+  version>}``.
 
 Config resolution order: the explicit ``config`` argument, then the
 ``QF_CRITERIA_CONFIG`` environment variable, then the of-record criteria
@@ -28,7 +29,7 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 
 from qualityforge.generated.soap_evaluator.config import DEFAULT_CONFIG_PATH, load_criteria
 from qualityforge.generated.soap_evaluator.evaluator import Evaluator, create_evaluator
@@ -38,12 +39,16 @@ _ENV_CONFIG = "QF_CRITERIA_CONFIG"
 
 
 class EvaluateBody(BaseModel):
-    """Request body of POST /evaluate — exactly the two wire fields."""
+    """Request body of POST /evaluate — exactly the two wire fields.
+
+    Spec section 1 error semantics: blank strings and non-strings are
+    malformed input (422) — ``min_length=1`` and ``StrictStr``.
+    """
 
     model_config = ConfigDict(extra="forbid")
 
-    note_id: str
-    note_text: str
+    note_id: StrictStr = Field(min_length=1)
+    note_text: StrictStr = Field(min_length=1)
 
 
 def _resolve_config(config: Mapping[str, Any] | None) -> Mapping[str, Any]:
@@ -58,7 +63,8 @@ def _resolve_config(config: Mapping[str, Any] | None) -> Mapping[str, Any]:
 
 def create_app(config: Mapping[str, Any] | None = None) -> FastAPI:
     """Build the API app around an evaluator built from the resolved config."""
-    evaluator: Evaluator = create_evaluator(_resolve_config(config))
+    resolved = _resolve_config(config)
+    evaluator: Evaluator = create_evaluator(resolved)
     app = FastAPI(title="SOAP note completeness evaluator", version="1.0.0")
 
     @app.post("/evaluate", response_model=EvaluateResponse)
@@ -67,6 +73,8 @@ def create_app(config: Mapping[str, Any] | None = None) -> FastAPI:
 
     @app.get("/health")
     def health() -> dict[str, str]:
-        return {"status": "ok"}
+        # Liveness echoes the loaded config's version — config-driven, never
+        # hardcoded (spec section 1 GET /health; section 8.2).
+        return {"status": "ok", "criteria_version": str(resolved["criteria_version"])}
 
     return app

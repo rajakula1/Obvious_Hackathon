@@ -17,8 +17,9 @@ strategy (review R5): header markers first, the documented fallback second.
    categories match, in S -> O -> A -> P order.
 
 An ambiguous note — a section still missing while unattributable content
-remains — surfaces as ``ambiguous`` so the structure criterion (X-01) answers
-``partial`` instead of guessing (R5; the config fallback rule, verbatim).
+remains, or nothing identified at all (a contentless note) — surfaces as
+``ambiguous`` so the structure criterion (X-01) answers ``partial`` instead
+of guessing (R5; the config fallback rule, verbatim).
 
 Every offset this module emits is a zero-based character offset into the raw
 text, end-exclusive (R3): ``text[start:end]`` reproduces the reported line or
@@ -422,12 +423,22 @@ def identify_sections(text: str, section_detection: Mapping[str, object]) -> Sec
     spans = {section: list(occurrences[section]) for section in occurrences}
     for section, claimed in claims.items():
         spans[section] = claimed
-    ambiguous = bool(missing - set(claims)) and any(
-        _has_letter(text[start:end]) for start, end in unclaimed
+    outstanding = missing - set(claims)
+    # Ambiguity (R5, config fallback rule): a section is still missing while
+    # unattributable content remains — or nothing was identified at all (no
+    # header named a section and the fallback confidently claimed nothing),
+    # so no section can be named and guessing is forbidden.
+    ambiguous = bool(outstanding) and (
+        any(_has_letter(text[start:end]) for start, end in unclaimed) or not spans
     )
+    if ambiguous and not unclaimed:
+        # Letterless note (whitespace, garble without letters): there is no
+        # sentence to point at — the whole unattributed text is the textual
+        # basis of the ambiguity, usable as the structure finding's evidence.
+        unclaimed = list(regions)
     return SectionMap(
         spans=spans,
-        missing=frozenset(missing - set(claims)),
+        missing=frozenset(outstanding),
         ambiguous=ambiguous,
         unclaimed=tuple(unclaimed),
     )

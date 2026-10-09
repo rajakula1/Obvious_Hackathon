@@ -190,8 +190,10 @@ def _check_x01(criterion: Mapping[str, Any], text: str, sections: SectionMap) ->
         ]
         return _finding(criterion, PRESENT, evidence)
     if sections.ambiguous and sections.unclaimed:
-        evidence = [_span_of(lines_in(text, sections.unclaimed[:1])[0])]
-        return _finding(criterion, PARTIAL, evidence)
+        # First unattributable span, taken raw: a letterless region has no
+        # lines to point at, and the raw slice is always R3-exact.
+        start, end = sections.unclaimed[0]
+        return _finding(criterion, PARTIAL, [_span_of((start, text[start:end]))])
     return _finding(criterion, MISSING, [])
 
 
