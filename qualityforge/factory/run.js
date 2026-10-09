@@ -17,6 +17,9 @@
  *   --executor NAME            executor hint recorded in the run plan
  *                              (advisory only — live creates don't carry it):
  *                              obvious | autobuild | human (default obvious)
+ *   --flat-stages              parent stage tasks beside the run root under
+ *                              --root-parent. Required on live surfaces that
+ *                              only accept depth-1 delegated subtasks.
  *   -h, --help                 show usage
  *
  * What it does: reads a requirement file (one run = one requirement file plus
@@ -465,7 +468,7 @@ function buildRunPlan({ requirement, requirementPath, budgets, runId, recordedAt
  * mock; the CLI passes the real SDK). Creates the run root with the budget
  * record first, then each node in dependency order, wiring dependsOn to real
  * task ids, then opens the run at its first stage status. */
-async function createRun({ plan, sdkClient, rootParentId = 'self' }) {
+async function createRun({ plan, sdkClient, rootParentId = 'self', flatStages = false }) {
   validatePlan(plan);
 
   const root = await sdkClient.tasks.create({
@@ -493,7 +496,13 @@ async function createRun({ plan, sdkClient, rootParentId = 'self' }) {
     const params = {
       title: node.title,
       description: node.description,
-      parentId: root.id,
+      // Live dispatch constraint surfaced by Run 2: delegated subtasks must
+      // be DIRECT children of the orchestrator root (depth 1 only) — the
+      // platform rejects a run-root → stages nesting with "is not the root
+      // task". Flat mode parents stages beside the run root and keeps the
+      // stage DAG in dependsOn; the default keeps the nested shape for
+      // surfaces that allow depth 2.
+      parentId: flatStages ? rootParentId : root.id,
       dependsOn: node.dependsOn.map((dep) => ids.get(dep)),
     };
     if (node.kind === 'human-gate') {
@@ -572,6 +581,10 @@ Options:
                              (interactive use); a delegated agent must pass its
                              bound task id — the live surface rejects 'self'
                              there. QUALITYFORGE_BOUND_TASK_ID is honored too.
+  --flat-stages              parent stage tasks beside the run root under
+                             --root-parent instead of beneath it. Required on
+                             live surfaces that only accept depth-1 delegated
+                             subtasks (Run 2: "is not the root task").
   -h, --help                 show this help`;
 
 const EXECUTORS = ['obvious', 'autobuild', 'human'];
@@ -585,6 +598,7 @@ function parseArgs(argv) {
     positional: [],
     help: false,
     rootParentId: undefined,
+    flatStages: false,
   };
   const budgetFlags = {
     '--max-repair-attempts': 'maxRepairAttempts',
@@ -614,6 +628,10 @@ function parseArgs(argv) {
     if (arg === '--root-parent') {
       opts.rootParentId = argv[++i];
       if (!opts.rootParentId) throw new UsageError('--root-parent requires a task id');
+      continue;
+    }
+    if (arg === '--flat-stages') {
+      opts.flatStages = true;
       continue;
     }
     if (arg.startsWith('--')) throw new UsageError(`unknown option ${arg}`);
@@ -676,7 +694,7 @@ async function main({ argv, env, requireFn = require } = {}) {
   const { sdk } = requireFn('obvious');
   sdk.configure({ tokenRefresh: async () => env.API_TOKEN });
   const rootParentId = options.rootParentId || env.QUALITYFORGE_BOUND_TASK_ID || 'self';
-  const result = await createRun({ plan, sdkClient: sdk, rootParentId });
+  const result = await createRun({ plan, sdkClient: sdk, rootParentId, flatStages: options.flatStages });
   console.log(JSON.stringify({ dispatched: true, ...result }, null, 2));
   return { plan, dispatched: result };
 }
