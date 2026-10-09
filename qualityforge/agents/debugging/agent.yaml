@@ -12,6 +12,7 @@ skills:
   - test-integrity
   - completeness-criteria
   - synthetic-data
+  - bounded-repair
 input_contract: smoke/input.json
 output_contract: smoke/output.json
 knowledge: knowledge.md

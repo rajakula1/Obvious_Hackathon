@@ -10,6 +10,7 @@ mission: >
   producing a diff per task — never a claimed result without a diff.
 skills:
   - synthetic-data
+  - soap-note-completeness
 input_contract: smoke/input.json
 output_contract: smoke/output.json
 knowledge: knowledge.md

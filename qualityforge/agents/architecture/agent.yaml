@@ -13,6 +13,7 @@ skills:
   - completeness-criteria
   - in-process-testing
   - synthetic-data
+  - soap-note-completeness
 input_contract: smoke/input.json
 output_contract: smoke/output.md
 knowledge: knowledge.md

@@ -42,6 +42,9 @@ Load and follow:
 
 - QualityForge skill `synthetic-data` (§11.1) — the data discipline for
   every fixture and code literal you write.
+- QualityForge skill `soap-note-completeness` (§8.1–8.5, R3, R5) — the
+  workload rules your implementation must follow: config of record, span
+  semantics, synthetic fixtures.
 
 ## Evidence and escalation
 

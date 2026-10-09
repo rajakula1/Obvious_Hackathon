@@ -52,6 +52,8 @@ Load and follow:
 - QualityForge skill `completeness-criteria` (§8.2, R3, R5) — to diagnose
   against the criterion's actual semantics.
 - QualityForge skill `synthetic-data` (§11.1).
+- QualityForge skill `bounded-repair` (§7.7, §7.3, R2) — minimal fixes,
+  logged attempts, full-suite retest, stop at the cap with `needs_human`.
 
 ## Evidence and escalation
 

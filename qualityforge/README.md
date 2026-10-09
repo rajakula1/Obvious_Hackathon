@@ -22,7 +22,7 @@ see `conventions/gates.md` for the layout).
 | `agents/<agent>/` | The six factory agents (§7): `agent.yaml` (identity, model hints, skills), `prompt.md` (system prompt, configuration source of truth), `knowledge.md`; canned `smoke/` input/output per §7 contract |
 | `agents/rules.py` | Guard helpers: criterion-linked test-change justifications (R2), in-process test patterns (R6), PHI-marker scan (§11.1) |
 | `agents/registered/` | Registration record: skill IDs and raw SDK responses; the blocked agent-registration path, honestly recorded |
-| `skills/<skill>/` | The four factory skills with `registered/` raw SDK registration responses |
+| `skills/<skill>/` | The nine factory skills — four policy skills plus the five procedure skills (including the Run 1 workload skill) — with `registered/` raw SDK registration responses |
 | `tools/smoke.py` | Smoke harness: per-agent §7 contract checks; the R2 guard, R6 rule, manifest re-hash, and PHI scan execute for real |
 | `workloads/soap-evaluator/` | Run 1 workload spec assets: machine-readable acceptance criteria (`acceptance-criteria.yaml`, §7.1) and criteria config v1 (`criteria-v1.yaml`, §8.2) |
 | `workloads/soap-evaluator/data/` | Synthetic SOAP notes corpus: 24 labeled notes + corpus manifest + label semantics (§8.4) |
@@ -51,6 +51,11 @@ see `conventions/gates.md` for the layout).
 | No-test-tampering guard: criterion-linked justification | `agents/rules.py` | §7.7, §11.4 | R2 |
 | In-process TestClient testing rule | `agents/rules.py`, `tools/smoke.py` | §7.6 | R6 |
 | Synthetic-data-only PHI screen | `agents/rules.py` | §11.1 | — |
+| Acceptance-criteria authoring procedure | `skills/acceptance-criteria/SKILL.md` | §7.1 | — |
+| Criterion tests: one test per criterion, authored before implementation | `skills/criterion-tests/SKILL.md` | §7.6 | R2, R4 |
+| Bounded repair: minimal fix, attempt log, stop at 3 with `needs_human` | `skills/bounded-repair/SKILL.md` | §7.7, §7.3 | R2, R8 |
+| Run evidence and approval-gate semantics | `skills/run-evidence/SKILL.md` | §5.2, §7.8, §7.9 | R8 |
+| SOAP workload rules: config of record, spans, sections, corpus, disclaimer | `skills/soap-note-completeness/SKILL.md` | §8.1–8.5 | R3, R5 |
 
 ## Usage
 

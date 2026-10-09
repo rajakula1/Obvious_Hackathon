@@ -15,6 +15,15 @@ truth.
 | `qualityforge-synthetic-data` | `skl_d1YHA3MmCIQY` | `../synthetic-data/SKILL.md` | `synthetic-data.json` |
 | `qualityforge-test-integrity` | `skl_a99oUqKd9Ck6` | `../test-integrity/SKILL.md` | `test-integrity.json` |
 | `qualityforge-in-process-testing` | `skl_NidEUkQSC0yp` | `../in-process-testing/SKILL.md` | `in-process-testing.json` |
+| `qualityforge-acceptance-criteria` | `skl_4xEqYpCw7KUu` | `../acceptance-criteria/SKILL.md` | `acceptance-criteria.json` |
+| `qualityforge-criterion-tests` | `skl_XPTGhfztroSU` | `../criterion-tests/SKILL.md` | `criterion-tests.json` |
+| `qualityforge-bounded-repair` | `skl_MrYIQGJ1myhZ` | `../bounded-repair/SKILL.md` | `bounded-repair.json` |
+| `qualityforge-run-evidence` | `skl_EQzG9owWizl7` | `../run-evidence/SKILL.md` | `run-evidence.json` |
+| `qualityforge-soap-note-completeness` | `skl_1ih3m36HEyM1` | `../soap-note-completeness/SKILL.md` | `soap-note-completeness.json` |
+
+The five procedure skills (rows 5–9) were registered October 9, 2026
+(18:36 UTC batch) under the skills-review task, with the full SKILL.md
+attached as content like the four policy skills above.
 
 Recreate reproducibly from the repo at any time:
 
