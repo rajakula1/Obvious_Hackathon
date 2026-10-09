@@ -3,6 +3,8 @@
 **Run:** `qf-run-1-soap-20261009T172617Z` · **Requirement:** `run-1-soap` —
 SOAP-note completeness evaluator · **Criteria version evaluated:** 1.0.0
 
+**Disclaimer (§8.5, §11.2):** Results reflect software correctness against stated criteria, not clinical validity.
+
 ## What was built and verified (software correctness)
 
 The run produced a FastAPI service that evaluates SOAP-note completeness
