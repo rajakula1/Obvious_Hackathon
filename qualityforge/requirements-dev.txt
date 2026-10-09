@@ -1,0 +1,5 @@
+# Factory tooling dependencies - minimal and pinned (spec section 7.2).
+jsonschema==4.26.0
+PyYAML==6.0.3
+pytest==9.0.3
+ruff==0.16.10

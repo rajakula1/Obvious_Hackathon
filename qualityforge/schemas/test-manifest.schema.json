@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QualityForge test manifest",
+  "description": "Integrity manifest for the generated test suite (review R2, guard 1). Recorded by the orchestrator when the Testing Agent finalizes tests; re-hashed by the Verify gate (spec section 7.8) before the quality report is issued. Any digest drift fails the gate — the mechanical enforcement of the no-test-tampering rule (spec section 11.4).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifest_version", "run_id", "recorded_at", "recorded_by", "test_files"],
+  "properties": {
+    "manifest_version": {
+      "const": "1.0",
+      "description": "Format version of the manifest itself."
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The run this suite belongs to (spec section 9, Run.run_id)."
+    },
+    "recorded_at": {
+      "type": "string",
+      "minLength": 1,
+      "description": "ISO-8601 timestamp of finalization. Format validity is enforced by tools/validate.py."
+    },
+    "recorded_by": {
+      "enum": ["orchestrator", "testing_agent"],
+      "description": "Review R2 assigns the recording to the orchestrator, acting on the Testing Agent's finalized suite."
+    },
+    "test_files": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/testFile" }
+    }
+  },
+  "$defs": {
+    "testFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repository-relative POSIX path of the test file. Absolute paths and '..' traversal are rejected by tools/validate.py."
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 of the file content at finalization time (review R2)."
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "File size in bytes at finalization time; advisory."
+        },
+        "criteria_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]+-[0-9]{2,}$"
+          },
+          "description": "Acceptance criteria this test file exercises (spec section 7.6: tests derive from criteria, not from reading the implementation)."
+        }
+      }
+    }
+  }
+}
