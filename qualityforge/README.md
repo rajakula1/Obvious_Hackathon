@@ -20,6 +20,7 @@ see `conventions/gates.md` for the layout).
 | `tools/validate.py` | Validator: schema + semantic checks, manifest re-hash (R2 Verify gate) |
 | `workloads/soap-evaluator/` | Run 1 workload spec assets: machine-readable acceptance criteria (`acceptance-criteria.yaml`, §7.1) and criteria config v1 (`criteria-v1.yaml`, §8.2) |
 | `requirements/run-1-soap.md` | Run 1 requirement input, verbatim from spec §8.1 |
+| `factory/run.js` | Runbook (R8): instantiates the run task DAG with budgets and evidence gates; terminal-status writer restricted to the §9 enum |
 | `tests/` | pytest suite covering the enum, the validator, and the workload spec assets |
 
 ## Convention → spec map
@@ -38,6 +39,7 @@ see `conventions/gates.md` for the layout).
 | Run 1 acceptance criteria + criteria config v1 | `workloads/soap-evaluator/` | §7.1, §8.1–8.3, §12.1 | R1, R3, R4, R5 |
 | Verify-gate re-hash of the manifest | `tools/validate.py` | §7.8 | R2 |
 | `criteria-ref:` commit rule for test files | `conventions/gates.md` | §11.4 | R2 |
+| Runbook instantiates the run DAG; only it writes run statuses, terminal ones restricted to §9 | `factory/run.js` | §5.3, §6, §7.3, §9, §10, §12.2 | R8 |
 
 ## Usage
 

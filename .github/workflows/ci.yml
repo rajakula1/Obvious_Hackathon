@@ -29,3 +29,13 @@ jobs:
         run: pip install -r qualityforge/requirements-dev.txt
       - name: Run tests
         run: python -m pytest qualityforge/
+
+  factory-runbook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Run runbook unit tests (mocked SDK)
+        run: node --test qualityforge/factory/
