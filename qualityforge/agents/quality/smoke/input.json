@@ -1,0 +1,33 @@
+{
+  "run_id": "run-1-smoke",
+  "workload": "soap-note-completeness-evaluator",
+  "criteria_config": "qualityforge/workloads/soap-evaluator/criteria-v1.yaml",
+  "final_test_results": {
+    "tests_run": 9,
+    "passed": 9,
+    "failed": 0
+  },
+  "repair_attempts": [
+    { "attempt_id": "ATT-01", "kind": "test", "accepted": false },
+    { "attempt_id": "ATT-02", "kind": "implementation", "accepted": true }
+  ],
+  "quality_raw": {
+    "lint": "pass",
+    "type_check": "pass",
+    "complexity": "pass",
+    "dependencies": "pass",
+    "security_scan": "pass"
+  },
+  "manifest": {
+    "run_id": "run-1-smoke",
+    "finalized_at": "2026-10-09T00:00:00Z",
+    "test_files": [
+      {
+        "path": "qualityforge/agents/testing/smoke/fixtures/generated-test-sample.txt",
+        "sha256": "ff43c20abe9321dae157ffdd70df6c84cd1506576ee3a234d92ae6d2e5d25d38",
+        "criteria_refs": ["S-01", "S-02", "O-01", "O-02", "A-01", "P-01", "P-02", "X-01"]
+      }
+    ]
+  },
+  "note": "Quality Agent input per spec section 7.8: final test results, the five raw quality reports, and the finalized test manifest for Verify-gate re-hashing (review R2)."
+}

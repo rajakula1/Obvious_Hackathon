@@ -1,0 +1,9 @@
+{
+  "workload": "soap-note-completeness-evaluator",
+  "failing_test": "tests/test_evaluate.py::test_plan_items_reference_assessment_p02",
+  "criterion_id": "P-02",
+  "criterion_statement": "Plan items relate to a stated assessment.",
+  "failure_message": "AssertionError: P-02 finding missing from response — evaluator emits no P-02 finding; plan-item cross-reference rule not implemented.",
+  "code_excerpt": "# app/evaluator.py (T3 diff, task smoke output)\ndef _check(criterion: dict, sections: dict, note_text: str) -> tuple[str, list[dict]]:\n    start = sections.get(criterion[\"section\"]) if criterion[\"section\"] else None\n    if start is None:\n        return \"missing\", []\n    return \"present\", [{\"start\": start, \"end\": start + 1, \"text\": note_text[start : start + 1]}]",
+  "rejection_note": "A test-file edit was proposed and REJECTED by the no-test-tampering guard (review R2): no justification linked to criterion P-02 was recorded. Repaired in the implementation instead. Guard mechanics verified by unit tests in qualityforge/tests/test_rules.py."
+}

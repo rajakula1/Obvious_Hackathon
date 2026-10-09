@@ -1,0 +1,15 @@
+# Agent registration metadata. The prompt source of truth is prompt.md in this
+# directory; the platform agent config is transcribed from these two files
+# (see ../registered/REGISTRATION.md).
+name: coding-agent
+display_name: Coding Agent
+spec_section: "7.4"
+pipeline_stage: "4. Generate"
+mission: >
+  Implement the technical specification task by task through file tools,
+  producing a diff per task — never a claimed result without a diff.
+skills:
+  - synthetic-data
+input_contract: smoke/input.json
+output_contract: smoke/output.json
+knowledge: knowledge.md

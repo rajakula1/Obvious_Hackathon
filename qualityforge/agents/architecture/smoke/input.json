@@ -1,0 +1,4 @@
+{
+  "acceptance_criteria": "../../requirements/smoke/output.json",
+  "note": "Architecture Agent input per spec section 7.2 is the acceptance-criteria list. The smoke run consumes the Requirements Agent's smoke output — the real pipeline hand-off, not a copy."
+}

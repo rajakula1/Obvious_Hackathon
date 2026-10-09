@@ -1,0 +1,17 @@
+# Agent registration metadata. The prompt source of truth is prompt.md in this
+# directory; the platform agent config is transcribed from these two files
+# (see ../registered/REGISTRATION.md).
+name: quality-agent
+display_name: Quality Agent
+spec_section: "7.8"
+pipeline_stage: "7. Verify"
+mission: >
+  Run code-quality checks after tests pass and issue the verification
+  report — re-hashing the test manifest before the report is issued.
+skills:
+  - test-integrity
+  - completeness-criteria
+  - synthetic-data
+input_contract: smoke/input.json
+output_contract: smoke/output.json
+knowledge: knowledge.md

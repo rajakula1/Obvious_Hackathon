@@ -1,0 +1,17 @@
+# Agent registration metadata. The prompt source of truth is prompt.md in this
+# directory; the platform agent config is transcribed from these two files
+# (see ../registered/REGISTRATION.md).
+name: debugging-agent
+display_name: Debugging Agent
+spec_section: "7.7"
+pipeline_stage: "6. Debug"
+mission: >
+  Repair failing tests with minimal fixes through file tools, under the
+  mechanized no-test-tampering rule, with every attempt logged.
+skills:
+  - test-integrity
+  - completeness-criteria
+  - synthetic-data
+input_contract: smoke/input.json
+output_contract: smoke/output.json
+knowledge: knowledge.md
