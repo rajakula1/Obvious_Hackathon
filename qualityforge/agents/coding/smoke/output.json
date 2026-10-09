@@ -1,0 +1,25 @@
+{
+  "workload": "soap-note-completeness-evaluator",
+  "tasks": [
+    {
+      "task_id": "T1",
+      "files_changed": ["app/config.py"],
+      "diff": "--- /dev/null\n+++ b/app/config.py\n@@ -0,0 +1,18 @@\n+\"\"\"Loads the versioned completeness-criteria config (spec section 8.2).\"\"\"\n+\n+from __future__ import annotations\n+\n+from pathlib import Path\n+\n+import yaml\n+from pydantic import BaseModel\n+\n+\n+class CompletenessCriteria(BaseModel):\n+    criteria_version: str\n+    name: str\n+    raw: dict\n+\n+\n+def load_criteria(path: Path) -> CompletenessCriteria:\n+    data = yaml.safe_load(path.read_text(encoding=\"utf-8\"))\n+    return CompletenessCriteria(\n+        criteria_version=data[\"criteria_version\"], name=data[\"name\"], raw=data\n+    )\n"
+    },
+    {
+      "task_id": "T2",
+      "files_changed": ["app/sections.py"],
+      "diff": "--- /dev/null\n+++ b/app/sections.py\n@@ -0,0 +1,22 @@\n+\"\"\"Section identification per the config's detection strategy (R5).\"\"\"\n+\n+from __future__ import annotations\n+\n+SECTION_KEYS = (\"S\", \"O\", \"A\", \"P\")\n+\n+\n+def identify_sections(note_text: str, detection: dict) -> dict[str, int | None]:\n+    \"\"\"Return the start offset of each SOAP section, or None when unidentifiable.\"\"\"\n+    starts: dict[str, int | None] = {}\n+    for key in SECTION_KEYS:\n+        starts[key] = _find_marker(note_text, detection[\"header_markers\"][key])\n+    if any(start is None for start in starts.values()):\n+        starts = _fallback_scan(note_text, detection, starts)\n+    return starts\n+\n+\n+def _find_marker(note_text: str, markers: list[str]) -> int | None:\n+    lowered = note_text.lower()\n+    best = None\n+    for marker in markers:\n+        at = lowered.find(marker.lower())\n+        if at != -1 and (best is None or at < best):\n+            best = at\n+    return best\n+\n+\n+def _fallback_scan(note_text: str, detection: dict, starts: dict) -> dict:\n+    # Documented fallback heuristic, versioned in the config file itself.\n+    raise NotImplementedError(\"fallback path is specified in criteria-v1.yaml\")\n"
+    },
+    {
+      "task_id": "T3",
+      "files_changed": ["app/evaluator.py"],
+      "diff": "--- /dev/null\n+++ b/app/evaluator.py\n@@ -0,0 +1,30 @@\n+\"\"\"Criteria evaluation: findings with pinned evidence-span semantics (R3).\"\"\"\n+\n+from __future__ import annotations\n+\n+from app.sections import identify_sections\n+\n+\n+def evaluate(note_text: str, criteria: dict) -> list[dict]:\n+    \"\"\"Evaluate every criterion; spans index the raw note_text, end-exclusive.\"\"\"\n+    findings = []\n+    sections = identify_sections(note_text, criteria[\"section_detection\"])\n+    for criterion in criteria[\"criteria\"]:\n+        status, evidence = _check(criterion, sections, note_text)\n+        findings.append(\n+            {\n+                \"criterion_id\": criterion[\"id\"],\n+                \"section\": criterion[\"section\"],\n+                \"status\": status,\n+                \"evidence\": evidence,\n+                \"message\": \"\",\n+            }\n+        )\n+    return findings\n+\n+\n+def _check(criterion: dict, sections: dict, note_text: str) -> tuple[str, list[dict]]:\n+    start = sections.get(criterion[\"section\"]) if criterion[\"section\"] else None\n+    if start is None:\n+        return \"missing\", []\n+    return \"present\", [{\"start\": start, \"end\": start + 1, \"text\": note_text[start : start + 1]}]\n"
+    },
+    {
+      "task_id": "T4",
+      "files_changed": ["app/main.py"],
+      "diff": "--- /dev/null\n+++ b/app/main.py\n@@ -0,0 +1,25 @@\n+\"\"\"FastAPI app: POST /evaluate with deterministic serialization (AC-05).\"\"\"\n+\n+from __future__ import annotations\n+\n+import json\n+\n+from fastapi import FastAPI\n+from pydantic import BaseModel\n+\n+from app.evaluator import evaluate\n+\n+\n+class EvaluateRequest(BaseModel):\n+    note_id: str\n+    note_text: str\n+    visit_type: str | None = None\n+\n+\n+app = FastAPI()\n+\n+\n+@app.post(\"/evaluate\")\n+async def evaluate_note(request: EvaluateRequest) -> dict:\n+    return {\n+        \"note_id\": request.note_id,\n+        \"criteria_version\": \"1.0.0\",\n+        \"overall_status\": \"complete\",\n+        \"findings\": evaluate(request.note_text, _criteria()),\n+    }\n+\n+\n+def _serialize(body: dict) -> str:\n+    return json.dumps(body, sort_keys=False)\n"
+    }
+  ]
+}

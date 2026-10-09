@@ -1,0 +1,17 @@
+# Agent registration metadata. The prompt source of truth is prompt.md in this
+# directory; the platform agent config is transcribed from these two files
+# (see ../registered/REGISTRATION.md).
+name: requirements-agent
+display_name: Requirements Agent
+spec_section: "7.1"
+pipeline_stage: "1. Analyze"
+mission: >
+  Turn a free-text feature requirement into a structured, machine-readable
+  acceptance-criteria list that every downstream agent can build from and
+  every completion gate can check.
+skills:
+  - completeness-criteria
+  - synthetic-data
+input_contract: smoke/input.md
+output_contract: smoke/output.json
+knowledge: knowledge.md

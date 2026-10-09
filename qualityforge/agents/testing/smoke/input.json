@@ -1,0 +1,7 @@
+{
+  "workload": "soap-note-completeness-evaluator",
+  "acceptance_criteria": "qualityforge/workloads/soap-evaluator/acceptance-criteria.yaml",
+  "criteria_config": "qualityforge/workloads/soap-evaluator/criteria-v1.yaml",
+  "implementation_modules": ["app/config.py", "app/sections.py", "app/evaluator.py", "app/main.py"],
+  "note": "Testing Agent input per spec section 7.6: the Architecture Agent's execution plan plus the validated acceptance criteria. Tests run in-process via TestClient (review R6)."
+}

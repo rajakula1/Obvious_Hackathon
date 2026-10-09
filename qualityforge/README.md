@@ -19,11 +19,16 @@ see `conventions/gates.md` for the layout).
 | `schemas/test-manifest.schema.json` | Test-manifest format: path + SHA-256 per test file (R2) |
 | `tools/validate.py` | Validator: schema + semantic checks, manifest re-hash (R2 Verify gate) |
 | `tools/validate_dataset.py` | Dataset validator: label well-formedness, criteria-config alignment, manifest re-hash, zero-hit PHI scan (§8.4, §11.1) |
+| `agents/<agent>/` | The six factory agents (§7): `agent.yaml` (identity, model hints, skills), `prompt.md` (system prompt, configuration source of truth), `knowledge.md`; canned `smoke/` input/output per §7 contract |
+| `agents/rules.py` | Guard helpers: criterion-linked test-change justifications (R2), in-process test patterns (R6), PHI-marker scan (§11.1) |
+| `agents/registered/` | Registration record: skill IDs and raw SDK responses; the blocked agent-registration path, honestly recorded |
+| `skills/<skill>/` | The four factory skills with `registered/` raw SDK registration responses |
+| `tools/smoke.py` | Smoke harness: per-agent §7 contract checks; the R2 guard, R6 rule, manifest re-hash, and PHI scan execute for real |
 | `workloads/soap-evaluator/` | Run 1 workload spec assets: machine-readable acceptance criteria (`acceptance-criteria.yaml`, §7.1) and criteria config v1 (`criteria-v1.yaml`, §8.2) |
 | `workloads/soap-evaluator/data/` | Synthetic SOAP notes corpus: 24 labeled notes + corpus manifest + label semantics (§8.4) |
 | `requirements/run-1-soap.md` | Run 1 requirement input, verbatim from spec §8.1 |
 | `factory/run.js` | Runbook (R8): instantiates the run task DAG with budgets and evidence gates; terminal-status writer restricted to the §9 enum |
-| `tests/` | pytest suite covering the enum, the validator, the workload spec assets, and the dataset |
+| `tests/` | pytest suite covering the enum, the validator, the workload spec assets, the dataset, the guard rules, and the agent smoke contracts |
 
 ## Convention → spec map
 
@@ -42,6 +47,10 @@ see `conventions/gates.md` for the layout).
 | Verify-gate re-hash of the manifest | `tools/validate.py` | §7.8 | R2 |
 | `criteria-ref:` commit rule for test files | `conventions/gates.md` | §11.4 | R2 |
 | Runbook instantiates the run DAG; only it writes run statuses, terminal ones restricted to §9 | `factory/run.js` | §5.3, §6, §7.3, §9, §10, §12.2 | R8 |
+| Six agents: identity, prompts, knowledge, smoke transcripts | `agents/<agent>/` | §7 | — |
+| No-test-tampering guard: criterion-linked justification | `agents/rules.py` | §7.7, §11.4 | R2 |
+| In-process TestClient testing rule | `agents/rules.py`, `tools/smoke.py` | §7.6 | R6 |
+| Synthetic-data-only PHI screen | `agents/rules.py` | §11.1 | — |
 
 ## Usage
 
@@ -56,6 +65,9 @@ python -m qualityforge.tools.validate criteria qualityforge/schemas/completeness
 
 # validate a test manifest, re-hashing every recorded test file (R2 Verify gate)
 python -m qualityforge.tools.validate manifest runs/<run_id>/05-test/test-manifest.json --repo-root .
+
+# smoke-check every agent's canned §7 input/output transcript
+python -m qualityforge.tools.smoke
 ```
 
 Exit codes: `0` valid, `1` invalid, `2` usage or I/O error.

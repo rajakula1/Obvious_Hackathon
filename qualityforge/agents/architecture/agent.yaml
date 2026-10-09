@@ -1,0 +1,18 @@
+# Agent registration metadata. The prompt source of truth is prompt.md in this
+# directory; the platform agent config is transcribed from these two files
+# (see ../registered/REGISTRATION.md).
+name: architecture-agent
+display_name: Architecture Agent
+spec_section: "7.2"
+pipeline_stage: "2. Design"
+mission: >
+  Turn acceptance criteria into a technical specification — API contract,
+  data model, module layout, dependencies — in which every criterion maps
+  to at least one component.
+skills:
+  - completeness-criteria
+  - in-process-testing
+  - synthetic-data
+input_contract: smoke/input.json
+output_contract: smoke/output.md
+knowledge: knowledge.md

@@ -1,0 +1,50 @@
+# Smoke fixture — Testing Agent sample of the generated suite (Run 1, SOAP evaluator).
+# criteria-refs: S-01, S-02, O-01, O-02, A-01, P-01, P-02, X-01
+# Runs in-process through TestClient — no bound ports (review R6).
+
+import json
+
+from fastapi.testclient import TestClient
+
+from app.main import app
+
+client = TestClient(app)
+
+SYNTHETIC_NOTE = (
+    "S: Patient reports persistent cough for five days. "
+    "O: Temperature 38.1 C, pulse 92. "
+    "A: Acute bronchitis, consistent with cough and fever. "
+    "P: Rest, fluids, follow-up in one week if not improved."
+)
+
+
+def test_response_schema_ac01():
+    response = client.post("/evaluate", json={"note_id": "n-1", "note_text": SYNTHETIC_NOTE})
+    body = response.json()
+    assert response.status_code == 200
+    assert body["note_id"] == "n-1"
+    assert body["criteria_version"] == "1.0.0"
+    assert body["overall_status"] in {"complete", "incomplete"}
+    for finding in body["findings"]:
+        assert finding["criterion_id"]
+        assert finding["section"] in {"S", "O", "A", "P"}
+        assert finding["status"] in {"present", "missing", "partial"}
+
+
+def test_span_arithmetic_ac04():
+    response = client.post("/evaluate", json={"note_id": "n-1", "note_text": SYNTHETIC_NOTE})
+    for finding in response.json()["findings"]:
+        for span in finding["evidence"]:
+            assert SYNTHETIC_NOTE[span["start"]:span["end"]] == span["text"]
+
+
+def test_repeat_call_determinism_ac05():
+    first = client.post("/evaluate", json={"note_id": "n-2", "note_text": SYNTHETIC_NOTE})
+    second = client.post("/evaluate", json={"note_id": "n-2", "note_text": SYNTHETIC_NOTE})
+    assert json.dumps(first.json(), sort_keys=False) == json.dumps(second.json(), sort_keys=False)
+
+
+def test_plan_items_reference_assessment_p02():
+    response = client.post("/evaluate", json={"note_id": "n-3", "note_text": SYNTHETIC_NOTE})
+    plan_findings = [f for f in response.json()["findings"] if f["criterion_id"] == "P-02"]
+    assert plan_findings, "P-02 finding missing from response"

@@ -1,0 +1,30 @@
+{
+  "workload": "soap-note-completeness-evaluator",
+  "technical_spec": "02-design/technical-specification.md",
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "Criteria config loader",
+      "depends_on": [],
+      "spec_ref": "app/config.py"
+    },
+    {
+      "id": "T2",
+      "title": "Section identification: header markers with fallback",
+      "depends_on": ["T1"],
+      "spec_ref": "app/sections.py"
+    },
+    {
+      "id": "T3",
+      "title": "Criteria evaluation and findings with evidence spans",
+      "depends_on": ["T2"],
+      "spec_ref": "app/evaluator.py"
+    },
+    {
+      "id": "T4",
+      "title": "FastAPI app with deterministic POST /evaluate",
+      "depends_on": ["T3"],
+      "spec_ref": "app/main.py"
+    }
+  ]
+}

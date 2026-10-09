@@ -1,0 +1,18 @@
+{
+  "workload": "soap-note-completeness-evaluator",
+  "criteria_config_version": "1.0.0",
+  "tests_run": 9,
+  "passed": 8,
+  "failed": 1,
+  "failures": [
+    {
+      "test_id": "tests/test_evaluate.py::test_plan_items_reference_assessment_p02",
+      "criterion_id": "P-02",
+      "message": "AssertionError: P-02 finding missing from response — evaluator emits no P-02 finding; plan-item cross-reference rule not implemented."
+    }
+  ],
+  "manifest": {
+    "status": "pending_finalization",
+    "note": "Recorded by the orchestrator at finalization (spec section 7.6), after the repair loop settles. First-run result above feeds the Debugging Agent."
+  }
+}

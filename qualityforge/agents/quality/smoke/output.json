@@ -1,0 +1,34 @@
+{
+  "run_id": "run-1-smoke",
+  "workload": "soap-note-completeness-evaluator",
+  "quality_checks": [
+    { "check": "lint", "status": "pass" },
+    { "check": "type_check", "status": "pass" },
+    { "check": "complexity", "status": "pass" },
+    { "check": "dependencies", "status": "pass" },
+    { "check": "security_scan", "status": "pass" }
+  ],
+  "manifest_rehash": {
+    "status": "pass",
+    "files_checked": 1,
+    "note": "Verify-gate re-hash executed against the finalized manifest; recorded SHA-256 values match the files on disk (review R2, spec section 7.8)."
+  },
+  "criteria_coverage": {
+    "covered": 8,
+    "total": 8,
+    "uncovered": []
+  },
+  "test_results_confirmed": {
+    "tests_run": 9,
+    "passed": 9,
+    "failed": 0
+  },
+  "repair_loop_confirmed": {
+    "attempts_logged": 2,
+    "resolved": true,
+    "note": "Repair loop detected and repaired one failure (natural run); every attempt logged per spec section 7.7."
+  },
+  "overall": "pass",
+  "report_to_human": true,
+  "disclaimer": "This report verifies software behavior against documented criteria. It does not establish clinical validity."
+}

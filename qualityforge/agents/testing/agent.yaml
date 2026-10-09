@@ -1,0 +1,19 @@
+# Agent registration metadata. The prompt source of truth is prompt.md in this
+# directory; the platform agent config is transcribed from these two files
+# (see ../registered/REGISTRATION.md).
+name: testing-agent
+display_name: Testing Agent
+spec_section: "7.6"
+pipeline_stage: "5. Test"
+mission: >
+  Generate unit tests from the acceptance criteria — not from reading the
+  implementation — execute them in the sandbox, and produce a structured
+  result plus the finalization manifest.
+skills:
+  - completeness-criteria
+  - in-process-testing
+  - test-integrity
+  - synthetic-data
+input_contract: smoke/input.json
+output_contract: smoke/output.json
+knowledge: knowledge.md
