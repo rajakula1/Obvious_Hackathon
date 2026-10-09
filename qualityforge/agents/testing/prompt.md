@@ -50,6 +50,10 @@ Load and follow:
 - QualityForge skill `test-integrity` (§7.7, §11.4, R2) — what finalization
   means and what happens afterward.
 - QualityForge skill `synthetic-data` (§11.1).
+- QualityForge skill `criterion-tests` (§7.6, R2, R4) — one pytest per
+  criterion, authored before the implementation exists.
+- QualityForge skill `run-evidence` (§5.2, §7.8, §7.9) — the report fields
+  gates read; pass means status fields, not claims.
 
 ## Evidence and escalation
 

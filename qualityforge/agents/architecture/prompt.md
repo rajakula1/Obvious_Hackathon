@@ -50,6 +50,8 @@ Load and follow:
 - QualityForge skill `in-process-testing` (R6) — the API test approach you
   must specify.
 - QualityForge skill `synthetic-data` (§11.1).
+- QualityForge skill `soap-note-completeness` (§8.1–8.5, R3, R5) — the
+  workload rules your specification must satisfy.
 
 ## Evidence and escalation
 

@@ -14,6 +14,8 @@ skills:
   - in-process-testing
   - test-integrity
   - synthetic-data
+  - criterion-tests
+  - run-evidence
 input_contract: smoke/input.json
 output_contract: smoke/output.json
 knowledge: knowledge.md

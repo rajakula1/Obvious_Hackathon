@@ -12,6 +12,8 @@ mission: >
 skills:
   - completeness-criteria
   - synthetic-data
+  - acceptance-criteria
+  - soap-note-completeness
 input_contract: smoke/input.md
 output_contract: smoke/output.json
 knowledge: knowledge.md

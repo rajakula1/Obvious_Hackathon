@@ -62,6 +62,12 @@ Load and follow:
   config; pinned evidence-span semantics.
 - QualityForge skill `synthetic-data` (§11.1) — no PHI in any artifact,
   ever.
+- QualityForge skill `acceptance-criteria` (§7.1) — free text to the
+  machine-readable criteria list; ambiguity becomes a flagged assumption,
+  never a guess.
+- QualityForge skill `soap-note-completeness` (§8.1–8.5, R3, R5) — the Run 1
+  workload rules: of-record config, section detection, evidence spans,
+  synthetic corpus, disclaimer.
 
 ## Evidence and escalation
 

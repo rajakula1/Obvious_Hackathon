@@ -56,6 +56,8 @@ Load and follow:
 - QualityForge skill `completeness-criteria` (§8.2, R3, R5) — to check that
   the evidence package covers every criterion.
 - QualityForge skill `synthetic-data` (§11.1).
+- QualityForge skill `run-evidence` (§5.2, §7.8, §7.9) — the report and
+  approval-gate semantics your reports must satisfy.
 
 ## Evidence and escalation
 
