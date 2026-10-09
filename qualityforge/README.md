@@ -18,10 +18,12 @@ see `conventions/gates.md` for the layout).
 | `schemas/completeness-criteria.example.yaml` | The §8.2 starting set as a validating sample |
 | `schemas/test-manifest.schema.json` | Test-manifest format: path + SHA-256 per test file (R2) |
 | `tools/validate.py` | Validator: schema + semantic checks, manifest re-hash (R2 Verify gate) |
+| `tools/validate_dataset.py` | Dataset validator: label well-formedness, criteria-config alignment, manifest re-hash, zero-hit PHI scan (§8.4, §11.1) |
 | `workloads/soap-evaluator/` | Run 1 workload spec assets: machine-readable acceptance criteria (`acceptance-criteria.yaml`, §7.1) and criteria config v1 (`criteria-v1.yaml`, §8.2) |
+| `workloads/soap-evaluator/data/` | Synthetic SOAP notes corpus: 24 labeled notes + corpus manifest + label semantics (§8.4) |
 | `requirements/run-1-soap.md` | Run 1 requirement input, verbatim from spec §8.1 |
 | `factory/run.js` | Runbook (R8): instantiates the run task DAG with budgets and evidence gates; terminal-status writer restricted to the §9 enum |
-| `tests/` | pytest suite covering the enum, the validator, and the workload spec assets |
+| `tests/` | pytest suite covering the enum, the validator, the workload spec assets, and the dataset |
 
 ## Convention → spec map
 
