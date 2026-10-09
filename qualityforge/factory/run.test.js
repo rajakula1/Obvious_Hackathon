@@ -34,7 +34,10 @@ function makePlan({ budgets = {}, requirement } = {}) {
   });
 }
 
-/** Mocked SDK: records every call, mints deterministic task ids. */
+/** Mocked SDK: records every call, mints deterministic task ids. The stub
+ * mirrors the REAL SDK surface: feedback writers are FLAT keys on tasks
+ * (`tasks['feedback.create']`) — a nested `feedback: { create }` object does
+ * not exist and would mask the Run 2 dispatch crash. */
 function mockSdk() {
   const calls = { create: [], update: [], feedback: [] };
   let counter = 0;
@@ -48,11 +51,9 @@ function mockSdk() {
         calls.update.push(params);
         return { ok: true };
       },
-      feedback: {
-        create: async (params) => {
-          calls.feedback.push(params);
-          return { ok: true };
-        },
+      'feedback.create': async (params) => {
+        calls.feedback.push(params);
+        return { ok: true };
       },
     },
   };
@@ -231,6 +232,52 @@ test('limits reached → needs_human with a failure summary (§7.3)', () => {
   );
   // No limits, no approval → nothing terminal is invented.
   assert.equal(run.decideTerminalStatus({}), null);
+});
+
+test('R8 writer: feedback log goes through the FLAT tasks[feedback.create] key', async () => {
+  const { sdkClient, calls } = mockSdk();
+
+  // (a) Non-terminal write: the flat-key writer is invoked with the taskId and
+  // the truncated body. The stub has NO nested `feedback` object — any nested
+  // access throws TypeError instead of silently passing.
+  assert.equal(typeof sdkClient.tasks['feedback.create'], 'function');
+  assert.equal(sdkClient.tasks.feedback, undefined);
+  const longReason = 'x'.repeat(10050);
+  const result = await run.writeRunStatus({
+    sdkClient,
+    runTaskId: 't-run',
+    current: 'analyzing',
+    next: 'designing',
+    reason: longReason,
+  });
+  assert.deepEqual(result, { written: 'designing', terminal: false });
+  assert.equal(calls.feedback.length, 1);
+  assert.equal(calls.feedback[0].taskId, 't-run');
+  assert.equal(calls.feedback[0].body.length, 10000); // truncated, not oversized
+  assert.match(calls.feedback[0].body, /run status → designing/);
+  assert.equal(calls.update.length, 0); // not terminal → no task update
+
+  // (b) Terminal write also parks the root with the mapped platform status.
+  await run.writeRunStatus({
+    sdkClient,
+    runTaskId: 't-run',
+    current: 'verifying',
+    next: 'needs_human',
+    reason: 'repair budget exhausted',
+  });
+  assert.equal(calls.feedback.length, 2);
+  assert.equal(calls.update.length, 1);
+  assert.equal(calls.update[0].taskId, 't-run');
+  assert.equal(calls.update[0].status, 'needs_action'); // needs_human → needs_action
+  assert.match(calls.update[0].completionNote, /needs_human — repair budget exhausted/);
+
+  // (c) An invalid transition throws before ANY SDK call is made.
+  await assert.rejects(
+    () => run.writeRunStatus({ sdkClient, runTaskId: 't-run', current: 'delivered', next: 'testing' }),
+    /run already ended/,
+  );
+  assert.equal(calls.feedback.length, 2);
+  assert.equal(calls.update.length, 1);
 });
 
 test('gate decisions: approve → delivered, reject → rejected, request_changes → stage restart', () => {
