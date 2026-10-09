@@ -290,6 +290,28 @@ test('createRun: dispatches the DAG with real ids, budgets, and the human gate (
   assert.equal(calls.update.length, 0); // opening write is not terminal
 });
 
+test('createRun: flat-stages mode parents stages beside the run root (live depth-1 constraint)', async () => {
+  const { sdkClient, calls } = mockSdk();
+  const plan = makePlan({});
+  const result = await run.createRun({ plan, sdkClient, rootParentId: 'todo_root', flatStages: true });
+
+  // Run root + 9 stages, all depth-1 children of the orchestrator root.
+  assert.equal(calls.create.length, 10);
+  assert.equal(result.rootTaskId, 't1');
+  assert.equal(calls.create[0].parentId, 'todo_root');
+  const byKey = {};
+  const order = ['run', ...plan.nodes.map((n) => n.key)];
+  order.forEach((key, i) => { byKey[key] = `t${i + 1}`; });
+  for (const node of plan.nodes) {
+    const created = calls.create[order.indexOf(node.key)];
+    assert.equal(created.parentId, 'todo_root', `${node.key} must be a sibling of the run root in flat mode`);
+    assert.notEqual(created.parentId, byKey.run);
+  }
+  // The stage DAG survives flattening in dependsOn edges.
+  assert.deepEqual(calls.create[order.indexOf('delivery')].dependsOn, [byKey['human-review']]);
+  assert.deepEqual(calls.create[order.indexOf('architecture')].dependsOn, [byKey.requirements]);
+});
+
 test('dry-run: renders the task tree without touching the SDK', async () => {
   const requireFn = () => { throw new Error('dry-run must not require the SDK'); };
   const result = await run.main({
