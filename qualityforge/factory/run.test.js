@@ -251,9 +251,13 @@ test('createRun: dispatches the DAG with real ids, budgets, and the human gate (
   assert.match(calls.create[0].description, /- credit budget: 30/);
   assert.match(calls.create[0].description, /QualityForge run qf-test-20261009T000000Z/);
   assert.equal(result.rootTaskId, 't1');
-  // Live tasks.create contract: the run root is a plan under the dispatching
-  // task's tree — a create with no parentId/assignee has no valid shape.
+  // Live tasks.create contract: the run root must attach somewhere — default
+  // 'self' for interactive use, the delegated agent's bound task id otherwise
+  // (the surface rejects parentId 'self' for delegated threads).
   assert.equal(calls.create[0].parentId, 'self');
+  const { sdkClient: sdkDelegated, calls: callsDelegated } = mockSdk();
+  await run.createRun({ plan, sdkClient: sdkDelegated, rootParentId: 'todo_bound' });
+  assert.equal(callsDelegated.create[0].parentId, 'todo_bound');
 
   // dependsOn edges point at the REAL created ids, not plan keys.
   const byKey = {};

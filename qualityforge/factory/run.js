@@ -464,15 +464,17 @@ function buildRunPlan({ requirement, requirementPath, budgets, runId, recordedAt
  * mock; the CLI passes the real SDK). Creates the run root with the budget
  * record first, then each node in dependency order, wiring dependsOn to real
  * task ids, then opens the run at its first stage status. */
-async function createRun({ plan, sdkClient }) {
+async function createRun({ plan, sdkClient, rootParentId = 'self' }) {
   validatePlan(plan);
 
   const root = await sdkClient.tasks.create({
     title: plan.root.title,
     description: plan.root.description, // budgets recorded before dispatch (§7.3)
     // Live tasks.create contract: a create with no parentId/assignee has no
-    // valid shape. The run is a plan under the dispatching task's tree.
-    parentId: 'self',
+    // valid shape. Interactive use attaches the run under the caller's own
+    // task ('self'); a delegated agent passes its bound task id instead —
+    // the surface rejects parentId 'self' for delegated threads.
+    parentId: rootParentId,
   });
   if (!root || !root.id) {
     throw new RunStatusError('task creation returned no root task id; refusing to dispatch stages');
@@ -560,12 +562,24 @@ Options:
   --credit-budget N          per-run credit budget (default 60)
   --executor NAME            suggested executor for stage tasks:
                              obvious | autobuild | human (default obvious)
+  --root-parent TASK-ID      parent of the run root task. Default 'self'
+                             (interactive use); a delegated agent must pass its
+                             bound task id — the live surface rejects 'self'
+                             there. QUALITYFORGE_BOUND_TASK_ID is honored too.
   -h, --help                 show this help`;
 
 const EXECUTORS = ['obvious', 'autobuild', 'human'];
 
 function parseArgs(argv) {
-  const opts = { dryRun: false, json: false, executor: 'obvious', budgets: {}, positional: [], help: false };
+  const opts = {
+    dryRun: false,
+    json: false,
+    executor: 'obvious',
+    budgets: {},
+    positional: [],
+    help: false,
+    rootParentId: undefined,
+  };
   const budgetFlags = {
     '--max-repair-attempts': 'maxRepairAttempts',
     '--max-iterations': 'maxIterations',
@@ -589,6 +603,11 @@ function parseArgs(argv) {
         // custom-agent needs a catalog agent id the factory does not manage yet.
         throw new UsageError(`--executor must be one of ${EXECUTORS.join(' | ')}`);
       }
+      continue;
+    }
+    if (arg === '--root-parent') {
+      opts.rootParentId = argv[++i];
+      if (!opts.rootParentId) throw new UsageError('--root-parent requires a task id');
       continue;
     }
     if (arg.startsWith('--')) throw new UsageError(`unknown option ${arg}`);
@@ -650,7 +669,8 @@ async function main({ argv, env, requireFn = require } = {}) {
   }
   const { sdk } = requireFn('obvious');
   sdk.configure({ tokenRefresh: async () => env.API_TOKEN });
-  const result = await createRun({ plan, sdkClient: sdk });
+  const rootParentId = options.rootParentId || env.QUALITYFORGE_BOUND_TASK_ID || 'self';
+  const result = await createRun({ plan, sdkClient, rootParentId });
   console.log(JSON.stringify({ dispatched: true, ...result }, null, 2));
   return { plan, dispatched: result };
 }
