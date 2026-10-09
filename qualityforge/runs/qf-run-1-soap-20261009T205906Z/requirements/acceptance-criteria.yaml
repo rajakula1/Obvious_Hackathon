@@ -1,0 +1,94 @@
+# Run 2 stage-1 artifact — acceptance-criteria config (Requirements Agent, spec §7.1).
+# Run: qf-run-1-soap-20261009T205906Z (Factory Run 2) · Branch: qualityforge/run-2-soap
+# Requirement input: qualityforge/requirements/run-1-soap.md, consumed as-is (verbatim).
+#
+# This config re-derives the acceptance criteria from that requirement. It is
+# SEMANTICALLY IDENTICAL to the of-record criteria configuration
+# qualityforge/workloads/soap-evaluator/criteria-v1.yaml (v1.0.0): same criteria
+# list, same section-identification strategy, same pinned evidence-span semantics.
+#
+# criteria_version stays "1.0.0" — deliberately NOT bumped. Per spec §8.2 and
+# review R5, a version bump is required only when the criteria list or the
+# section-detection strategy changes; neither changes for Run 2 (the requirement
+# input is byte-identical to Run 1's). P-02 (plan-to-assessment) stays.
+#
+# Schema: qualityforge/schemas/completeness-criteria.schema.json
+# Validation evidence (raw validator output): ./criteria-validation.txt
+# Stage note: ./requirements.md
+---
+criteria_version: "1.0.0"
+name: soap-note-completeness
+description: >
+  Of-record starting set of documentation-completeness criteria for Run 1
+  (spec section 8.2). These are documented documentation-completeness rules,
+  not clinical judgments. Header markers below are matched case-insensitively
+  as line-start prefixes of the note text; detection semantics live in this
+  file so they version with the criteria (review R5).
+
+# Review R3: pinned evidence-span semantics, inherited by every downstream agent.
+evidence_span_semantics:
+  offset_base: character
+  index_origin: zero
+  end_exclusive: true
+  reference_text: raw note_text from the request
+  normalization: none
+
+# Review R5: section-identification strategy, versioned with this file —
+# header markers first, documented fallback heuristic second, never hardcoded
+# in the evaluator.
+section_detection:
+  strategy: header_markers_with_fallback
+  header_markers:
+    S: ["S:", "Subjective:", "Subjective -"]
+    O: ["O:", "Objective:", "Objective -"]
+    A: ["A:", "Assessment:", "Assessment -"]
+    P: ["P:", "Plan:", "Plan -"]
+  fallback: >
+    If no header marker for a section is found, identify the section by scanning
+    the note in document order for content matching the section's known data
+    categories (S: complaint and history narrative; O: measurements and observed
+    findings; A: diagnoses and assessments; P: ordered actions and follow-ups).
+    An ambiguous note is reported as "partial" against the Structure criterion
+    rather than guessed.
+
+criteria:
+  - id: S-01
+    statement: Chief complaint is present in the Subjective section.
+    section: S
+    check_type: behavior_check
+    source: requirement
+  - id: S-02
+    statement: History of present illness is present in the Subjective section.
+    section: S
+    check_type: behavior_check
+    source: requirement
+  - id: O-01
+    statement: Vital signs are present in the Objective section.
+    section: O
+    check_type: behavior_check
+    source: requirement
+  - id: O-02
+    statement: At least one exam or objective finding is present in the Objective section.
+    section: O
+    check_type: behavior_check
+    source: requirement
+  - id: A-01
+    statement: At least one diagnosis or assessment statement is present in the Assessment section.
+    section: A
+    check_type: behavior_check
+    source: requirement
+  - id: P-01
+    statement: At least one plan item is present in the Plan section.
+    section: P
+    check_type: behavior_check
+    source: requirement
+  - id: P-02
+    statement: Plan items relate to a stated assessment.
+    section: P
+    check_type: behavior_check
+    source: requirement
+  - id: X-01
+    statement: All four SOAP sections (Subjective, Objective, Assessment, Plan) are identifiable.
+    section: null
+    check_type: behavior_check
+    source: requirement
