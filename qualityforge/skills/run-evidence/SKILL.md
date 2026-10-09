@@ -10,7 +10,7 @@ skill defines the three Verifier reports, the exact fields a gate reads, and
 the approval-record semantics — so "pass" always means a status field in a
 file, not a sentence in a log.
 
-## The three reports (artifact type `report`, §9)
+## Workflow steps (the three reports, artifact type `report`, §9)
 
 1. **Test report** (Testing Agent, stages 5 and 7): `tests_run`, `passed`,
    `failed`, per-test status with messages and traces, criteria coverage. The

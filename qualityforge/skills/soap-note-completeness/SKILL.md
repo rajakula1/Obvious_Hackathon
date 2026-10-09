@@ -10,7 +10,7 @@ of-record criteria live, how section detection and evidence spans behave, what
 the fixtures are, and the disclaimer the product carries. Everything here is
 documentation completeness of SOAP notes — **never clinical validity** (§2.2).
 
-## The of-record rules
+## Workflow steps (the of-record rules)
 
 1. **Criteria config is the single source of truth:**
    `qualityforge/workloads/soap-evaluator/criteria-v1.yaml` (v1.0.0). The
