@@ -65,18 +65,22 @@ as three guards:
    linking it to a criterion ID; at the PR layer, commits touching generated
    test files carry `criteria-ref: <criterion-id>` in the message.
 
-## Run layout (review R7)
+## Run layout (review R7, R8)
 
 ```
 qualityforge/
-  workloads/<workload-id>/requirement.md   # a run starts from a requirement file (R8)
-  runs/<run_id>/                           # one self-contained, reviewable record (§9)
+  requirements/<run-id>.md               # a run starts from a requirement file (R8);
+                                         # e.g. run-1-soap.md, verbatim from spec §8.1
+  workloads/<workload-id>/               # versioned criteria + acceptance criteria
+                                         # (e.g. soap-evaluator/criteria-v1.yaml)
+  runs/<run_id>/                         # one self-contained, reviewable record (§9)
     01-analyze/  02-design/  03-plan/  04-generate/
     05-test/  06-debug/  07-verify/  08-deliver/
 ```
 
 A second workload must run through the same layout with zero factory edits
-(spec section 13, Goal 6).
+(spec section 13, Goal 6). The runbook `../factory/run.js` instantiates the
+task DAG for a run from its requirement file.
 
 ## Inherited from the spec review
 
