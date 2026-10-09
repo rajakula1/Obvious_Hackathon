@@ -1,0 +1,117 @@
+# Run 1 machine-readable acceptance criteria — SOAP note completeness evaluator.
+# Output shape per spec section 7.1 (Requirements Agent): every criterion has an
+# ID, a plain statement, and a verifiable check type:
+#   unit_test      verified by a named test in the generated pytest suite
+#   schema_check   verified by validating structure against a schema or contract
+#   behavior_check verified by observing evaluator behavior on controlled inputs
+# Provenance: spec_ref points at the source section of the spec; review_ref at
+# the pinned review recommendation where one amends the spec.
+---
+workload: soap-note-completeness-evaluator
+requirement_input: ../../requirements/run-1-soap.md
+criteria_config: ./criteria-v1.yaml
+criteria:
+  # --- API contract (spec section 8.3) ---
+  - id: AC-01
+    statement: >
+      A POST /evaluate request with note_id, note_text, and optional visit_type
+      returns a response carrying note_id, criteria_version, overall_status
+      (complete or incomplete), and findings, where each finding carries
+      criterion_id, section (S, O, A, or P), status (present, missing, or
+      partial), evidence spans, and message, per spec section 8.3.
+    check_type: schema_check
+    source: requirement
+    spec_ref: "spec section 8.3"
+  - id: AC-02
+    statement: >
+      Every present or partial finding includes supporting evidence tied to a
+      span in the note.
+    check_type: behavior_check
+    source: requirement
+    spec_ref: "spec section 8.3"
+  - id: AC-03
+    statement: >
+      Every missing finding names the criterion that failed through its
+      criterion_id.
+    check_type: behavior_check
+    source: requirement
+    spec_ref: "spec section 8.3"
+  # --- Evidence spans (review R3, pinned) ---
+  - id: AC-04
+    statement: >
+      Evidence spans are zero-based character offsets into the exact raw
+      note_text string from the request, end-exclusive, with no whitespace or
+      unicode normalization: note_text[start:end] reproduces the reported
+      evidence text.
+    check_type: behavior_check
+    source: requirement
+    spec_ref: "spec section 8.3"
+    review_ref: "review R3"
+  # --- Determinism (review R4, pinned) ---
+  - id: AC-05
+    statement: >
+      Two identical POST /evaluate calls with the same note_text and criteria
+      version return byte-identical JSON response bodies with a fixed key
+      order; a repeat-call test in the generated suite verifies it.
+    check_type: behavior_check
+    source: requirement
+    spec_ref: "spec section 8.3"
+    review_ref: "review R4"
+  # --- Config-driven criteria (spec section 8.2, review R5) ---
+  - id: AC-06
+    statement: >
+      The evaluator reads the completeness criteria from the versioned criteria
+      config and reports that config's criteria_version in every response;
+      changing criteria is a change to the config file, not an evaluator
+      rewrite.
+    check_type: behavior_check
+    source: requirement
+    spec_ref: "spec section 8.2"
+  - id: AC-07
+    statement: >
+      Section identification follows the strategy versioned in the criteria
+      config — header markers first, the documented fallback heuristic second —
+      and the generated suite exercises notes without standard headers so the
+      fallback path is tested, not promised.
+    check_type: behavior_check
+    source: requirement
+    spec_ref: "spec section 8.2"
+    review_ref: "review R5"
+  # --- Test generation, defect injection, repair loop (spec sections 8.1 and
+  # --- 12.1, review R1) ---
+  - id: AC-08
+    statement: >
+      Unit tests are generated for the implementation and execute green in the
+      sandbox on the final retest.
+    check_type: unit_test
+    source: requirement
+    spec_ref: "spec sections 8.1 and 12.1"
+  - id: AC-09
+    statement: >
+      The defect-injection round executes: known defects are injected into the
+      validated implementation and the generated suite catches at least 80
+      percent of them, with the detection share reported either way; a share
+      below 80 percent is a reportable result, not a staged pass.
+    check_type: behavior_check
+    source: requirement
+    spec_ref: "spec section 12.1"
+    review_ref: "review R1"
+  - id: AC-10
+    statement: >
+      The repair loop demonstrably detects and repairs at least one failure,
+      from the natural run or the injection round, with every attempt logged
+      per spec section 7.7 and no manual edits to the generated implementation.
+    check_type: behavior_check
+    source: requirement
+    spec_ref: "spec section 12.1"
+    review_ref: "review R1"
+  # --- Evaluation report (spec section 8.5) ---
+  - id: AC-11
+    statement: >
+      An evaluation report is produced listing criteria tested, tests passed
+      and failed, repair attempts, remaining known limitations, and the
+      explicit statement that results reflect software correctness against
+      stated criteria, not clinical validity.
+    check_type: schema_check
+    source: requirement
+    spec_ref: "spec section 8.5"
