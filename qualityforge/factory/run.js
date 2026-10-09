@@ -470,6 +470,9 @@ async function createRun({ plan, sdkClient }) {
   const root = await sdkClient.tasks.create({
     title: plan.root.title,
     description: plan.root.description, // budgets recorded before dispatch (§7.3)
+    // Live tasks.create contract: a create with no parentId/assignee has no
+    // valid shape. The run is a plan under the dispatching task's tree.
+    parentId: 'self',
   });
   if (!root || !root.id) {
     throw new RunStatusError('task creation returned no root task id; refusing to dispatch stages');

@@ -251,6 +251,9 @@ test('createRun: dispatches the DAG with real ids, budgets, and the human gate (
   assert.match(calls.create[0].description, /- credit budget: 30/);
   assert.match(calls.create[0].description, /QualityForge run qf-test-20261009T000000Z/);
   assert.equal(result.rootTaskId, 't1');
+  // Live tasks.create contract: the run root is a plan under the dispatching
+  // task's tree — a create with no parentId/assignee has no valid shape.
+  assert.equal(calls.create[0].parentId, 'self');
 
   // dependsOn edges point at the REAL created ids, not plan keys.
   const byKey = {};
