@@ -1,0 +1,47 @@
+{
+  "runId": "qf-run-1-soap-20261009T205906Z",
+  "artifactType": "spec",
+  "recordedPreDispatch": true,
+  "recordedOn": "run root task todo_KVNCN54J (description) before dispatch, per spec section 7.3 and section 10",
+  "planStageExecutionRow": "todo_kjayEN2c",
+  "runbookPlanNode": "todo_mFL0FsKR",
+  "budgets": {
+    "maxRepairAttempts": 3,
+    "maxIterations": 8,
+    "timeBudgetMinutes": 15,
+    "creditBudget": 60
+  },
+  "classes": {
+    "retry": {
+      "limit": 3,
+      "unit": "repair attempts per failure",
+      "specRef": "7.3 (default 3), 7.7",
+      "consumedBy": ["coding (bounded)", "debug-retest (bounded)", "verify (quality-check returns to the Debugging Agent within the same retry budget)"]
+    },
+    "iteration": {
+      "limit": 8,
+      "unit": "total iterations per run",
+      "specRef": "7.3",
+      "consumedBy": ["the generate -> test -> debug cycle across stages 4-6"]
+    },
+    "time": {
+      "limitMinutes": 15,
+      "unit": "minutes of factory compute per suite execution window",
+      "specRef": "10 (Performance)",
+      "protectedBy": "R6 in-process testing (TestClient, no bound ports)"
+    },
+    "credit": {
+      "limit": 60,
+      "unit": "credits per run (model reasoning + code execution)",
+      "specRef": "10 (Cost), 7.5"
+    }
+  },
+  "enforcement": "Recorded pre-run on the run root and reconciled after the run; not platform-enforced. When retry, iteration, time, or credit limits are reached the run stops with status needs_human and a failure summary (spec 7.3, 9); only the runbook writes that status (review R8).",
+  "reconciliation": "Reconcile-vs-actuals happens at run end (spec 7.3, 10) — per the run root record: 'recorded pre-run and reconciled after the run; not platform-enforced'. The plan (plan/execution-plan.md) mirrors these values and invents no new limits.",
+  "source": {
+    "requirementPath": "qualityforge/requirements/run-1-soap.md",
+    "requirementChars": 510,
+    "runRootTaskId": "todo_KVNCN54J",
+    "runbookPlanOfRecord": "qualityforge/runs/qf-run-1-soap/plan.json (Run 1 plan for the same byte-identical workload — identical budget values)"
+  }
+}
