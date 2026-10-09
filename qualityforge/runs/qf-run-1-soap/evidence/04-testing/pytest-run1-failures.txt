@@ -1,0 +1,17 @@
+Captured excerpt — generated-suite run 1 (the Debug↔Retest loop's detection
+evidence). Provenance: transcribed verbatim from the Testing Agent's pytest
+run of 2026-10-09 (~17:47Z), tail of stdout. The final passing run is
+pytest-baseline.txt; this file documents what failed BEFORE repair.
+
+    qualityforge/generated/tests/test_soap_evaluator.py:155: AssertionError
+    E                       Left contains 3 more items, first extra item: {'end': 26, 'start': 3, 'text': 'Vitals: temperature 37.'}
+    ...
+    =========================== short test summary info ============================
+    FAILED qualityforge/generated/tests/test_soap_evaluator.py::test_unnormalized_note_text_keeps_span_fidelity
+    FAILED qualityforge/generated/tests/test_soap_evaluator.py::test_missing_findings_carry_no_evidence
+    =================== 2 failed, 10 passed, 1 warning in 0.67s ====================
+
+The missing-evidence failure's left side (`[]`) versus the X-01 context
+spans it wrongly carried is the AC-03 violation repaired in attempt 1; the
+span-fidelity failure is the decimal-point sentence split, also repaired in
+attempt 1. Full root causes and repairs: ../05-debug-retest/repair-log.md.

@@ -1,0 +1,189 @@
+{
+  "dryRun": true,
+  "runId": "qf-run-1-soap-20261009T172617Z",
+  "executor": "obvious",
+  "requirementPath": "/home/user/work/Obvious_Hackathon/qualityforge/requirements/run-1-soap.md",
+  "requirementChars": 510,
+  "budgets": {
+    "maxRepairAttempts": 3,
+    "maxIterations": 8,
+    "timeBudgetMinutes": 15,
+    "creditBudget": 60
+  },
+  "budgetRecord": {
+    "recorded": "before dispatch (spec §7.3, §10)",
+    "enforced": "recorded pre-run and reconciled after the run; not platform-enforced",
+    "maxRepairAttempts": 3,
+    "maxIterations": 8,
+    "timeBudgetMinutes": 15,
+    "creditBudget": 60,
+    "requirementPath": "/home/user/work/Obvious_Hackathon/qualityforge/requirements/run-1-soap.md",
+    "requirementChars": 510,
+    "recordedAt": "2026-10-09T17:26:17.441Z"
+  },
+  "recordedAt": "2026-10-09T17:26:17.441Z",
+  "root": {
+    "key": "run",
+    "title": "QualityForge run qf-run-1-soap-20261009T172617Z",
+    "description": "QualityForge run qf-run-1-soap-20261009T172617Z — instantiated by the factory runbook (review R8).\nRequirement: /home/user/work/Obvious_Hackathon/qualityforge/requirements/run-1-soap.md (510 chars).\n\nBudgets recorded before dispatch (spec §7.3, §10):\n- max repair attempts: 3\n- max iterations: 8\n- time budget (minutes): 15\n- credit budget: 60\nEnforcement: recorded pre-run and reconciled after the run; not platform-enforced.\n\nRun statuses are written only by the runbook (R8), restricted to spec §9: analyzing, designing, generating, testing, debugging, verifying, awaiting_approval, delivered, needs_human, rejected.\nEscalation: when retry, iteration, time, or credit limits are reached the run stops with status needs_human and a failure summary (§7.3).\nSynthetic data only (§11.1). No clinical validity claims (§11.2).\n\nRequirement text:\n---\n# Run 1 requirement input — SOAP note completeness evaluator\n\nSource: `Praxify QualityForge Specification.md` section 8.1, quoted verbatim.\nThis file is the requirement given to the factory for Run 1; it is consumed\nas-is, not paraphrased.\n\n> Build a Python API that evaluates the clinical completeness of SOAP notes. It must identify missing sections, return structured findings with supporting evidence, generate unit tests, execute those tests, fix implementation defects, and produce an evaluation report.\n\n---"
+  },
+  "nodes": [
+    {
+      "key": "requirements",
+      "kind": "stage",
+      "stage": 1,
+      "action": "interpret the feature requirement into acceptance criteria",
+      "role": "Requirements Agent",
+      "specRef": "§7.1",
+      "dependsOn": [],
+      "evidence": [
+        "acceptance-criteria config validating against schemas/completeness-criteria.schema.json (artifact type: spec)"
+      ],
+      "gate": "config validates; every criterion has id, statement, check_type, source; assumptions carry an explicit note.",
+      "title": "[QF qf-run-1-soap-20261009T172617Z] 1 · requirements",
+      "description": "Stage 1 of 8 (spec §6): interpret the feature requirement into acceptance criteria.\nRole: Requirements Agent (spec §7.1).\nEvidence required to complete (§5.2, conventions/gates.md): acceptance-criteria config validating against schemas/completeness-criteria.schema.json (artifact type: spec).\nGate: config validates; every criterion has id, statement, check_type, source; assumptions carry an explicit note. Agents never mark their own completion."
+    },
+    {
+      "key": "architecture",
+      "kind": "stage",
+      "stage": 2,
+      "action": "define the API contract and data model",
+      "role": "Architecture Agent",
+      "specRef": "§7.2",
+      "dependsOn": [
+        "requirements"
+      ],
+      "evidence": [
+        "technical specification (artifact type: spec)"
+      ],
+      "gate": "every acceptance criterion maps to at least one component; dependencies minimal and pinned.",
+      "title": "[QF qf-run-1-soap-20261009T172617Z] 2 · architecture",
+      "description": "Stage 2 of 8 (spec §6): define the API contract and data model.\nRole: Architecture Agent (spec §7.2).\nEvidence required to complete (§5.2, conventions/gates.md): technical specification (artifact type: spec).\nGate: every acceptance criterion maps to at least one component; dependencies minimal and pinned. Agents never mark their own completion."
+    },
+    {
+      "key": "plan",
+      "kind": "stage",
+      "stage": 3,
+      "action": "break the implementation into ordered tasks with dependencies and budgets",
+      "role": "Task Orchestrator",
+      "specRef": "§7.3",
+      "dependsOn": [
+        "architecture"
+      ],
+      "evidence": [
+        "execution plan (artifact type: spec) with retry, iteration, time, and credit budgets recorded"
+      ],
+      "gate": "every §6 stage has an owning task; all four budget classes recorded before dispatch.",
+      "title": "[QF qf-run-1-soap-20261009T172617Z] 3 · plan",
+      "description": "Stage 3 of 8 (spec §6): break the implementation into ordered tasks with dependencies and budgets.\nRole: Task Orchestrator (spec §7.3).\nEvidence required to complete (§5.2, conventions/gates.md): execution plan (artifact type: spec) with retry, iteration, time, and credit budgets recorded.\nGate: every §6 stage has an owning task; all four budget classes recorded before dispatch. Agents never mark their own completion."
+    },
+    {
+      "key": "coding",
+      "kind": "stage",
+      "stage": 4,
+      "action": "write the implementation through file tools, task by task",
+      "role": "Coding Agent",
+      "specRef": "§7.4",
+      "dependsOn": [
+        "plan"
+      ],
+      "evidence": [
+        "per-task diffs produced through file tools (artifact type: diff)"
+      ],
+      "gate": "diffs produced through file tools only — no manual code edits (§12.1).",
+      "bounded": true,
+      "title": "[QF qf-run-1-soap-20261009T172617Z] 4 · coding",
+      "description": "Stage 4 of 8 (spec §6): write the implementation through file tools, task by task.\nRole: Coding Agent (spec §7.4).\nEvidence required to complete (§5.2, conventions/gates.md): per-task diffs produced through file tools (artifact type: diff).\nGate: diffs produced through file tools only — no manual code edits (§12.1). Agents never mark their own completion.\nBounded: at most 3 repair attempts (§7.3). When the limit is reached, the runbook writes run status needs_human with a failure summary. No test may be weakened or deleted (§11.4); any generated-test change requires a justification artifact linked to a criterion id (R2)."
+    },
+    {
+      "key": "testing",
+      "kind": "stage",
+      "stage": 5,
+      "action": "generate unit tests from the acceptance criteria and execute them in the sandbox",
+      "role": "Testing Agent",
+      "specRef": "§7.6",
+      "dependsOn": [
+        "coding"
+      ],
+      "evidence": [
+        "structured test results (artifact type: test_output)",
+        "test manifest: path + SHA-256 per test file (R2, schemas/test-manifest.schema.json)"
+      ],
+      "gate": "tests derive from acceptance criteria, not from reading the implementation alone (§7.6); manifest recorded at finalization (R2).",
+      "title": "[QF qf-run-1-soap-20261009T172617Z] 5 · testing",
+      "description": "Stage 5 of 8 (spec §6): generate unit tests from the acceptance criteria and execute them in the sandbox.\nRole: Testing Agent (spec §7.6).\nEvidence required to complete (§5.2, conventions/gates.md): structured test results (artifact type: test_output); test manifest: path + SHA-256 per test file (R2, schemas/test-manifest.schema.json).\nGate: tests derive from acceptance criteria, not from reading the implementation alone (§7.6); manifest recorded at finalization (R2). Agents never mark their own completion."
+    },
+    {
+      "key": "debug-retest",
+      "kind": "stage",
+      "stage": 6,
+      "action": "diagnose failures, apply minimal fixes, and retest",
+      "role": "Debugging Agent",
+      "specRef": "§7.7",
+      "dependsOn": [
+        "testing"
+      ],
+      "evidence": [
+        "attempt record per repair: failing test, change summary, retest result (artifact type: diff + test_output)"
+      ],
+      "gate": "every attempt logged (§7.7); no test weakened or deleted (§11.4); test-file changes justified against a criterion id (R2).",
+      "bounded": true,
+      "title": "[QF qf-run-1-soap-20261009T172617Z] 6 · debug-retest",
+      "description": "Stage 6 of 8 (spec §6): diagnose failures, apply minimal fixes, and retest.\nRole: Debugging Agent (spec §7.7).\nEvidence required to complete (§5.2, conventions/gates.md): attempt record per repair: failing test, change summary, retest result (artifact type: diff + test_output).\nGate: every attempt logged (§7.7); no test weakened or deleted (§11.4); test-file changes justified against a criterion id (R2). Agents never mark their own completion.\nBounded: at most 3 repair attempts (§7.3). When the limit is reached, the runbook writes run status needs_human with a failure summary. No test may be weakened or deleted (§11.4); any generated-test change requires a justification artifact linked to a criterion id (R2)."
+    },
+    {
+      "key": "verify",
+      "kind": "gate",
+      "stage": 7,
+      "action": "rerun tests and run code-quality checks (lint, types, complexity, dependencies, security)",
+      "role": "Code Quality Checks",
+      "specRef": "§7.8",
+      "dependsOn": [
+        "debug-retest"
+      ],
+      "evidence": [
+        "verification report (artifact type: report)",
+        "manifest digests re-hashed and matching (R2): python -m qualityforge.tools.validate manifest <manifest> --repo-root ."
+      ],
+      "gate": "100% of generated tests pass (§12.2) and every manifest digest matches — drift fails the gate (R2).",
+      "title": "[QF qf-run-1-soap-20261009T172617Z] 7 · verify",
+      "description": "Stage 7 of 8 (spec §6): rerun tests and run code-quality checks (lint, types, complexity, dependencies, security).\nRole: Code Quality Checks (spec §7.8).\nEvidence required to complete (§5.2, conventions/gates.md): verification report (artifact type: report); manifest digests re-hashed and matching (R2): python -m qualityforge.tools.validate manifest <manifest> --repo-root ..\nGate: 100% of generated tests pass (§12.2) and every manifest digest matches — drift fails the gate (R2). Agents never mark their own completion."
+    },
+    {
+      "key": "human-review",
+      "kind": "human-gate",
+      "stage": 8,
+      "action": "review the evidence package: plan, diffs, test results, repair history, verification report",
+      "role": "Human Review Gate",
+      "specRef": "§7.9",
+      "dependsOn": [
+        "verify"
+      ],
+      "evidence": [
+        "complete evidence package",
+        "Approval record (approve | request_changes | reject) on the delivery gate"
+      ],
+      "gate": "the run holds at awaiting_approval until an Approval record exists (§7.9); nothing is delivered without one.",
+      "title": "[QF qf-run-1-soap-20261009T172617Z] 8 · human-review",
+      "description": "Stage 8 of 8 (spec §6): review the evidence package: plan, diffs, test results, repair history, verification report.\nRole: Human Review Gate (spec §7.9).\nEvidence required to complete (§5.2, conventions/gates.md): complete evidence package; Approval record (approve | request_changes | reject) on the delivery gate.\nGate: the run holds at awaiting_approval until an Approval record exists (§7.9); nothing is delivered without one. Agents never mark their own completion."
+    },
+    {
+      "key": "delivery",
+      "kind": "delivery",
+      "stage": 8,
+      "action": "execute the gate decision and close the run",
+      "role": "Delivery",
+      "specRef": "§6",
+      "dependsOn": [
+        "human-review"
+      ],
+      "evidence": [
+        "pull request or reviewed code artifact",
+        "Approval record (§7.9)"
+      ],
+      "gate": "approve → run status delivered; request_changes → noted stage restarts; reject → run status rejected (§7.9).",
+      "title": "[QF qf-run-1-soap-20261009T172617Z] 8 · delivery",
+      "description": "Stage 8 of 8 (spec §6): execute the gate decision and close the run.\nRole: Delivery (spec §6).\nEvidence required to complete (§5.2, conventions/gates.md): pull request or reviewed code artifact; Approval record (§7.9).\nGate: approve → run status delivered; request_changes → noted stage restarts; reject → run status rejected (§7.9). Agents never mark their own completion."
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+OK: qualityforge/workloads/soap-evaluator/criteria-v1.yaml (criteria)

@@ -3,3 +3,6 @@ jsonschema==4.26.0
 PyYAML==6.0.3
 pytest==9.0.3
 ruff==0.16.10
+# Generated API runtime - needed by the TestClient suite (Run 1 verify gate pins).
+fastapi==0.143.0
+httpx==0.28.1

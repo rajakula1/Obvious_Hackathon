@@ -1,0 +1,34 @@
+=== Verify gate — 2026-10-09T17:53:55Z ===
+
+--- 1. R2 guard 2: test manifest re-hash ---
+MATCH  qualityforge/generated/tests/test_soap_evaluator.py  (0d4cae6d64c9dd94…)
+MATCH  qualityforge/generated/tests/conftest.py  (7547868112168a07…)
+MATCH  qualityforge/generated/tests/__init__.py  (c212e8d3e0f9b98b…)
+manifest: zero drift — the suite hashed at finalization is the suite on disk
+
+--- 2. Full test suite ---
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+140 passed, 1 warning in 12.68s
+
+--- 3. Lint and format (ruff) ---
+All checks passed!
+68 files already formatted
+
+--- 4. Workload integrity: criteria config, dataset, PHI screen ---
+usage: python -m qualityforge.tools.validate [-h] {criteria,manifest} ...
+python -m qualityforge.tools.validate: error: the following arguments are required: kind
+--- dataset ---
+Traceback (most recent call last):
+  File "/home/user/work/Obvious_Hackathon/qualityforge/tools/validate_dataset.py", line 37, in <module>
+    from qualityforge.tools.validate import (
+    ...<5 lines>...
+    )
+ModuleNotFoundError: No module named 'qualityforge'
+--- criteria config + test-manifest schema validation ---
+OK: qualityforge/workloads/soap-evaluator/criteria-v1.yaml (criteria)
+OK: qualityforge/runs/qf-run-1-soap/test-manifest.json (manifest)
+--- dataset: labels, integrity, PHI screen ---
+usage: python -m qualityforge.tools.validate_dataset [-h] [--data DATA]
+                                                     [--criteria CRITERIA]
+python -m qualityforge.tools.validate_dataset: error: unrecognized arguments: --dataset qualityforge/workloads/soap-evaluator/data
+OK: qualityforge/workloads/soap-evaluator/data (24 notes, criteria 1.0.0, phi hits: 0)
