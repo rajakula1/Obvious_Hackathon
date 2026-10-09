@@ -1,0 +1,33 @@
+{
+  "manifest_version": "1.0",
+  "run_id": "qf-run-1-soap-20261009T205906Z",
+  "recorded_at": "2026-10-09T23:13:47Z",
+  "recorded_by": "testing_agent",
+  "test_files": [
+    {
+      "path": "qualityforge/generated/tests/test_soap_evaluator.py",
+      "sha256": "85ffed05e64ab33795baaf1ef14e0529dc23437329fdb5e9dfaf2092a4beee73",
+      "bytes": 15402,
+      "criteria_refs": [
+        "S-01",
+        "S-02",
+        "O-01",
+        "O-02",
+        "A-01",
+        "P-01",
+        "P-02",
+        "X-01"
+      ]
+    },
+    {
+      "path": "qualityforge/generated/tests/conftest.py",
+      "sha256": "b3e503fa10a53495fde62b26c1aa5b890644004a645140c42ba11f2ade5fbc95",
+      "bytes": 3911
+    },
+    {
+      "path": "qualityforge/generated/tests/__init__.py",
+      "sha256": "206533f0ed879bffc5c59ac56372ebc6cf2a0b29eac66abd39ef09e7eb6ed66b",
+      "bytes": 64
+    }
+  ]
+}

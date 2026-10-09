@@ -1,0 +1,108 @@
+{
+  "artifact_type": "test_output",
+  "run_id": "qf-run-1-soap-20261009T205906Z",
+  "stage": "5. Test (\u00a77.6 Testing Agent, tasks T1+T2)",
+  "recorded_at": "2026-10-09T23:13:47Z",
+  "suite": {
+    "path": "qualityforge/generated/tests/",
+    "files": [
+      "conftest.py",
+      "test_soap_evaluator.py",
+      "__init__.py"
+    ],
+    "one_test_per_criterion": [
+      "S-01",
+      "S-02",
+      "O-01",
+      "O-02",
+      "A-01",
+      "P-01",
+      "P-02",
+      "X-01"
+    ],
+    "results": [
+      {
+        "test": "test_S_01",
+        "outcome": "passed",
+        "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+      },
+      {
+        "test": "test_S_02",
+        "outcome": "passed",
+        "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+      },
+      {
+        "test": "test_O_01",
+        "outcome": "passed",
+        "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+      },
+      {
+        "test": "test_O_02",
+        "outcome": "passed",
+        "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+      },
+      {
+        "test": "test_A_01",
+        "outcome": "passed",
+        "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+      },
+      {
+        "test": "test_P_01",
+        "outcome": "passed",
+        "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+      },
+      {
+        "test": "test_P_02",
+        "outcome": "passed",
+        "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+      },
+      {
+        "test": "test_X_01",
+        "outcome": "passed",
+        "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+      },
+      {
+        "test": "test_R4_repeat_calls_byte_identical",
+        "outcome": "passed",
+        "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+      },
+      {
+        "test": "test_api_contract_422_health_and_seam_consistency",
+        "outcome": "failed",
+        "file": "qualityforge/generated/tests/test_soap_evaluator.py"
+      }
+    ],
+    "summary_line": "1 failed, 9 passed, 1 warning in 0.18s",
+    "passed": 9,
+    "failed": 1
+  },
+  "whole_repo": {
+    "command": "python -m pytest qualityforge/ -q --tb=short",
+    "summary_line": "1 failed, 174 passed, 1 warning in 11.44s",
+    "note": "all pre-existing factory/reference tests green (174 passed); the single failure is the generated contract-floor test below \u2014 stage 6 (D1) input, not a pre-existing regression"
+  },
+  "quality_checks": {
+    "ruff": {
+      "command": "ruff check qualityforge",
+      "pin": "0.16.10",
+      "result": "All checks passed!"
+    },
+    "in_process_test_violations": {
+      "result": "CLEAN for test_soap_evaluator.py and conftest.py (review R6)"
+    }
+  },
+  "failures": [
+    {
+      "test": "test_api_contract_422_health_and_seam_consistency",
+      "derivation": "stage-2 technical specification section 1 (API contract floor), NOT from the implementation",
+      "violations": [
+        "malformed input {'note_id': '', 'note_text': 'S: complaint'} -> HTTP 200, expected 422 (spec section 1: blank note_id, min_length=1)",
+        "malformed input {'note_id': 'x', 'note_text': ''} -> HTTP 200, expected 422 (spec section 1: blank note_text, min_length=1)",
+        "contentless note: X-01 must be partial, not guessed (spec section 1: a note with no identifiable sections is ambiguous)",
+        "GET /health -> {\"status\":\"ok\"} missing criteria_version echo (spec section 1 pins {\"status\":\"ok\",\"criteria_version\":\"1.0.0\"})"
+      ],
+      "note": "test collects ALL contract-floor violations in one pass (diagnosability for D1); assertion strength unchanged"
+    }
+  ],
+  "passing_highlight": "all 8 criterion tests pass: labeled statuses across present/missing/partial corpus cases, R3 span slice fidelity (note_text[start:end] == text), config-order findings, version echo, overall all-present rule; X-01 ambiguous->partial (soap-020) included; R4 byte determinism passes"
+}
