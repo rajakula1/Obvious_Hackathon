@@ -11,7 +11,13 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from .models import EvaluateRequest, EvaluateResponse, EvidenceSpan, Finding
+from .models import (
+    EvaluateRequest,
+    EvaluateResponse,
+    EvaluatorCallable,
+    EvidenceSpan,
+    Finding,
+)
 from .sections import SECTION_ORDER, SectionMap, SectionSpan, identify_sections
 
 CHIEF_COMPLAINT = re.compile(
@@ -162,6 +168,10 @@ def _check_structure(criterion: dict[str, Any], note_text: str, section_map: Sec
             first_start, first_text = span.sentences[0]
             lead = len(first_text) - len(first_text.lstrip())
             evidence.append(_span(first_text.strip(), first_start + lead))
+        elif span.marker_start is not None:
+            # Empty-but-marked section: the honest evidence is the raw marker
+            # itself ("S:"), not a zero-length span.
+            evidence.append(_span(note_text[span.marker_start : span.start], span.marker_start))
         else:
             evidence.append(_span(note_text[span.start : span.start], span.start))
     if len(found) == len(SECTION_ORDER):
@@ -182,7 +192,9 @@ def _check_structure(criterion: dict[str, Any], note_text: str, section_map: Sec
     return _finding(
         criterion,
         "missing",
-        evidence,
+        # AC-03: a missing finding carries no evidence — some sections may
+        # have been identified, but the criterion itself is not satisfied.
+        [],
         f"Section(s) {', '.join(missing)} absent or unidentifiable.",
     )
 
@@ -264,3 +276,14 @@ def evaluate_note(request: EvaluateRequest, config: dict[str, Any]) -> EvaluateR
         "overall_status": overall,
         "findings": findings,
     }
+
+
+def create_evaluator(config: dict[str, Any]) -> EvaluatorCallable:
+    """Module-level factory the harness loader consumes (spec naming:
+    module=qualityforge.generated.soap_evaluator, factory=create_evaluator).
+    Returns a single-argument callable bound to one criteria config."""
+
+    def evaluate(request: EvaluateRequest) -> EvaluateResponse:
+        return evaluate_note(request, config)
+
+    return evaluate

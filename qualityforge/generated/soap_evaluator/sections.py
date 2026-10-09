@@ -46,7 +46,10 @@ FALLBACK_PATTERNS: dict[str, re.Pattern[str]] = {
     ),
 }
 
-_SENTENCE_RE = re.compile(r"[^.!?]+(?:[.!?]+|$)")
+# Sentence run: a digit.dot.digit sequence ("37.2") is a decimal, not a
+# boundary — the class consumes it as one unit so vital-sign numbers do not
+# split mid-number (caught by the generated suite's unnormalized-note test).
+_SENTENCE_RE = re.compile(r"(?:[^.!?]|\d\.\d)+(?:[.!?]+|$)")
 _LINE_RE = re.compile(r"[^\n]+")
 
 
@@ -54,12 +57,15 @@ class SectionSpan(NamedTuple):
     """One section's identified content: a span of raw note_text plus its
     sentences with absolute offsets. An empty-but-marked section is still
     identified (text == ""); the dataset README's rule 5 makes that present
-    structure with absent content."""
+    structure with absent content. ``marker_start`` points at the opening
+    marker (evidence for empty sections); it is ``None`` for fallback spans,
+    whose first content line is the evidence instead."""
 
     start: int
     end: int
     text: str
     source: str  # "marker" | "fallback"
+    marker_start: int | None = None
 
     @property
     def sentences(self) -> list[tuple[int, str]]:
@@ -112,7 +118,7 @@ def identify_sections(text: str, header_markers: dict[str, list[str]]) -> Sectio
     character to the end of its last segment (the raw slice between them is
     part of the span, so offsets stay honest).
     """
-    marker_spans: dict[str, list[tuple[int, int]]] = {}
+    marker_spans: dict[str, list[tuple[int, int, int]]] = {}
     lines = lines_with_offsets(text)
 
     for index, (offset, line) in enumerate(lines):
@@ -120,6 +126,7 @@ def identify_sections(text: str, header_markers: dict[str, list[str]]) -> Sectio
         if hit is None:
             continue
         section, content_pos = hit
+        marker_start = offset + (len(line) - len(line.lstrip()))
         # Content runs from just past the marker to the line before the next
         # marker line (or EOF).
         end = len(text)
@@ -129,19 +136,20 @@ def identify_sections(text: str, header_markers: dict[str, list[str]]) -> Sectio
                 end = next_offset
                 break
         start = min(offset + content_pos + _sep_len(line[content_pos:]), end)
-        marker_spans.setdefault(section, []).append((start, end))
+        marker_spans.setdefault(section, []).append((start, end, marker_start))
 
     sections: dict[str, SectionSpan] = {}
     for section, spans in marker_spans.items():
-        first_start = spans[0][0]
-        last_end = spans[-1][1]
-        sections[section] = SectionSpan(first_start, last_end, text[first_start:last_end], "marker")
+        first_start, last_end = spans[0][0], spans[-1][1]
+        sections[section] = SectionSpan(
+            first_start, last_end, text[first_start:last_end], "marker", spans[0][2]
+        )
 
     # Fallback: sections with no marker get their content attributed from
     # lines the marker sections do not already own (the config's documented
     # fallback rule).
     any_markers = bool(marker_spans)
-    covered = [(start, end) for spans in marker_spans.values() for start, end in spans]
+    covered = [(start, end) for spans in marker_spans.values() for start, end, _marker in spans]
 
     def unclaimed(offset: int, line: str) -> bool:
         return not any(start <= offset < end for start, end in covered)

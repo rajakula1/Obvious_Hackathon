@@ -16,13 +16,13 @@ callable (request in, response out):
 from __future__ import annotations
 
 import os
-from functools import partial
+from typing import Any
 
 from fastapi import FastAPI
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 
 from .config import load_criteria
-from .evaluator import evaluate_note
+from .evaluator import create_evaluator
 from .models import EvaluateRequest, EvaluateResponse
 
 ENV_EVALUATOR_SPEC = "QUALITYFORGE_EVALUATOR_SPEC"
@@ -39,15 +39,21 @@ class EvaluateBody(BaseModel):
     visit_type: StrictStr | None = None
 
 
-def _resolve_evaluator(config: dict):
-    """Bind the baseline callable, or the harness-wrapped callable when the
-    injection seam is configured. Both are single-argument callables."""
-    spec_path = os.environ.get(ENV_EVALUATOR_SPEC)
-    if not spec_path:
-        return partial(evaluate_note, config=config)
-    from qualityforge.harness.loader import load_evaluator  # runtime seam only
+def _seam_active() -> bool:
+    """The injection seam is active when the env var carries a serialized
+    evaluator spec (its text, not a path — harness/loader contract)."""
+    return bool(os.environ.get(ENV_EVALUATOR_SPEC, "").strip())
 
-    return load_evaluator(spec_path)
+
+def _resolve_through_seam() -> tuple[dict, Any]:
+    """Resolve the evaluator AND its criteria config through the harness
+    loader, so the injection round's mutant and config travel together."""
+    from qualityforge.harness.loader import (  # runtime seam only
+        get_config_under_test,
+        get_evaluator_under_test,
+    )
+
+    return get_config_under_test(), get_evaluator_under_test()
 
 
 def _to_request(body: EvaluateBody) -> EvaluateRequest:
@@ -58,10 +64,14 @@ def _to_request(body: EvaluateBody) -> EvaluateRequest:
 
 
 def create_app() -> FastAPI:
-    """Build the API with the criteria config loaded once at startup — a
+    """Build the API. With the seam inactive, the criteria config is loaded
+    from the workload path and the baseline evaluator is bound to it; a
     config that fails validation must fail startup, not requests."""
-    config = load_criteria()
-    evaluator = _resolve_evaluator(config)
+    if _seam_active():
+        config, evaluator = _resolve_through_seam()
+    else:
+        config = load_criteria()
+        evaluator = create_evaluator(config)
 
     app = FastAPI(
         title="SOAP Note Completeness Evaluator",

@@ -7,7 +7,7 @@ injection-seam branch.
 
 from .app import create_app
 from .config import CriteriaConfigError, load_criteria
-from .evaluator import evaluate_note
+from .evaluator import create_evaluator, evaluate_note
 from .models import EvaluateRequest, EvaluateResponse, EvidenceSpan, Finding
 from .sections import identify_sections
 
@@ -18,6 +18,7 @@ __all__ = [
     "EvaluateResponse",
     "Finding",
     "create_app",
+    "create_evaluator",
     "evaluate_note",
     "identify_sections",
     "load_criteria",
