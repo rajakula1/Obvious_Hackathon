@@ -1,0 +1,43 @@
+{
+  "note_id": "soap-020",
+  "category": "fallback_detection",
+  "note_text": "The visit was long. Things have not been right lately and the numbers were not great. The plan is to try harder with the routine, keep an eye on things, and come back if anything changes. A follow-up was discussed and the patient agreed to try the steps first.",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "partial"
+      }
+    ]
+  },
+  "rationale": "Free text with no headers and vague content: the fallback heuristic cannot confidently attribute anything to a section. Per the criteria config fallback rule, an ambiguous note is reported as 'partial' against the Structure criterion (X-01 partial) rather than guessed; with no confidently identified section, all content criteria are missing. Overall incomplete."
+}

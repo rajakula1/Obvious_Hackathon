@@ -1,0 +1,43 @@
+{
+  "note_id": "soap-008",
+  "category": "missing_section",
+  "note_text": "S: The patient reports a cut on the left thumb from a kitchen knife yesterday; bleeding stopped with pressure. The cut is mildly painful and about one centimeter long.\nO: Vitals: pulse 76, blood pressure 120/78, temperature 36.8 C, oxygen saturation 99 percent on room air. A clean one-centimeter cut on the left thumb pad, no foreign body, no signs of infection, full movement of the thumb.\nA: Left thumb laceration, clean and uninfected.",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "missing"
+      }
+    ]
+  },
+  "rationale": "Plan section removed. P-01 and P-02 missing (no plan items exist to satisfy or relate); X-01 missing; Subjective, Objective, and Assessment present."
+}

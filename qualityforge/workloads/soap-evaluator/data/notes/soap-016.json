@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-016",
+  "category": "duplicate_headers",
+  "visit_type": "office visit",
+  "note_text": "S: The patient reports a sore throat and swollen glands under the jaw for three days.\nS: The throat discomfort worsens with swallowing and improved only briefly with warm salt water. No cough; the voice sounds normal to the patient.\nO: Vitals: temperature 37.8 C, pulse 88, respirations 16, blood pressure 118/76, oxygen saturation 98 percent on room air. The throat is red with tonsillar swelling; the jaw glands are tender and enlarged; lungs are clear.\nA: Throat infection with swollen glands.\nP: Rest the voice and maintain fluids. Take the prescribed antibiotic exactly as directed until finished. Return if drooling, trouble breathing, or no improvement within three days.",
+  "expected": {
+    "overall_status": "complete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Two Subjective headers. Findings consider the union of all occurrences: the first carries the chief complaint, the second the history, so S-01 and S-02 are both present. Duplicate headers alone do not make a note incomplete. Overall complete."
+}

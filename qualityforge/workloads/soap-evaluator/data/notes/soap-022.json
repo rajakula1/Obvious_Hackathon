@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-022",
+  "category": "layout_variation",
+  "visit_type": "office visit",
+  "note_text": "Dictated by the covering clinician for the teaching file; reviewed for spelling.\n\nS: The patient reports nighttime tingling in both hands that wakes her, worse after knitting, shaken loose by dangling the arms. No neck pain.\nO: Vitals: temperature 36.8 C, pulse 72, respirations 14, blood pressure 121/77, oxygen saturation 99 percent on room air. Both hands show no wasting; grip strength is full; tapping the wrist tingles the fingers on both sides.\nA: Hand tingling from nerve irritation at the wrist.\nP: Night wrist splints for both hands and no knitting for two weeks. Return if the tingling becomes constant or the hands weaken.",
+  "expected": {
+    "overall_status": "complete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Clerical preamble precedes the headers. Preamble text belongs to no section and must not break detection: all criteria present. Overall complete."
+}

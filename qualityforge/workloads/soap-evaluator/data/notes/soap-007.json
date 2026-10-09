@@ -1,0 +1,43 @@
+{
+  "note_id": "soap-007",
+  "category": "missing_section",
+  "note_text": "S: The patient reports a dry cough that started four days ago after household contacts were ill, now with mild chest soreness from coughing. No shortness of breath at rest.\nO: Vitals: temperature 37.0 C, pulse 78, respirations 16, blood pressure 118/74, oxygen saturation 98 percent on room air. Lungs are clear to auscultation; no wheeze or crackles.\nP: Use warm fluids and honey for cough soothing. Avoid smoke exposure. Return for breathlessness, fever, or a cough beyond two weeks.",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "missing"
+      }
+    ]
+  },
+  "rationale": "Assessment section removed. A-01 missing; P-02 missing because no stated assessment exists for the plan items to relate to; P-01 still present (plan items exist); X-01 missing."
+}

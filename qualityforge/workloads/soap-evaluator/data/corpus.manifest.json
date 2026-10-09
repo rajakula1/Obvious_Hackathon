@@ -1,0 +1,119 @@
+{
+  "manifest_version": "1.0",
+  "criteria_version": "1.0.0",
+  "recorded_at": "2026-10-09T17:00:00Z",
+  "recorded_by": "qualityforge-dataset-builder",
+  "note_count": 24,
+  "category_counts": {
+    "complete": 4,
+    "duplicate_headers": 2,
+    "empty_section": 2,
+    "fallback_detection": 2,
+    "layout_variation": 3,
+    "missing_section": 4,
+    "partial_content": 5,
+    "plan_unrelated": 2
+  },
+  "phi_scan": {
+    "patterns_version": "1.0",
+    "expected_hits": 0
+  },
+  "notes": [
+    {
+      "path": "notes/soap-001.json",
+      "sha256": "199a995e1fe7b2b4f4ca3a2c8c57f724c7879e0e0a8da182510043b03d6ddff3"
+    },
+    {
+      "path": "notes/soap-002.json",
+      "sha256": "a6790a9ed6a1e93ffbfff18ac323b1e503f28b91b2d6deba1a4ee59e88c15973"
+    },
+    {
+      "path": "notes/soap-003.json",
+      "sha256": "a5c0a0daaabf79d88fa6beccfce4cd7c74e101a0e8a3112188d5aa46998e8221"
+    },
+    {
+      "path": "notes/soap-004.json",
+      "sha256": "fbe073058aab53d3c78bbd2dec39e015e5940e1f4e6151866c51b1e390bc1e3e"
+    },
+    {
+      "path": "notes/soap-005.json",
+      "sha256": "16e32a9d1b8643b7f113ba8c721aa88d79c1ee923e73afc0745e51d33cab7bdd"
+    },
+    {
+      "path": "notes/soap-006.json",
+      "sha256": "73249055b88c2370da769c53cc8d0dd25aa8d8d4be9b31d322e521298a86f5ff"
+    },
+    {
+      "path": "notes/soap-007.json",
+      "sha256": "0c88f89b2c135bb02b3cfb0e3c397e9042b6d4edebaa2b722d146bb079abc764"
+    },
+    {
+      "path": "notes/soap-008.json",
+      "sha256": "d63705e501eeb366505b02114951dd24412d6f4e8fee7c5c81e2205c5970b70e"
+    },
+    {
+      "path": "notes/soap-009.json",
+      "sha256": "4bb60fc91433e8ffac0a3d82422bfafd373bcc1567609239c5f06ea90805719f"
+    },
+    {
+      "path": "notes/soap-010.json",
+      "sha256": "020d4726c7a1dda043cda5fe43f09c7558aff510ab8eb44b269acecda9dad4c3"
+    },
+    {
+      "path": "notes/soap-011.json",
+      "sha256": "3ddd0665695b136f3ec51464da835afc6656c682f0a2143353fa4d495a5a5ffb"
+    },
+    {
+      "path": "notes/soap-012.json",
+      "sha256": "072c541bf831e2a73176e28a417978e8dd719f80a454e5bff3dbc465e0a9ed9f"
+    },
+    {
+      "path": "notes/soap-013.json",
+      "sha256": "70bb7b9a1e32cb0194e83cce936e56209af287612388cb4782203c7dd2ecd41b"
+    },
+    {
+      "path": "notes/soap-014.json",
+      "sha256": "a8873d476bd5465e20a4156c5340580ef79f47c4acfc6305fdecd0c4d9942ca7"
+    },
+    {
+      "path": "notes/soap-015.json",
+      "sha256": "6d3e786207a5488da7c6a1d8d61bdf1a40cc9053defc6b2de2c3f1e073cfc502"
+    },
+    {
+      "path": "notes/soap-016.json",
+      "sha256": "ae6d05612649cfc0cb31873509fa79c0d29258e9413ac8a799291f30fc82f6f2"
+    },
+    {
+      "path": "notes/soap-017.json",
+      "sha256": "477f0e356326fe7caf0a122a1ae874378ca27291556f6386289878d730ccc05f"
+    },
+    {
+      "path": "notes/soap-018.json",
+      "sha256": "25b62327837044a62d864667da5a91c1209cd7bc2929a13d69d5712fb5232712"
+    },
+    {
+      "path": "notes/soap-019.json",
+      "sha256": "c564e52aa14e017441e53ac861a709252afcf5d5fc1282b889995aff69c40f1f"
+    },
+    {
+      "path": "notes/soap-020.json",
+      "sha256": "722d98de6cf8340e399764cd00fc74c83b0096a546d1a814107e8d6cfb6ea4c7"
+    },
+    {
+      "path": "notes/soap-021.json",
+      "sha256": "25b7fcb438f7cc2631127bb000c025ff5e08fd70e53ed7e3ae3a8a5357b435b5"
+    },
+    {
+      "path": "notes/soap-022.json",
+      "sha256": "67fa6692f3cbce7bfc90bc1c0d5f607f0fe1b3300c9e6a56a9574f5f932e37cc"
+    },
+    {
+      "path": "notes/soap-023.json",
+      "sha256": "f5aecdcab7e9d59316622c6e374448cc766d3ec67b73bb22a3cae7462a89bfe9"
+    },
+    {
+      "path": "notes/soap-024.json",
+      "sha256": "119b2f5ee5f32588854360563bcd378e0489f81f8fc7ff30f1ca2939f4c9476e"
+    }
+  ]
+}

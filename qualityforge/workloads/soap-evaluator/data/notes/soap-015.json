@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-015",
+  "category": "partial_content",
+  "visit_type": "office visit",
+  "note_text": "S: The patient reports a headache behind the right eye for two days, with mild nausea but no vomiting, and sensitivity to bright light. Two similar but milder episodes occurred before.\nO: Vitals: temperature 36.9 C, pulse 76, respirations 14, blood pressure 124/80, oxygen saturation 99 percent on room air.\nA: Headache consistent with a recurring pattern.\nP: Rest in a dim room at symptom onset and keep a simple diary of episode timing. Use the prescribed rescue medication as directed at onset only. Return if headaches increase in frequency or the pattern changes suddenly.",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Objective section contains vital signs only, with no exam or objective finding. O-01 present, O-02 missing. Overall incomplete."
+}

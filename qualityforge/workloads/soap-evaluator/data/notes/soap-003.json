@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-003",
+  "category": "complete",
+  "visit_type": "urgent care",
+  "note_text": "Subjective - The patient twisted the right ankle stepping off a curb this morning and now walks with a limp. Swelling appeared within an hour. No numbness in the toes.\nObjective - Vitals: pulse 88, respirations 18, blood pressure 126/82, temperature 36.9 C, oxygen saturation 99 percent on room air. Right ankle shows swelling over the lateral malleolus with tenderness; the skin is intact; the toes move freely.\nAssessment - Lateral ankle sprain, right.\nPlan - Apply ice for twenty minutes several times per day and elevate above heart level when seated. Use an elastic wrap for compression and avoid weight-bearing exercise this week. Follow up if swelling worsens or weight bearing remains impossible after five days.",
+  "expected": {
+    "overall_status": "complete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Complete note with dash-style markers. All criteria present; confirms the full marker set listed in the criteria config header_markers is accepted."
+}

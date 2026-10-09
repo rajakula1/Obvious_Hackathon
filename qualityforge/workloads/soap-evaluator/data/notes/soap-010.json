@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-010",
+  "category": "empty_section",
+  "visit_type": "office visit",
+  "note_text": "S: The patient reports an itchy, red right eye with watering since waking, no change in discharge color, no pain, and no vision change. Contact lenses were worn overnight twice this week.\nO: Vitals: temperature 36.7 C, pulse 70, respirations 14, blood pressure 116/74, oxygen saturation 99 percent on room air. Right eye is mildly red with clear tearing; the cornea is clear; no discharge pooling; vision unchanged on chart check.\nA: Mild right eye irritation, likely from contact lens overwear.\nP:",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Plan header present with no items. X-01 present (all four headers identifiable); P-01 and P-02 missing. Overall incomplete."
+}

@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-021",
+  "category": "fallback_detection",
+  "visit_type": "telehealth",
+  "note_text": "The patient reports a mild sore throat with a runny nose for two days, without fever, and a scratchy cough at night. Temperature is 37.1 C, pulse 80, respirations 16, blood pressure 118/76, oxygen saturation 98 percent on room air. The throat is mildly red without swelling; the ears are clear; the lungs are clear. The findings fit a common cold. Rest, warm fluids, and honey for the cough are advised, with a return visit if fever, ear pain, or worsening occurs.",
+  "expected": {
+    "overall_status": "complete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "No header markers at all, but content is clearly ordered: complaint and history, then measurements and findings, then an assessment sentence, then ordered actions. The documented fallback identifies all four sections confidently, so X-01 present and every content criterion present. Overall complete."
+}
