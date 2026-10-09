@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-023",
+  "category": "layout_variation",
+  "visit_type": "urgent care",
+  "note_text": "A: Foreign object in the right eye.\nP: Rinse the right eye with clean water for five minutes and avoid rubbing. Do not wear contact lenses until cleared. Return immediately for pain, vision change, or light sensitivity.\nS: The patient reports something flying into the right eye while hammering outdoors this morning, with gritty pain and tearing since. Vision feels unchanged.\nO: Vitals: temperature 36.8 C, pulse 82, respirations 16, blood pressure 122/78, oxygen saturation 99 percent on room air. Right eye shows a small object under the upper lid with mild surface redness; the eye moves fully; vision is unchanged on chart check.",
+  "expected": {
+    "overall_status": "complete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Sections appear out of canonical order (A, P, S, O). Section identity comes from headers, not position, so all criteria present. Overall complete."
+}

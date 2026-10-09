@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-005",
+  "category": "missing_section",
+  "visit_type": "office visit",
+  "note_text": "O: Vitals: temperature 37.6 C, pulse 92, respirations 18, blood pressure 124/78, oxygen saturation 97 percent on room air. Left ear canal shows mild redness; the eardrum is dull; lungs are clear.\nA: Left ear infection.\nP: Start the prescribed ear drops, five drops twice daily. Return in two weeks for a hearing recheck, sooner if pain worsens or discharge appears.",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "missing"
+      }
+    ]
+  },
+  "rationale": "Subjective section removed entirely. S-01 and S-02 missing (no section to carry complaint or history); X-01 missing (one section unidentifiable); remaining criteria present."
+}

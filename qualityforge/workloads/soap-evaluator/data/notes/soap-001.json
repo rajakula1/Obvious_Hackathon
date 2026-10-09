@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-001",
+  "category": "complete",
+  "visit_type": "office visit",
+  "note_text": "S: The patient reports a sore, scratchy throat with painful swallowing that began two days ago, worse in the morning. There was mild low energy and fatigue but no chills at home. No cough or shortness of breath.\nO: Vitals: temperature 37.2 C, pulse 82, respirations 16, blood pressure 118/76, oxygen saturation 98 percent on room air. Throat exam shows mild redness of the posterior pharynx without exudate; ears and lungs are clear.\nA: Viral pharyngitis.\nP: Rest and fluids at home for the next two days. Return or seek urgent care if swallowing becomes impossible or symptoms worsen after three days.",
+  "expected": {
+    "overall_status": "complete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Complete note with short markers: chief complaint and history in Subjective, vitals plus exam in Objective, one assessment, plan items that relate to it, all four sections identifiable. All criteria present."
+}

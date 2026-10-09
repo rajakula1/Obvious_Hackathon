@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-018",
+  "category": "plan_unrelated",
+  "visit_type": "office visit",
+  "note_text": "S: The patient reports a wobbly tooth in the lower left with gum soreness when chewing for five days. No facial swelling and no fever.\nO: Vitals: temperature 36.7 C, pulse 70, respirations 14, blood pressure 118/72, oxygen saturation 99 percent on room air. Lower left gum shows mild redness around a mobile tooth; no pus; the bite feels even.\nA: Loose lower left tooth with mild gum irritation.\nP: Walk briskly for thirty minutes on most days. Begin a stretching routine for the shoulders each morning. Limit sugary drinks in the evening.",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Every plan item (walking, stretching, sugary drinks) is unrelated to the stated dental assessment, so P-02 missing while P-01 remains present. Overall incomplete."
+}

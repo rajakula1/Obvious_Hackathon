@@ -1,0 +1,43 @@
+{
+  "note_id": "soap-004",
+  "category": "complete",
+  "note_text": "S: Rash on both forearms, itchy, for four days.\nO: Vitals within normal limits; temperature 36.7 C. Patchy red plaques on both forearms with dry edges, no weeping.\nA: Contact dermatitis.\nP: Switch to fragrance-free soap. Apply bland moisturizer twice daily. Return in one week if the rash spreads.",
+  "expected": {
+    "overall_status": "complete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Complete but terse note. Minimal content still satisfies every criterion; guards against an evaluator tuned only to verbose notes."
+}

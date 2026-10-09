@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-011",
+  "category": "partial_content",
+  "visit_type": "urgent care",
+  "note_text": "S: The patient reports a deep, aching pain in the lower back that began after lifting a heavy box two days ago. The pain radiates\nO: Vitals: temperature 36.9 C, pulse 80, respirations 16, blood pressure 122/78, oxygen saturation 98 percent on room air. Back exam shows tenderness in the lower back muscles; straight leg raise is negative on both sides; strength and sensation are intact.\nA: Lower back muscle strain.\nP: Continue gentle movement as tolerated and use heat on the sore muscles. Take the prescribed pain reliever as directed on the label. Return if leg weakness, numbness, or bladder changes appear.",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "partial"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Subjective history is truncated mid-sentence ('The pain radiates' and nothing further). Chief complaint is intact so S-01 present; the history is started but incomplete so S-02 partial. Overall incomplete."
+}

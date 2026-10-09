@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-024",
+  "category": "layout_variation",
+  "visit_type": "office visit",
+  "note_text": "S:\nO:\nA:\nP:",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "All four headers present with no content anywhere. Structure is identifiable (X-01 present) but every content criterion is missing. Overall incomplete."
+}

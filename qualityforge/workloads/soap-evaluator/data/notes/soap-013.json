@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-013",
+  "category": "partial_content",
+  "visit_type": "office visit",
+  "note_text": "S: The symptoms have gradually worsened over the past week, worse at night and after long periods of standing. Elevating the legs overnight helps somewhat, though the relief does not last. A family member first noticed the change and suggested this visit. No fever and no new medications.\nO: Vitals: temperature 36.8 C, pulse 72, respirations 14, blood pressure 118/76, oxygen saturation 99 percent on room air. Both ankles show pitting swelling that improves with elevation; the skin is intact; the calves are soft and non-tender.\nA: Ankle swelling from prolonged standing.\nP: Elevate the legs above heart level twice daily for thirty minutes. Take walking breaks every hour when standing is required. Return if swelling becomes one-sided, painful, or accompanied by breathlessness.",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Subjective history is present (timeline, modifiers, what helps) but no chief complaint is ever stated — the note opens with 'The symptoms' and never names them. S-01 missing, S-02 present. Overall incomplete."
+}

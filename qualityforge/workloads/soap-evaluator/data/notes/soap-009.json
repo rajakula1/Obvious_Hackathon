@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-009",
+  "category": "empty_section",
+  "visit_type": "telehealth",
+  "note_text": "S:\nO: Vitals: pulse 84, respirations 15, blood pressure 128/84, temperature 36.6 C, oxygen saturation 98 percent on room air. Hearing is unchanged; the ear canal is clear; the nose shows mild congestion.\nA: Seasonal allergies.\nP: Begin a daily non-sedating antihistamine in the morning. Use a saline nasal rinse at night. Return if congestion becomes one-sided or facial pain develops.",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Subjective header present but empty. Section is still identifiable, so X-01 present (structure is judged by identifiability); S-01 and S-02 missing because an empty section carries no content. Overall incomplete."
+}

@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-002",
+  "category": "complete",
+  "visit_type": "telehealth",
+  "note_text": "Subjective: The patient describes a dull headache across both temples that started three days ago and builds through the afternoon. Screen time makes it worse and sleep helps. No nausea, no vision changes, no recent injury.\nObjective: Vitals: blood pressure 122/80, pulse 74, respirations 14, temperature 36.8 C, oxygen saturation 99 percent on room air. Neurological exam is non-focal; the neck has full range of motion without tenderness.\nAssessment: Tension-type headache.\nPlan: Schedule regular screen breaks and keep a consistent sleep schedule. Return if headaches become daily or wake the patient from sleep.",
+  "expected": {
+    "overall_status": "complete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Complete note with expanded long-form markers. Every criterion present; establishes that marker style does not affect the expected result."
+}

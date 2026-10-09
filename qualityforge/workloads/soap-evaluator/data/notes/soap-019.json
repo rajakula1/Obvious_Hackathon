@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-019",
+  "category": "plan_unrelated",
+  "visit_type": "urgent care",
+  "note_text": "S: The patient reports a mildly itchy bump on the right forearm that appeared after gardening two days ago, now slightly larger and warm. No fever.\nO: Vitals: temperature 37.0 C, pulse 78, respirations 14, blood pressure 119/76, oxygen saturation 99 percent on room air. Right forearm shows a raised, warm, pink bump about two centimeters wide with a central point; mild tenderness; no red streaking.\nA: Skin bump on the right forearm, inflamed and localized.\nP: Wash the area daily, keep it covered, and apply a warm compress three times per day. Take a daily multivitamin with breakfast.",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "partial"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Single Plan section with one related item (wound care) and one unrelated item (multivitamin). P-02 partial — some but not all plan items relate to the stated assessment. Overall incomplete."
+}

@@ -1,0 +1,43 @@
+{
+  "note_id": "soap-012",
+  "category": "partial_content",
+  "note_text": "S: The patient reports three days of ear pressure and muffled hearing on the left after a cold, with mild discomfort when yawning. No fever and no dizziness.\nO: ##!! ?? ### !!?? ## ???? !!! ### ??\nA: Left ear pressure from congestion.\nP: Use a warm compress on the affected ear twice daily. Try gentle yawning or swallowing to relieve pressure during altitude changes. Return if pain worsens or hearing drops further.",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Objective section corrupted: the header is intact but the body is unreadable noise. Content that cannot be interpreted counts as absent, so O-01 and O-02 missing; X-01 still present because the section is identifiable. Overall incomplete."
+}

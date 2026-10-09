@@ -1,0 +1,43 @@
+{
+  "note_id": "soap-006",
+  "category": "missing_section",
+  "note_text": "S: The patient reports burning on urination for three days with urinary frequency and pressure above the pubic bone. No fever, no back pain, no blood in the urine.\nA: Urinary tract infection.\nP: Increase daily water intake and begin the prescribed antibiotic course as directed. Return if fever, back pain, or vomiting develops.",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "missing"
+      }
+    ]
+  },
+  "rationale": "Objective section removed. O-01 and O-02 missing; X-01 missing; Subjective, Assessment, and Plan criteria unaffected."
+}

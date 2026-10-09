@@ -1,0 +1,44 @@
+{
+  "note_id": "soap-014",
+  "category": "partial_content",
+  "visit_type": "telehealth",
+  "note_text": "S: The patient reports an itchy rash on both wrists that appeared two days after switching to a new hand soap. Scratching spreads the itch. No fever and no swelling of the face or hands.\nO: Both wrists show a red, dry, scaly patch with scratch marks; the rash respects the glove line; no blistering; the nails and finger spaces are clear.\nA: Irritant contact dermatitis from the new soap.\nP: Stop the new soap and return to the previous one. Apply a plain moisturizer after every hand washing. Return if the rash blisters, spreads to the face, or keeps the patient awake at night.",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "missing"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Objective section has exam findings but no vital signs anywhere. O-01 missing, O-02 present. Overall incomplete."
+}

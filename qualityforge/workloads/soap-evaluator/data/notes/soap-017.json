@@ -1,0 +1,43 @@
+{
+  "note_id": "soap-017",
+  "category": "duplicate_headers",
+  "note_text": "S: The patient reports one week of heartburn after meals, worse when lying down, relieved partially by over-the-counter antacids. No difficulty swallowing.\nO: Vitals: temperature 36.8 C, pulse 74, respirations 14, blood pressure 120/78, oxygen saturation 99 percent on room air. The abdomen is soft and non-tender; the chest is clear; no mouth sores.\nA: Heartburn after meals.\nP: Avoid eating within three hours of bedtime and raise the head of the bed.\nP: Begin a daily vitamin D supplement and schedule a dental cleaning.",
+  "expected": {
+    "overall_status": "incomplete",
+    "findings": [
+      {
+        "criterion_id": "S-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "S-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "O-02",
+        "status": "present"
+      },
+      {
+        "criterion_id": "A-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-01",
+        "status": "present"
+      },
+      {
+        "criterion_id": "P-02",
+        "status": "partial"
+      },
+      {
+        "criterion_id": "X-01",
+        "status": "present"
+      }
+    ]
+  },
+  "rationale": "Two Plan headers with different items. P-01 present (plan items exist); P-02 partial — some plan items relate to the stated heartburn assessment while the vitamin and dental items relate to no stated assessment. Overall incomplete."
+}
