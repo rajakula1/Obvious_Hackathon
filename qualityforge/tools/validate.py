@@ -152,9 +152,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     criteria_parser.add_argument("config", type=Path)
 
-    manifest_parser = subparsers.add_parser(
-        "manifest", help="validate a test manifest (review R2)"
-    )
+    manifest_parser = subparsers.add_parser("manifest", help="validate a test manifest (review R2)")
     manifest_parser.add_argument("config", type=Path)
     manifest_parser.add_argument(
         "--repo-root",
