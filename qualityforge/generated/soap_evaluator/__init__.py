@@ -1,25 +1,28 @@
-"""Generated SOAP note completeness evaluator (Factory Run 1).
+"""Public seam of the generated SOAP evaluator package.
 
-Standalone package: the harness wraps it (harness → generated dependency
-direction); this package never imports the harness outside the app's
-injection-seam branch.
+The harness loads ``create_evaluator`` from this module path (review R1) —
+the re-exports below ARE the seam. The app factory shares it.
 """
 
-from .app import create_app
-from .config import CriteriaConfigError, load_criteria
-from .evaluator import create_evaluator, evaluate_note
-from .models import EvaluateRequest, EvaluateResponse, EvidenceSpan, Finding
-from .sections import identify_sections
+from qualityforge.generated.soap_evaluator.app import EvaluateBody, create_app
+from qualityforge.generated.soap_evaluator.config import load_criteria, validate_criteria
+from qualityforge.generated.soap_evaluator.evaluator import Evaluator, create_evaluator
+from qualityforge.generated.soap_evaluator.models import (
+    EvaluateRequest,
+    EvaluateResponse,
+    EvidenceSpan,
+    Finding,
+)
 
 __all__ = [
-    "CriteriaConfigError",
-    "EvidenceSpan",
+    "EvaluateBody",
     "EvaluateRequest",
     "EvaluateResponse",
+    "Evaluator",
+    "EvidenceSpan",
     "Finding",
     "create_app",
     "create_evaluator",
-    "evaluate_note",
-    "identify_sections",
     "load_criteria",
+    "validate_criteria",
 ]

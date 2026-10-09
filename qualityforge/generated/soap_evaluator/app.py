@@ -1,90 +1,72 @@
-"""FastAPI surface of the SOAP note completeness evaluator (spec section 8.3).
+"""HTTP wiring for the evaluator (stage-2 spec section 3, app.py row).
 
-The app is a thin, deterministic wrapper around a single-argument evaluator
-callable (request in, response out):
+``create_app`` builds the FastAPI application over the same evaluator factory
+the harness seam names (review R1): the app consumes ``create_evaluator``
+from this package's ``__init__`` re-export, so the harness and the API load
+evaluators through one seam and drift between them is impossible.
 
-- Tests bind through FastAPI's in-process TestClient (review R6) — the API
-  never binds a live port inside a sandbox run.
-- The evaluator is resolved through the defect-injection seam: with
-  QUALITYFORGE_EVALUATOR_SPEC unset the baseline callable runs; when set, the
-  harness loader wraps the SAME evaluator with the spec's operators, so the
-  injection round exercises the identical API surface with zero code edits
-  (spec section 12.3, review R1). The harness import is lazy and lives only
-  in that branch — the core package stays standalone without the env var.
+Wire shapes (spec section 8.3):
+
+- ``POST /evaluate`` — body ``{"note_id": ..., "note_text": ...}`` (pydantic,
+  strict about extra fields); response is the evaluation record whose field
+  order IS the wire order — response bodies are built so JSON key order is
+  deterministic (note_id, criteria_version, overall_status, findings, and
+  each finding's keys in declared order).
+- ``GET /health`` — ``{"status": "ok"}``.
+
+Config resolution order: the explicit ``config`` argument, then the
+``QF_CRITERIA_CONFIG`` environment variable, then the of-record criteria
+config for this workload. A missing or invalid config fails loudly at
+startup (spec section 8.2).
 """
 
 from __future__ import annotations
 
 import os
+from collections.abc import Mapping
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict
 
-from .config import load_criteria
-from .evaluator import create_evaluator
-from .models import EvaluateRequest, EvaluateResponse
+from qualityforge.generated.soap_evaluator.config import DEFAULT_CONFIG_PATH, load_criteria
+from qualityforge.generated.soap_evaluator.evaluator import Evaluator, create_evaluator
+from qualityforge.generated.soap_evaluator.models import EvaluateResponse
 
-ENV_EVALUATOR_SPEC = "QUALITYFORGE_EVALUATOR_SPEC"
+_ENV_CONFIG = "QF_CRITERIA_CONFIG"
 
 
 class EvaluateBody(BaseModel):
-    """Request schema (spec section 8.3). Strict strings: a blank or
-    non-string field is malformed input and answers 422."""
+    """Request body of POST /evaluate — exactly the two wire fields."""
 
-    model_config = ConfigDict(extra="ignore")
+    model_config = ConfigDict(extra="forbid")
 
-    note_id: StrictStr = Field(min_length=1)
-    note_text: StrictStr = Field(min_length=1)
-    visit_type: StrictStr | None = None
+    note_id: str
+    note_text: str
 
 
-def _seam_active() -> bool:
-    """The injection seam is active when the env var carries a serialized
-    evaluator spec (its text, not a path — harness/loader contract)."""
-    return bool(os.environ.get(ENV_EVALUATOR_SPEC, "").strip())
+def _resolve_config(config: Mapping[str, Any] | None) -> Mapping[str, Any]:
+    """Explicit argument, then env var, then the of-record criteria config."""
+    if config is not None:
+        return config
+    env_path = os.environ.get(_ENV_CONFIG)
+    if env_path:
+        return load_criteria(Path(env_path))
+    return load_criteria(DEFAULT_CONFIG_PATH)
 
 
-def _resolve_through_seam() -> tuple[dict, Any]:
-    """Resolve the evaluator AND its criteria config through the harness
-    loader, so the injection round's mutant and config travel together."""
-    from qualityforge.harness.loader import (  # runtime seam only
-        get_config_under_test,
-        get_evaluator_under_test,
-    )
+def create_app(config: Mapping[str, Any] | None = None) -> FastAPI:
+    """Build the API app around an evaluator built from the resolved config."""
+    evaluator: Evaluator = create_evaluator(_resolve_config(config))
+    app = FastAPI(title="SOAP note completeness evaluator", version="1.0.0")
 
-    return get_config_under_test(), get_evaluator_under_test()
-
-
-def _to_request(body: EvaluateBody) -> EvaluateRequest:
-    request: EvaluateRequest = {"note_id": body.note_id, "note_text": body.note_text}
-    if body.visit_type is not None:
-        request["visit_type"] = body.visit_type
-    return request
-
-
-def create_app() -> FastAPI:
-    """Build the API. With the seam inactive, the criteria config is loaded
-    from the workload path and the baseline evaluator is bound to it; a
-    config that fails validation must fail startup, not requests."""
-    if _seam_active():
-        config, evaluator = _resolve_through_seam()
-    else:
-        config = load_criteria()
-        evaluator = create_evaluator(config)
-
-    app = FastAPI(
-        title="SOAP Note Completeness Evaluator",
-        description="Run 1 completeness evaluator (software correctness, not clinical validity).",
-        version=config["criteria_version"],
-    )
-
-    @app.post("/evaluate")
-    def post_evaluate(body: EvaluateBody) -> EvaluateResponse:
-        return evaluator(_to_request(body))
+    @app.post("/evaluate", response_model=EvaluateResponse)
+    def evaluate_note(body: EvaluateBody) -> EvaluateResponse:
+        return evaluator({"note_id": body.note_id, "note_text": body.note_text})
 
     @app.get("/health")
-    def get_health() -> dict[str, str]:
-        return {"status": "ok", "criteria_version": config["criteria_version"]}
+    def health() -> dict[str, str]:
+        return {"status": "ok"}
 
     return app

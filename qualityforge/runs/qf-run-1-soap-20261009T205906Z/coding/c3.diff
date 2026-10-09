@@ -1,0 +1,507 @@
+diff --git a/qualityforge/generated/soap_evaluator/evaluator.py b/qualityforge/generated/soap_evaluator/evaluator.py
+index 27a3248..f95bc33 100644
+--- a/qualityforge/generated/soap_evaluator/evaluator.py
++++ b/qualityforge/generated/soap_evaluator/evaluator.py
+@@ -1,289 +1,259 @@
+-"""Criterion checks (spec section 8.2) against the Run 1 corpus labels.
++"""The rule engine (stage-2 spec section 3, evaluator.py row).
+ 
+-Every check is a pure function of (criterion, note, section map). Detection
+-uses the term families documented below; term families are versioned with the
+-evaluator and recorded in the run report as the heuristics' known limits —
+-the labeled corpus is the oracle that locks them.
++One check per configured criterion — S-01, S-02, O-01, O-02, A-01, P-01,
++P-02 plan-relation, X-01 — against the sections ``sections.py`` identified.
++Findings are built in config order (deterministic without sorting, R4) with
++evidence spans carrying the R3 semantics: zero-based, end-exclusive offsets
++into the exact raw ``note_text`` — ``note_text[start:end]`` reproduces every
++reported span text, with no normalization.
++
++``create_evaluator(config)`` is the factory the harness seam names (review
++R1): it closes over the criteria config and returns a pure
++``(EvaluateRequest) -> EvaluateResponse`` callable. The config is consumed
++read-only; no rule is hardcoded here — the config file governs (section 8.2).
++
++Status vocabulary per the dataset README: ``present`` (content identifiable
++and complete), ``missing`` (section absent/unidentifiable, section empty, or
++content absent — unreadable content counts as absent), ``partial`` (content
++present but truncated mid-sentence, or P-02 with some related items). The
++structure criterion answers ``partial`` for an ambiguous note — never a guess
++(review R5).
+ """
+ 
+ from __future__ import annotations
+ 
+ import re
++from collections.abc import Callable, Mapping, Sequence
+ from typing import Any
+ 
+-from .models import (
++from qualityforge.generated.soap_evaluator.config import validate_criteria
++from qualityforge.generated.soap_evaluator.models import (
+     EvaluateRequest,
+     EvaluateResponse,
+-    EvaluatorCallable,
+     EvidenceSpan,
+     Finding,
+ )
+-from .sections import SECTION_ORDER, SectionMap, SectionSpan, identify_sections
+-
+-CHIEF_COMPLAINT = re.compile(
+-    r"\bpatient\b|complain|complaint|reports|describes|pain|sore|itchy|rash|"
+-    r"headache|cough|heartburn|tingling|pressure|\bcut\b|\bbump\b|tooth|swelling",
+-    re.I,
+-)
+-HISTORY = re.compile(
+-    r"\bago\b|began|started|appeared|since|yesterday|worse|worsen|gradually|"
+-    r"past\s+\w+|after|overnight|when\b|helps?|helped|"
+-    r"for\s+(?:a\s+|\d+|two|three|four|five|six|seven|eight|nine|ten)?\s*"
+-    r"(?:days?|weeks?|months?|hours?|years?)",
+-    re.I,
++from qualityforge.generated.soap_evaluator.sections import (
++    SECTION_ORDER,
++    LineAtOffset,
++    SectionMap,
++    content_lines,
++    content_sentences,
++    identify_sections,
++    is_complaint,
++    is_finding,
++    is_vital,
++    lines_in,
+ )
+-VITALS = re.compile(r"vitals|temperature|pulse|respirations|blood pressure|oxygen saturation", re.I)
+-EXAM = re.compile(
+-    r"\bexam\b|\bshows?\b|\bclear\b|\bsoft\b|red\w*|rash|swelling|swollen|tender\w*|"
+-    r"dull|patch|plaques?|wheeze|crackles|congestion|tearing|wasting|\bgrip\b|"
+-    r"\bcut\b|\bbump\b|lesion|discharge",
+-    re.I,
++
++Evaluator = Callable[[EvaluateRequest], EvaluateResponse]
++
++PRESENT = "present"
++MISSING = "missing"
++PARTIAL = "partial"
++_TERMINAL_PUNCT = (".", "!", "?")
++
++# Criterion content predicates — documentation-completeness heuristics pinned
++# by the workload's labeled corpus (spec section 8.4). These implement the
++# criteria statements; they are not clinical judgments (spec section 2.2).
++# The O vitals/findings and S complaint predicates ARE the sections.py
++# fallback categories — shared, not duplicated.
++_HISTORY = (
++    re.compile(r"\bago\b"),
++    re.compile(r"\byesterday\b"),
++    re.compile(r"\bsince\b"),
++    re.compile(r"\bbegan\b"),
++    re.compile(r"\bstart(ed)?\b"),
++    re.compile(r"\bappear(ed)?\b"),
++    re.compile(r"\bworse(n(s|ed)?)?\b"),
++    re.compile(r"\bimproved?\b"),
++    re.compile(r"\breliev(ed|es)\b"),
++    re.compile(r"\bpast\b"),
++    re.compile(r"\bhistory of\b"),
++    re.compile(r"\bthis morning\b"),
++    re.compile(r"\b(one|two|three|four|five|six|seven|\d+)\s+(day|week|month|year)s?\b"),
+ )
+-STATEMENT = re.compile(r"[a-z]", re.I)  # any alphabetic content counts as a statement
+-UNRELATED_PLAN = re.compile(
+-    # Documented generic-wellness markers: a plan item matching these does not
+-    # relate to the stated assessment. Bare "exercise" is deliberately NOT a
+-    # marker — activity restrictions ("avoid weight-bearing exercise") are
+-    # condition-specific rest instructions.
+-    r"multivitamin|vitamin|supplement|dental|walk briskly|stretch|sugary|hydrat",
+-    re.I,
++# P-02 plan-relation (README rule 4): a plan item relates to the stated
++# assessment unless it is a general health-maintenance item — the class of
++# items the corpus labels call out as unrelated to any assessment (vitamins
++# and supplements, dental care, generic exercise and diet phrasing).
++_MAINTENANCE_TERMS = (
++    "vitamin",
++    "supplement",
++    "multivitamin",
++    "dental",
++    "stretching",
++    "sugary drink",
++    "walk briskly",
+ )
+ 
+-_TRUNCATION_MSG = "content truncated mid-sentence"
+ 
++def _span_of(line: LineAtOffset) -> EvidenceSpan:
++    """An R3 span for a line: raw slice reproducing the line exactly."""
++    offset, text = line
++    return {"start": offset, "end": offset + len(text), "text": text}
+ 
+-def _span(text: str, start: int) -> EvidenceSpan:
+-    return {"start": start, "end": start + len(text), "text": text}
+ 
++def overall_status(findings: Sequence[Finding]) -> str:
++    """The all-present rule: complete only when every finding is present.
+ 
+-def _finding(
+-    criterion: dict[str, Any],
+-    status: str,
+-    evidence: list[EvidenceSpan],
+-    message: str,
+-) -> Finding:
++    A ``partial`` finding leaves the note incomplete (the dataset README's
++    rule 7 and the harness's pinned reading).
++    """
++    all_present = all(finding["status"] == PRESENT for finding in findings)
++    return "complete" if all_present else "incomplete"
++
++
++def _finding(criterion: Mapping[str, Any], status: str, evidence: list[EvidenceSpan]) -> Finding:
++    """A finding in the wire shape; messages stay documentation-completeness."""
++    suffix = {PRESENT: "satisfied.", PARTIAL: "partially satisfied.", MISSING: "not satisfied."}[
++        status
++    ]
+     return {
+-        "criterion_id": criterion["id"],
+-        "section": criterion.get("section"),
++        "criterion_id": str(criterion["id"]),
++        "section": criterion["section"],  # type: ignore[assignment]
+         "status": status,
+         "evidence": evidence,
+-        "message": message,
++        "message": f"{criterion['statement']} — {suffix}",
+     }
+ 
+ 
+-def _sentence_finding(
+-    criterion: dict[str, Any],
+-    span: SectionSpan | None,
+-    pattern: re.Pattern[str],
+-    present_msg: str,
+-    missing_msg: str,
+-    truncation_partial: bool = False,
++def _first_line(
++    lines: Sequence[LineAtOffset], predicate: Callable[[str], bool]
++) -> LineAtOffset | None:
++    """First line satisfying the predicate, or None."""
++    for line in lines:
++        if predicate(line[1]):
++            return line
++    return None
++
++
++def _label_check(
++    criterion: Mapping[str, Any],
++    lines: Sequence[LineAtOffset],
++    predicate: Callable[[str], bool],
+ ) -> Finding:
+-    """present/partial/missing on the section's sentences. With
+-    ``truncation_partial`` (the narrative criterion S-02), matched content in
+-    a section that ends mid-sentence is ``partial`` — the history narrative is
+-    present but incomplete. Other criteria are not degraded by a truncated
+-    tail they did not match (the corpus labels pin this distinction)."""
+-    if span is None or not span.text.strip():
+-        return _finding(criterion, "missing", [], missing_msg)
+-    matches = [(start, s) for start, s in span.sentences if pattern.search(s)]
+-    if not matches:
+-        return _finding(criterion, "missing", [], missing_msg)
+-    first_start, first_text = matches[0]
+-    lead = len(first_text) - len(first_text.lstrip())
+-    evidence = [_span(first_text.strip(), first_start + lead)]
+-    if truncation_partial:
+-        last_sentence = span.sentences[-1][1]
+-        if not last_sentence.rstrip().endswith((".", "!", "?")):
+-            return _finding(criterion, "partial", evidence, f"{present_msg} ({_TRUNCATION_MSG})")
+-    return _finding(criterion, "present", evidence, present_msg)
+-
+-
+-def _check_assessment(criterion: dict[str, Any], span: SectionSpan | None) -> Finding:
+-    if span is None or not span.text.strip():
+-        return _finding(criterion, "missing", [], "No assessment stated.")
+-    sentences = span.sentences
+-    if not any(STATEMENT.search(s) for _, s in sentences):
+-        return _finding(criterion, "missing", [], "No assessment stated.")
+-    first_start, first_text = sentences[0]
+-    lead = len(first_text) - len(first_text.lstrip())
+-    return _finding(
+-        criterion, "present", [_span(first_text.strip(), first_start + lead)], "Assessment stated."
+-    )
++    hit = _first_line(lines, predicate)
++    if hit is None:
++        return _finding(criterion, MISSING, [])
++    return _finding(criterion, PRESENT, [_span_of(hit)])
+ 
+ 
+-def _plan_items(span: SectionSpan | None) -> list[tuple[int, str]]:
+-    if span is None:
+-        return []
+-    return [(start, text) for start, text in span.sentences if text.strip()]
++def _check_s01(criterion: Mapping[str, Any], lines: Sequence[LineAtOffset]) -> Finding:
++    """S-01: a stated complaint — complaint phrasing or a symptom mention."""
++    hit = _first_line(lines, is_complaint)
++    if hit is None:
++        return _finding(criterion, MISSING, [])
++    return _finding(criterion, PRESENT, [_span_of(hit)])
+ 
+ 
+-def _check_plan_items(criterion: dict[str, Any], span: SectionSpan | None) -> Finding:
+-    """P-01: at least one plan item present (any alphabetic content)."""
+-    items = _plan_items(span)
+-    if not items:
+-        return _finding(criterion, "missing", [], "No plan items recorded.")
+-    first_start, first_text = items[0]
+-    lead = len(first_text) - len(first_text.lstrip())
+-    return _finding(
+-        criterion, "present", [_span(first_text.strip(), first_start + lead)], "Plan item recorded."
+-    )
++def _check_s02(criterion: Mapping[str, Any], lines: Sequence[LineAtOffset]) -> Finding:
++    """S-02: history present, unless the narrative ends mid-sentence (partial)."""
++
++    def has_history(line: str) -> bool:
++        lowered = line.lower()
++        return any(pattern.search(lowered) for pattern in _HISTORY)
+ 
++    hit = _first_line(lines, has_history)
++    if hit is None:
++        return _finding(criterion, MISSING, [])
++    # Truncated mid-sentence: content present but incomplete (README rule 3).
++    truncated = not lines[-1][1].endswith(_TERMINAL_PUNCT)
++    status = PARTIAL if truncated else PRESENT
++    return _finding(criterion, status, [_span_of(hit)])
+ 
+-def _check_plan_relation(
+-    criterion: dict[str, Any], assessment: SectionSpan | None, plan: SectionSpan | None
++
++def _check_p02(
++    criterion: Mapping[str, Any],
++    plan_items: Sequence[LineAtOffset],
++    assessment: Sequence[LineAtOffset],
+ ) -> Finding:
+-    """P-02 (dataset README rule 4): all plan items relate to a stated
+-    assessment → present; some → partial; none (or no assessment, or no plan)
+-    → missing. Relatedness is the documented heuristic: an item is unrelated
+-    when it matches the generic-wellness markers; anything else counts as
+-    condition-specific care. Known limit: lexical, not clinical reasoning —
+-    recorded in the run report."""
+-    items = _plan_items(plan)
+-    assessment_stated = assessment is not None and assessment.text.strip() != ""
+-    if not assessment_stated or not items:
+-        return _finding(criterion, "missing", [], "No assessment or no plan to relate.")
+-    related = [item for item in items if not UNRELATED_PLAN.search(item[1])]
++    """P-02: every plan item relates, unless the plan is generic maintenance."""
++    if not plan_items or not assessment:
++        return _finding(criterion, MISSING, [])
++    related = [
++        item
++        for item in plan_items
++        if not any(term in item[1].lower() for term in _MAINTENANCE_TERMS)
++    ]
+     if not related:
+-        return _finding(criterion, "missing", [], "No plan item relates to the assessment.")
+-    first_start, first_text = related[0]
+-    lead = len(first_text) - len(first_text.lstrip())
+-    evidence = [_span(first_text.strip(), first_start + lead)]
+-    if len(related) == len(items):
+-        return _finding(criterion, "present", evidence, "All plan items relate to the assessment.")
+-    return _finding(
+-        criterion, "partial", evidence, "Some plan items do not relate to the assessment."
+-    )
++        return _finding(criterion, MISSING, [])
++    status = PRESENT if len(related) == len(plan_items) else PARTIAL
++    return _finding(criterion, status, [_span_of(related[0])])
+ 
+ 
+-def _check_structure(criterion: dict[str, Any], note_text: str, section_map: SectionMap) -> Finding:
+-    """X-01 (dataset README rule 5): sections identifiable by marker or
+-    confident fallback. A markerless note the fallback cannot fully attribute
+-    is ambiguous → partial, never guessed."""
+-    found = [s for s in SECTION_ORDER if s in section_map.sections]
+-    evidence: list[EvidenceSpan] = []
+-    for section in found:
+-        span = section_map.sections[section]
+-        if span.sentences:
+-            first_start, first_text = span.sentences[0]
+-            lead = len(first_text) - len(first_text.lstrip())
+-            evidence.append(_span(first_text.strip(), first_start + lead))
+-        elif span.marker_start is not None:
+-            # Empty-but-marked section: the honest evidence is the raw marker
+-            # itself ("S:"), not a zero-length span.
+-            evidence.append(_span(note_text[span.marker_start : span.start], span.marker_start))
+-        else:
+-            evidence.append(_span(note_text[span.start : span.start], span.start))
+-    if len(found) == len(SECTION_ORDER):
+-        return _finding(criterion, "present", evidence, "All four SOAP sections identified.")
+-    if section_map.markerless_note:
+-        first_line = note_text.split("\n", 1)[0]
+-        ambiguous_evidence = (
+-            [_span(first_line.strip() or first_line, 0)] if note_text.strip() else []
+-        )
+-        return _finding(
+-            criterion,
+-            "partial",
+-            ambiguous_evidence,
+-            "Sections ambiguous: no header markers and the fallback could not "
+-            "confidently attribute all sections.",
+-        )
+-    missing = [s for s in SECTION_ORDER if s not in section_map.sections]
+-    return _finding(
+-        criterion,
+-        "missing",
+-        # AC-03: a missing finding carries no evidence — some sections may
+-        # have been identified, but the criterion itself is not satisfied.
+-        [],
+-        f"Section(s) {', '.join(missing)} absent or unidentifiable.",
+-    )
++def _check_x01(criterion: Mapping[str, Any], text: str, sections: SectionMap) -> Finding:
++    """X-01: all four sections identifiable; ambiguous notes answer partial."""
++    if not sections.missing:
++        evidence = [
++            _span_of(lines_in(text, sections.spans[section])[0]) for section in SECTION_ORDER
++        ]
++        return _finding(criterion, PRESENT, evidence)
++    if sections.ambiguous and sections.unclaimed:
++        evidence = [_span_of(lines_in(text, sections.unclaimed[:1])[0])]
++        return _finding(criterion, PARTIAL, evidence)
++    return _finding(criterion, MISSING, [])
+ 
+ 
+-def evaluate_note(request: EvaluateRequest, config: dict[str, Any]) -> EvaluateResponse:
+-    """Evaluate one note against the config's criteria, in config order."""
+-    note_text = request["note_text"]
+-    header_markers = config["section_detection"]["header_markers"]
+-    section_map = identify_sections(note_text, header_markers)
+-    sections = section_map.sections
+-
+-    findings: list[Finding] = []
+-    for criterion in config["criteria"]:
+-        cid = criterion["id"]
+-        section = criterion.get("section")
+-        if section is None:
+-            findings.append(_check_structure(criterion, note_text, section_map))
+-            continue
+-        if section not in sections:
+-            findings.append(
+-                _finding(criterion, "missing", [], f"Section {section} absent or unidentifiable.")
+-            )
+-            continue
+-        span = sections[section]
+-        if cid == "S-01":
+-            findings.append(
+-                _sentence_finding(
+-                    criterion,
+-                    span,
+-                    CHIEF_COMPLAINT,
+-                    "Chief complaint recorded.",
+-                    "No chief complaint in Subjective.",
+-                )
+-            )
+-        elif cid == "S-02":
+-            findings.append(
+-                _sentence_finding(
+-                    criterion,
+-                    span,
+-                    HISTORY,
+-                    "History of present illness recorded.",
+-                    "No history of present illness in Subjective.",
+-                    truncation_partial=True,
+-                )
+-            )
+-        elif cid == "O-01":
+-            findings.append(
+-                _sentence_finding(
+-                    criterion,
+-                    span,
+-                    VITALS,
+-                    "Vital signs recorded in Objective.",
+-                    "No vital signs in Objective.",
+-                )
+-            )
+-        elif cid == "O-02":
+-            findings.append(
+-                _sentence_finding(
+-                    criterion,
+-                    span,
+-                    EXAM,
+-                    "Objective examination findings recorded.",
+-                    "No examination findings in Objective.",
+-                )
+-            )
+-        elif cid == "A-01":
+-            findings.append(_check_assessment(criterion, span))
+-        elif cid == "P-01":
+-            findings.append(_check_plan_items(criterion, span))
+-        elif cid == "P-02":
+-            findings.append(_check_plan_relation(criterion, sections.get("A"), sections.get("P")))
+-        else:
+-            raise ValueError(f"no check implemented for criterion {cid!r}")
+-
+-    overall = "complete" if all(f["status"] == "present" for f in findings) else "incomplete"
+-    return {
+-        "note_id": request["note_id"],
+-        "criteria_version": config["criteria_version"],
+-        "overall_status": overall,
+-        "findings": findings,
+-    }
++def _check_criterion(
++    criterion: Mapping[str, Any],
++    text: str,
++    sections: SectionMap,
++    header_markers: Mapping[str, Sequence[str]],
++) -> Finding:
++    """Dispatch one configured criterion to its check."""
++    criterion_id = criterion["id"]
++    section = criterion["section"]
++    if section is None:
++        return _check_x01(criterion, text, sections)
++    if section not in sections.spans:
++        return _finding(criterion, MISSING, [])
++    lines = content_lines(text, sections.spans[section], header_markers)
++    if criterion_id == "S-01":
++        return _check_s01(criterion, lines)
++    if criterion_id == "S-02":
++        return _check_s02(criterion, lines)
++    if criterion_id == "O-01":
++        return _label_check(criterion, lines, is_vital)
++    if criterion_id == "O-02":
++        return _label_check(criterion, lines, is_finding)
++    if criterion_id in ("A-01", "P-01"):
++        if not lines:
++            return _finding(criterion, MISSING, [])
++        return _finding(criterion, PRESENT, [_span_of(lines[0])])
++    if criterion_id == "P-02":
++        plan_items = content_sentences(text, sections.spans["P"], header_markers)
++        assessment = content_lines(text, sections.spans.get("A", []), header_markers)
++        return _check_p02(criterion, plan_items, assessment)
++    raise ValueError(
++        "the evaluator implements the criteria config's starting set only; "
++        f"unknown criterion id {criterion_id!r}"
++    )
++
+ 
++def create_evaluator(config: Mapping[str, Any]) -> Evaluator:
++    """Factory consumed by the harness seam (R1): build an evaluator from a config.
+ 
+-def create_evaluator(config: dict[str, Any]) -> EvaluatorCallable:
+-    """Module-level factory the harness loader consumes (spec naming:
+-    module=qualityforge.generated.soap_evaluator, factory=create_evaluator).
+-    Returns a single-argument callable bound to one criteria config."""
++    The config is validated loudly here too — the harness hands over the raw
++    parsed mapping, and drift must stop the evaluator at startup, not drift
++    silently at request time.
++    """
++    validate_criteria(config)
++    header_markers: Mapping[str, Sequence[str]] = config["section_detection"]["header_markers"]
++    version = config["criteria_version"]
+ 
+     def evaluate(request: EvaluateRequest) -> EvaluateResponse:
+-        return evaluate_note(request, config)
++        text = request["note_text"]
++        sections = identify_sections(text, config["section_detection"])
++        findings = [
++            _check_criterion(criterion, text, sections, header_markers)
++            for criterion in config["criteria"]
++        ]
++        return {
++            "note_id": request["note_id"],
++            "criteria_version": version,
++            "overall_status": overall_status(findings),
++            "findings": findings,
++        }
+ 
+     return evaluate

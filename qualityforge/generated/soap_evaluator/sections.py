@@ -1,178 +1,433 @@
-"""SOAP section identification (spec section 8.2, review R5).
+"""Section identification for SOAP notes (stage-2 spec section 3, sections.py row).
 
-Strategy comes from the criteria config — never hardcoded here:
+Pure functions over (text, config) implementing the config's pinned detection
+strategy (review R5): header markers first, the documented fallback second.
 
-1. Header markers first: a line whose leading text starts with one of the
-   config's marker strings (case-insensitive) opens that section. Duplicate
-   headers merge into one span per section (union across occurrences).
-2. Documented fallback second: for a section with no marker, scan the note's
-   non-marker lines for content matching the section's known data
-   categories. The fallback attributes only what it can match confidently;
-   an ambiguous note is reported as ``partial`` against the structure
-   criterion (X-01), never guessed.
+1. Header markers (config ``header_markers``) match case-insensitively as
+   line-start prefixes. A section runs from its marker line to the next
+   marker line of any section (or the end of the note), so duplicate headers
+   unify: every occurrence of a section contributes its lines — the union the
+   dataset README pins as rule 6.
+2. The documented fallback second: for a section no header names, scan the
+   note's unattributed text in document order for content matching the
+   section's known data categories — the categories the config's fallback
+   text names: S complaint and history narrative; O measurements and observed
+   findings; A diagnoses and assessments; P ordered actions and follow-ups.
+   Each missing section claims the first forward run of sentences its
+   categories match, in S -> O -> A -> P order.
 
-All offsets are zero-based, end-exclusive character offsets into the RAW
-``note_text`` — no whitespace or unicode normalization anywhere (review R3).
+An ambiguous note — a section still missing while unattributable content
+remains — surfaces as ``ambiguous`` so the structure criterion (X-01) answers
+``partial`` instead of guessing (R5; the config fallback rule, verbatim).
+
+Every offset this module emits is a zero-based character offset into the raw
+text, end-exclusive (R3): ``text[start:end]`` reproduces the reported line or
+sentence exactly. No normalization is ever applied to the text itself.
 """
 
 from __future__ import annotations
 
 import re
-from typing import NamedTuple
+from collections.abc import Mapping, Sequence
+from dataclasses import dataclass
 
 SECTION_ORDER = ("S", "O", "A", "P")
+STRATEGY = "header_markers_with_fallback"
 
-# Fallback evidence patterns, one per section (documented heuristic; the
-# criteria config's fallback text names the data categories: complaint and
-# history narrative; measurements and observed findings; diagnoses and
-# assessments; ordered actions and follow-ups). Word-bounded so results are
-# deterministic.
-FALLBACK_PATTERNS: dict[str, re.Pattern[str]] = {
-    # S: a complaint or history narrative — the patient's report.
-    "S": re.compile(r"patient reports|patient describes|complains|\bsymptoms\b", re.I),
-    # O: measurements (vitals) or observed findings.
-    "O": re.compile(
-        r"temperature|pulse|respirations|blood pressure|oxygen saturation|"
-        r"\bexam\b|\bshows?\b|\bclear\b|swelling",
-        re.I,
-    ),
-    # A: a diagnosis or assessment statement.
-    "A": re.compile(r"diagnos|consistent with|fits? a\b|likely\b|assessment", re.I),
-    # P: an ordered action or follow-up — imperative advice or a prescription.
-    "P": re.compile(
-        r"^\s*(rest|take|apply|use|begin|continue|schedule|avoid|return)\b|"
-        r"advised|prescribed|recommend",
-        re.I,
-    ),
-}
+LineAtOffset = tuple[int, str]
+Span = tuple[int, int]
 
-# Sentence run: a digit.dot.digit sequence ("37.2") is a decimal, not a
-# boundary — the class consumes it as one unit so vital-sign numbers do not
-# split mid-number (caught by the generated suite's unnormalized-note test).
-_SENTENCE_RE = re.compile(r"(?:[^.!?]|\d\.\d)+(?:[.!?]+|$)")
-_LINE_RE = re.compile(r"[^\n]+")
+# The documented fallback's data categories (config fallback text) as named
+# deterministic patterns. These implement documentation-completeness
+# categories, not clinical judgments (spec section 2.2).
+_COMPLAINT_PHRASES = (
+    "the patient reports",
+    "the patient describes",
+    "the patient complains",
+    "complains of",
+    "presents with",
+)
+_SYMPTOM_TERMS = (
+    "bump",
+    "cough",
+    "cut",
+    "discomfort",
+    "dizziness",
+    "earache",
+    "fatigue",
+    "fever",
+    "headache",
+    "heartburn",
+    "itchy",
+    "limp",
+    "nausea",
+    "numbness",
+    "pain",
+    "rash",
+    "sore throat",
+    "soreness",
+    "swelling",
+    "tingling",
+    "wound",
+)
+# A symptom term directly preceded by one of these prefixes is a negated
+# mention ("No fever") and does not attribute content to a section.
+_NEGATION_PREFIXES = ("no ", "not ", "without ", "denies ", "free of ")
+_VITAL_PATTERNS = tuple(
+    re.compile(pattern)
+    for pattern in (
+        r"\bvitals?\b",
+        r"\bvital signs\b",
+        r"\bpulse\b",
+        r"\bblood pressure\b",
+        r"\btemperature\b.*\d",
+        r"\brespirations?\b",
+        r"\boxygen saturation\b",
+    )
+)
+_FINDING_PATTERNS = tuple(
+    re.compile(pattern)
+    for pattern in (
+        r"\bexams?\b",
+        r"\bexamination\b",
+        r"\bshow(s|ed|ing)?\b",
+        r"\bclear\b",
+        r"\bred\b",
+        r"\bswelling\b",
+        r"\bswollen\b",
+        r"\btender(ness)?\b",
+        r"\bredness\b",
+        r"\brash\b",
+        r"\bpatch(y)?\b",
+        r"\bplaques?\b",
+        r"\blesion(s)?\b",
+        r"\bwound\b",
+        r"\bcut\b",
+        r"\bbump\b",
+        r"\bintact\b",
+    )
+)
+_ASSESSMENT_PATTERNS = tuple(
+    re.compile(pattern)
+    for pattern in (
+        r"\bdiagnosis\b",
+        r"\bassessment\b",
+        r"\bconsistent with\b",
+        r"\blikely\b",
+        r"\bfits?\b",
+        r"\bsuspected\b",
+        r"\bprobable\b",
+    )
+)
+# Ordered actions and follow-ups: sentences that START with an action verb.
+_ACTION_STARTERS = (
+    "rest",
+    "take",
+    "apply",
+    "use",
+    "continue",
+    "return",
+    "avoid",
+    "begin",
+    "stop",
+    "schedule",
+    "elevate",
+    "increase",
+    "limit",
+    "try",
+    "seek",
+    "switch",
+    "keep",
+    "wash",
+    "rinse",
+    "wear",
+    "ice",
+    "do not",
+    "follow up",
+    "come back",
+)
+_ADVISORY_PATTERNS = (re.compile(r"\b(is|are) advised\b"),)
+_SENTENCE_END = re.compile(r"[.!?]")
+_LETTER = re.compile(r"[a-z]")
 
 
-class SectionSpan(NamedTuple):
-    """One section's identified content: a span of raw note_text plus its
-    sentences with absolute offsets. An empty-but-marked section is still
-    identified (text == ""); the dataset README's rule 5 makes that present
-    structure with absent content. ``marker_start`` points at the opening
-    marker (evidence for empty sections); it is ``None`` for fallback spans,
-    whose first content line is the evidence instead."""
+@dataclass(frozen=True)
+class SectionMap:
+    """Sections identified in a note, per the config's detection strategy.
 
-    start: int
-    end: int
-    text: str
-    source: str  # "marker" | "fallback"
-    marker_start: int | None = None
-
-    @property
-    def sentences(self) -> list[tuple[int, str]]:
-        return sentences_with_offsets(self.text, self.start)
-
-
-class SectionMap(NamedTuple):
-    """The identification outcome for a note."""
-
-    sections: dict[str, SectionSpan]
-    markerless_note: bool  # no header marker anywhere (fallback-only note)
-    any_markers: bool
-
-
-def lines_with_offsets(text: str) -> list[tuple[int, str]]:
-    """Every non-empty line with its start offset in the raw text."""
-    return [(m.start(), m.group()) for m in _LINE_RE.finditer(text)]
-
-
-def sentences_with_offsets(text: str, base: int) -> list[tuple[int, str]]:
-    """Sentence-split a segment, keeping absolute offsets into the raw note.
-
-    A final unpunctuated run counts as a sentence — that is exactly the
-    truncated-content signal the corpus labels encode for ``partial``.
+    ``spans`` maps a section to the document-order occurrence spans of every
+    occurrence (header-derived or fallback-claimed) — the union the dataset
+    README's duplicate-header rule pins. ``missing`` lists sections nothing
+    identified; ``ambiguous`` is true when a section is missing while
+    unattributable content remains, so the structure criterion answers
+    ``partial`` rather than guessing. ``unclaimed`` holds the spans of that
+    unattributable content — the textual basis of the ambiguity, usable as
+    the structure finding's evidence.
     """
-    out: list[tuple[int, str]] = []
-    for match in _SENTENCE_RE.finditer(text):
-        chunk = match.group()
-        if chunk.strip():
-            out.append((base + match.start(), chunk))
-    return out
+
+    spans: dict[str, list[Span]]
+    missing: frozenset[str]
+    ambiguous: bool
+    unclaimed: tuple[Span, ...] = ()
 
 
-def _marker_prefix_len(line: str, header_markers: dict[str, list[str]]) -> tuple[str, int] | None:
-    """The section whose marker this line starts with, and the offset just
-    past the marker (before consuming separator punctuation)."""
-    stripped = line.lstrip()
-    lead = len(line) - len(stripped)
+def _lines(text: str, span: Span) -> list[LineAtOffset]:
+    """Non-empty lines of ``text[span]`` as (offset of first char, line)."""
+    start, end = span
+    entries: list[LineAtOffset] = []
+    cursor = start
+    for raw in text[start:end].split("\n"):
+        stripped = raw.strip()
+        if stripped:
+            entries.append((cursor + len(raw) - len(raw.lstrip()), stripped))
+        cursor += len(raw) + 1
+    return entries
+
+
+def _sentences(text: str, span: Span) -> list[LineAtOffset]:
+    """Sentences of ``text[span]`` as (offset of first char, sentence).
+
+    Splits on sentence terminators; a period between digits (``37.1``) does
+    not split. Slices stay R3-exact: offsets track stripped boundaries.
+    """
+    start, end = span
+    entries: list[LineAtOffset] = []
+    chunk: list[str] = []
+    chunk_start = start
+    for index, char in enumerate(text[start:end]):
+        chunk.append(char)
+        if _SENTENCE_END.match(char) is None:
+            continue
+        if char == "." and index > 0 and text[start + index - 1].isdigit():
+            nxt = start + index + 1
+            if nxt < end and text[nxt].isdigit():
+                continue
+        joined = "".join(chunk)
+        stripped = joined.strip()
+        if stripped:
+            entries.append((chunk_start + len(joined) - len(joined.lstrip()), stripped))
+        chunk = []
+        chunk_start = start + index + 1
+    joined = "".join(chunk)
+    stripped = joined.strip()
+    if stripped:
+        entries.append((chunk_start + len(joined) - len(joined.lstrip()), stripped))
+    return entries
+
+
+def _section_of(line: str, header_markers: Mapping[str, Sequence[str]]) -> str | None:
+    """The section whose marker this line starts with, or None."""
+    lowered = line.lower()
     for section in SECTION_ORDER:
-        for marker in sorted(header_markers.get(section, []), key=len, reverse=True):
-            if stripped.lower().startswith(marker.lower()):
-                return section, lead + len(marker)
+        if any(lowered.startswith(str(marker).lower()) for marker in header_markers[section]):
+            return section
     return None
 
 
-def identify_sections(text: str, header_markers: dict[str, list[str]]) -> SectionMap:
-    """Identify every section per the config strategy: markers, then fallback.
+def is_marker_line(line: str, header_markers: Mapping[str, Sequence[str]]) -> bool:
+    """True when the line is a bare header marker with no content after it."""
+    lowered = line.lower()
+    return any(
+        lowered == str(marker).lower() for markers in header_markers.values() for marker in markers
+    )
 
-    Duplicate headers merge: a section's span runs from its first content
-    character to the end of its last segment (the raw slice between them is
-    part of the span, so offsets stay honest).
+
+def _has_letter(line: str) -> bool:
+    """Readable line: content with no letters (garble/noise) counts as absent."""
+    return _LETTER.search(line.lower()) is not None
+
+
+def lines_in(text: str, spans: Sequence[Span]) -> list[LineAtOffset]:
+    """All non-empty lines across the spans, in document order (R3 offsets)."""
+    return [entry for span in spans for entry in _lines(text, span)]
+
+
+def content_lines(
+    text: str,
+    spans: Sequence[Span],
+    header_markers: Mapping[str, Sequence[str]],
+) -> list[LineAtOffset]:
+    """Readable content lines of the section: not bare markers, not garble."""
+    return [
+        entry
+        for entry in lines_in(text, spans)
+        if _has_letter(entry[1]) and not is_marker_line(entry[1], header_markers)
+    ]
+
+
+def content_sentences(
+    text: str,
+    spans: Sequence[Span],
+    header_markers: Mapping[str, Sequence[str]],
+) -> list[LineAtOffset]:
+    """Readable sentences of the section's content lines, in document order.
+
+    Bare marker lines and garble are not content, so they yield no items —
+    a bare ``P:`` marker is an empty plan, not a plan item.
     """
-    marker_spans: dict[str, list[tuple[int, int, int]]] = {}
-    lines = lines_with_offsets(text)
+    items: list[LineAtOffset] = []
+    for offset, line in content_lines(text, spans, header_markers):
+        for relative, sentence in _sentences(line, (0, len(line))):
+            items.append((offset + relative, sentence))
+    return items
 
-    for index, (offset, line) in enumerate(lines):
-        hit = _marker_prefix_len(line, header_markers)
-        if hit is None:
-            continue
-        section, content_pos = hit
-        marker_start = offset + (len(line) - len(line.lstrip()))
-        # Content runs from just past the marker to the line before the next
-        # marker line (or EOF).
-        end = len(text)
-        for next_index in range(index + 1, len(lines)):
-            next_offset, next_line = lines[next_index]
-            if _marker_prefix_len(next_line, header_markers) is not None:
-                end = next_offset
-                break
-        start = min(offset + content_pos + _sep_len(line[content_pos:]), end)
-        marker_spans.setdefault(section, []).append((start, end, marker_start))
 
-    sections: dict[str, SectionSpan] = {}
-    for section, spans in marker_spans.items():
-        first_start, last_end = spans[0][0], spans[-1][1]
-        sections[section] = SectionSpan(
-            first_start, last_end, text[first_start:last_end], "marker", spans[0][2]
-        )
+def _symptom_hit(sentence: str) -> bool:
+    """A symptom term mention that is not negated in the immediate context."""
+    lowered = sentence.lower()
+    for term in _SYMPTOM_TERMS:
+        at = lowered.find(term)
+        while at != -1:
+            # Keep the trailing space: the negation prefixes end with one.
+            before = lowered[max(0, at - 10) : at]
+            if not before.endswith(_NEGATION_PREFIXES):
+                return True
+            at = lowered.find(term, at + len(term))
+    return False
 
-    # Fallback: sections with no marker get their content attributed from
-    # lines the marker sections do not already own (the config's documented
-    # fallback rule).
-    any_markers = bool(marker_spans)
-    covered = [(start, end) for spans in marker_spans.values() for start, end, _marker in spans]
 
-    def unclaimed(offset: int, line: str) -> bool:
-        return not any(start <= offset < end for start, end in covered)
+def is_complaint(sentence: str) -> bool:
+    """S data category: complaint and history narrative (the patient's report)."""
+    lowered = sentence.lower()
+    return any(phrase in lowered for phrase in _COMPLAINT_PHRASES) or _symptom_hit(sentence)
 
+
+def is_vital(sentence: str) -> bool:
+    """O data category: measurements — vitals with numeric context."""
+    lowered = sentence.lower()
+    return any(pattern.search(lowered) for pattern in _VITAL_PATTERNS)
+
+
+def is_finding(sentence: str) -> bool:
+    """O data category: observed findings on examination."""
+    lowered = sentence.lower()
+    return any(pattern.search(lowered) for pattern in _FINDING_PATTERNS)
+
+
+def is_assessment(sentence: str) -> bool:
+    """A data category: diagnoses and assessment statements."""
+    lowered = sentence.lower()
+    return any(pattern.search(lowered) for pattern in _ASSESSMENT_PATTERNS)
+
+
+def is_action(sentence: str) -> bool:
+    """P data category: ordered actions and follow-ups."""
+    lowered = sentence.lower()
+    if any(lowered.startswith(starter) for starter in _ACTION_STARTERS):
+        return True
+    return any(pattern.search(lowered) for pattern in _ADVISORY_PATTERNS)
+
+
+def _matches_category(section: str, sentence: str) -> bool:
+    """Does the sentence match the section's documented data categories?"""
+    if section == "S":
+        return is_complaint(sentence)
+    if section == "O":
+        return is_vital(sentence) or is_finding(sentence)
+    if section == "A":
+        return is_assessment(sentence)
+    if section == "P":
+        return is_action(sentence)
+    return False
+
+
+def _header_spans(
+    text: str, header_markers: Mapping[str, Sequence[str]]
+) -> dict[str, list[Span]]:
+    """Occurrence spans per section from header markers alone.
+
+    A section runs from its marker line to the next marker line of any
+    section (or the end of the note), so duplicate headers unify and
+    out-of-order sections keep their own spans. Preamble text before the
+    first marker belongs to no section.
+    """
+    markers: list[tuple[int, str]] = []
+    for offset, line in _lines(text, (0, len(text))):
+        section = _section_of(line, header_markers)
+        if section is not None:
+            markers.append((offset, section))
+    occurrences: dict[str, list[Span]] = {}
+    for index, (offset, section) in enumerate(markers):
+        end = markers[index + 1][0] if index + 1 < len(markers) else len(text)
+        occurrences.setdefault(section, []).append((offset, end))
+    return occurrences
+
+
+def _fallback_claims(
+    text: str,
+    regions: Sequence[Span],
+    missing: Sequence[str],
+) -> tuple[dict[str, list[Span]], list[Span]]:
+    """Attribute unattributed content to missing sections, in document order.
+
+    Scans the unattributed sentences in document order; each missing section
+    (in S -> O -> A -> P order) claims the first forward run of sentences its
+    documented data categories match. Returns the claimed spans per section
+    and the spans of sentences nothing claimed (the ambiguity evidence).
+    """
+    pool = [entry for region in regions for entry in _sentences(text, region)]
+    claimed_spans: set[Span] = set()
+    claims: dict[str, list[Span]] = {}
+    cursor = 0
     for section in SECTION_ORDER:
-        if section in sections:
+        if section not in missing:
             continue
-        pattern = FALLBACK_PATTERNS[section]
-        matched = [
-            (offset, line)
-            for offset, line in lines
-            if unclaimed(offset, line) and pattern.search(line)
-        ]
-        if matched:
-            start = matched[0][0]
-            end = matched[-1][0] + len(matched[-1][1])
-            sections[section] = SectionSpan(start, end, text[start:end], "fallback")
+        index = cursor
+        while index < len(pool) and not _matches_category(section, pool[index][1]):
+            index += 1
+        if index >= len(pool):
+            continue
+        run_end = index
+        while run_end + 1 < len(pool) and _matches_category(section, pool[run_end + 1][1]):
+            run_end += 1
+        spans = [(pool[i][0], pool[i][0] + len(pool[i][1])) for i in range(index, run_end + 1)]
+        claims[section] = spans
+        claimed_spans.update(spans)
+        cursor = run_end + 1
+    unclaimed = [
+        (offset, offset + len(sentence))
+        for offset, sentence in pool
+        if (offset, offset + len(sentence)) not in claimed_spans
+    ]
+    return claims, unclaimed
 
-    return SectionMap(sections=sections, markerless_note=not any_markers, any_markers=any_markers)
 
+def identify_sections(text: str, section_detection: Mapping[str, object]) -> SectionMap:
+    """Identify every SOAP section: header markers first, fallback second (R5)."""
+    strategy = section_detection.get("strategy")
+    if strategy != STRATEGY:
+        raise ValueError(f"unsupported section_detection strategy: {strategy!r}")
+    header_markers = section_detection["header_markers"]
+    if not isinstance(header_markers, Mapping):
+        raise ValueError("section_detection.header_markers must be a mapping")
+    absent = [section for section in SECTION_ORDER if section not in header_markers]
+    if absent:
+        raise ValueError(f"section_detection.header_markers is missing sections: {absent}")
 
-def _sep_len(rest: str) -> int:
-    """Separator characters (spaces, colons, dashes) between the marker and
-    the content — part of the marker line, never part of the evidence."""
-    stripped = rest.lstrip(" :-—")
-    return len(rest) - len(stripped)
+    occurrences = _header_spans(text, header_markers)
+
+    # Unattributed text: everything outside every header occurrence span.
+    regions: list[Span] = []
+    cursor = 0
+    for start, end in sorted(span for spans in occurrences.values() for span in spans):
+        if start > cursor:
+            regions.append((cursor, start))
+        cursor = max(cursor, end)
+    if cursor < len(text):
+        regions.append((cursor, len(text)))
+
+    missing = frozenset(section for section in SECTION_ORDER if section not in occurrences)
+    claims, unclaimed = _fallback_claims(text, regions, sorted(missing))
+
+    spans = {section: list(occurrences[section]) for section in occurrences}
+    for section, claimed in claims.items():
+        spans[section] = claimed
+    ambiguous = bool(missing - set(claims)) and any(
+        _has_letter(text[start:end]) for start, end in unclaimed
+    )
+    return SectionMap(
+        spans=spans,
+        missing=frozenset(missing - set(claims)),
+        ambiguous=ambiguous,
+        unclaimed=tuple(unclaimed),
+    )

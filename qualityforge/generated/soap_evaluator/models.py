@@ -1,19 +1,22 @@
-"""Data shapes of the SOAP note completeness evaluator (spec section 8.3).
+"""Wire shapes of the SOAP note completeness evaluator (stage-2 spec section 2).
 
-The evaluator is standalone: these TypedDicts mirror the contract the
-defect-injection harness wraps (qualityforge/harness/inject.py) without
-importing it — the dependency points from the harness to this package, never
-the other way.
+These TypedDicts are the generated package's own data model of record — they
+mirror the harness's contract shapes so the injection round can wrap this
+evaluator at the seam unchanged, but the dependency points one way only:
+harness -> generated. This module never imports the harness.
+
+Field order in these shapes is the wire order of the API responses (spec R4):
+response dicts are constructed in field order, so two identical POST /evaluate
+calls serialize byte-identically with no sorting step.
 """
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from typing import NotRequired, TypedDict
 
 
 class EvaluateRequest(TypedDict):
-    """Request body of POST /evaluate (spec section 8.3)."""
+    """Request body of POST /evaluate (stage-2 spec section 1)."""
 
     note_id: str
     note_text: str
@@ -21,11 +24,10 @@ class EvaluateRequest(TypedDict):
 
 
 class EvidenceSpan(TypedDict):
-    """Zero-based, end-exclusive character offsets into the raw note_text.
+    """Zero-based, end-exclusive character offsets into the raw note_text (R3).
 
-    Pinned by review R3 and the criteria config's evidence_span_semantics:
-    ``note_text[start:end]`` reproduces ``text`` with no whitespace or unicode
-    normalization of any kind.
+    ``note_text[start:end] == text`` always holds: spans index the exact raw
+    string submitted by the caller, with no normalization of any kind.
     """
 
     start: int
@@ -34,22 +36,19 @@ class EvidenceSpan(TypedDict):
 
 
 class Finding(TypedDict):
-    """One criterion's result: present | missing | partial (spec section 8.3)."""
+    """One criterion's result (stage-2 spec section 1 semantics)."""
 
     criterion_id: str
     section: str | None
-    status: str
+    status: str  # present | missing | partial
     evidence: list[EvidenceSpan]
     message: str
 
 
 class EvaluateResponse(TypedDict):
-    """Response body of POST /evaluate (spec section 8.3)."""
+    """Response body of POST /evaluate (stage-2 spec section 1)."""
 
     note_id: str
     criteria_version: str
-    overall_status: str
+    overall_status: str  # complete | incomplete
     findings: list[Finding]
-
-
-type EvaluatorCallable = Callable[[EvaluateRequest], "EvaluateResponse"]
