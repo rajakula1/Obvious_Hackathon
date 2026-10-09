@@ -54,7 +54,8 @@ Zero test-manifest drift · generated 12/12 · repository 140/140 · Ruff clean
 - **No manual code edits:** the evaluator was written through file tools
   during the Coding stage and only modified through the logged repair loop
   (2 attempts, implementation files only). No human-authored code changes.
-- **Defined status:** the run ends `human-review pending` — the ten-status
-  model's defined pre-delivery state; if the reviewer requests changes, the
-  run re-enters the bounded loop or ends `needs_human` with a failure
-  summary (§12.2).
+- **Defined status:** the run ended in the defined terminal status
+  **`delivered`** — delivery PR #8 merged squash as `cf707a2` after CI was
+  fully green (test/lint/factory-runbook), CodeRabbit skipped as a
+  bot-user PR, and the repo required no approving review; the platform's
+  PR review gate remains the human checkpoint for this run record.
