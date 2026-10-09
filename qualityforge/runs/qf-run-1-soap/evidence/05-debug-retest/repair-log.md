@@ -14,10 +14,12 @@ with detection evidence, root cause, repair, and retest result.
 `test_missing_findings_carry_no_evidence` (output captured in
 `evidence/04-testing/pytest-run1-failures.txt`).
 
-**Failure 1 — AC-03 violation (missing findings carried evidence).**
+**Failure 1 — §8.3 missing-evidence contract violation.**
 `X-01` returned `missing` for soap-005…008 while still emitting the
 first-sentence spans of the sections it *had* identified — context
-evidence on a non-satisfied criterion, which AC-03 forbids.
+evidence on a non-satisfied criterion, which the §8.3 missing-evidence
+contract forbids (the suite pins this as its own case; canonical AC-03 is
+the criterion_id-naming rule — see the checklist's discrepancy record).
 *Root cause:* the X-01 missing-path return passed the pre-built
 `evidence` list instead of `[]`.
 *Repair (implementation, never tests):* `evaluator.py` `_check_structure`

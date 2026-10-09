@@ -1,0 +1,175 @@
+{
+  "run_id": "qf-run-1-soap-20261009T172617Z",
+  "criteria_name": "soap-note-completeness",
+  "criteria_version": "1.0.0",
+  "criteria_tested": [
+    {
+      "id": "O-01",
+      "statement": "Vital signs are present in the Objective section.",
+      "section": "O"
+    },
+    {
+      "id": "O-02",
+      "statement": "At least one exam or objective finding is present in the Objective section.",
+      "section": "O"
+    },
+    {
+      "id": "P-02",
+      "statement": "Plan items relate to a stated assessment.",
+      "section": "P"
+    }
+  ],
+  "contract_targets": [
+    "evidence field of every present or partial finding (spec section 8.3)",
+    "status field of every finding, with overall_status recomputed"
+  ],
+  "baseline": {
+    "passed": 12,
+    "failed": 0,
+    "failed_test_ids": [],
+    "summary_line": "12 passed, 1 warning in 0.66s"
+  },
+  "mutants": [
+    {
+      "op_id": "remove-section-check-o",
+      "title": "Remove the Objective section check",
+      "description": "The evaluator never reports findings for the Objective (O) criteria (O-01, O-02), as if that section check had not been implemented.",
+      "targets": "findings for every Objective (O) criterion",
+      "criterion_refs": [
+        "O-01",
+        "O-02"
+      ],
+      "spec": {
+        "module": "qualityforge.generated.soap_evaluator",
+        "factory": "create_evaluator",
+        "config_path": "/home/user/work/Obvious_Hackathon/qualityforge/workloads/soap-evaluator/criteria-v1.yaml",
+        "operators": [
+          {
+            "op": "remove_section_check",
+            "args": {
+              "section": "O"
+            }
+          }
+        ]
+      },
+      "detected": true,
+      "vacuous": false,
+      "probes_different": 24,
+      "suite": {
+        "passed": 9,
+        "failed": 3,
+        "failed_test_ids": [
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_evaluate_response_schema_and_criteria_coverage",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_corpus_labels_reproduced",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_overall_status_derived_from_findings"
+        ],
+        "summary_line": "3 failed, 9 passed, 1 warning in 0.50s"
+      }
+    },
+    {
+      "op_id": "drop-evidence-spans",
+      "title": "Drop evidence spans from present findings",
+      "description": "Every present or partial finding loses its evidence spans, violating the section 8.3 requirement that present and partial findings carry supporting evidence.",
+      "targets": "evidence field of every present or partial finding (spec section 8.3)",
+      "criterion_refs": [],
+      "spec": {
+        "module": "qualityforge.generated.soap_evaluator",
+        "factory": "create_evaluator",
+        "config_path": "/home/user/work/Obvious_Hackathon/qualityforge/workloads/soap-evaluator/criteria-v1.yaml",
+        "operators": [
+          {
+            "op": "drop_evidence_spans",
+            "args": {}
+          }
+        ]
+      },
+      "detected": true,
+      "vacuous": false,
+      "probes_different": 24,
+      "suite": {
+        "passed": 10,
+        "failed": 2,
+        "failed_test_ids": [
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_present_and_partial_findings_have_evidence",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_fallback_notes_identified_without_markers"
+        ],
+        "summary_line": "2 failed, 10 passed, 1 warning in 0.58s"
+      }
+    },
+    {
+      "op_id": "flip-finding-statuses",
+      "title": "Flip finding statuses",
+      "description": "Every finding has its status flipped between present and missing (partial is untouched) and overall_status is recomputed from the flipped findings.",
+      "targets": "status field of every finding, with overall_status recomputed",
+      "criterion_refs": [],
+      "spec": {
+        "module": "qualityforge.generated.soap_evaluator",
+        "factory": "create_evaluator",
+        "config_path": "/home/user/work/Obvious_Hackathon/qualityforge/workloads/soap-evaluator/criteria-v1.yaml",
+        "operators": [
+          {
+            "op": "flip_finding_statuses",
+            "args": {}
+          }
+        ]
+      },
+      "detected": true,
+      "vacuous": false,
+      "probes_different": 24,
+      "suite": {
+        "passed": 7,
+        "failed": 5,
+        "failed_test_ids": [
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_corpus_labels_reproduced",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_present_and_partial_findings_have_evidence",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_unnormalized_note_text_keeps_span_fidelity",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_missing_findings_carry_no_evidence",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_fallback_notes_identified_without_markers"
+        ],
+        "summary_line": "5 failed, 7 passed, 1 warning in 0.44s"
+      }
+    },
+    {
+      "op_id": "skip-criterion-check-p-02",
+      "title": "Skip the P-02 check",
+      "description": "Criterion P-02 is never checked: its finding is missing from every response.",
+      "targets": "the P-02 finding",
+      "criterion_refs": [
+        "P-02"
+      ],
+      "spec": {
+        "module": "qualityforge.generated.soap_evaluator",
+        "factory": "create_evaluator",
+        "config_path": "/home/user/work/Obvious_Hackathon/qualityforge/workloads/soap-evaluator/criteria-v1.yaml",
+        "operators": [
+          {
+            "op": "skip_criterion_check",
+            "args": {
+              "criterion_id": "P-02"
+            }
+          }
+        ]
+      },
+      "detected": true,
+      "vacuous": false,
+      "probes_different": 24,
+      "suite": {
+        "passed": 9,
+        "failed": 3,
+        "failed_test_ids": [
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_evaluate_response_schema_and_criteria_coverage",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_corpus_labels_reproduced",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_overall_status_derived_from_findings"
+        ],
+        "summary_line": "3 failed, 9 passed, 1 warning in 0.56s"
+      }
+    }
+  ],
+  "limitations": [
+    "Mutants inject defects at the evaluation seam fixed by the API contract (spec section 8.3); for any suite that consumes only the contract, a seam-level mutant is observationally equivalent to a source-level implementation with the same behavior.",
+    "The injection round measures detection only and records no repair attempts; detect, repair, retest evidence is produced by the Debug stage (spec sections 6 and 7.7).",
+    "The detection share is measured against the probe requests supplied to the round and the suite under test; a suite may also detect a mutant on inputs outside the probe set.",
+    "Vacuous mutants \u2014 identical output to the validated implementation on every probe \u2014 are reported and excluded from the share denominator; a vacuous mutant means the probe set or the operator's targeting is too narrow."
+  ],
+  "disclaimer": "Results reflect software correctness against stated criteria, not clinical validity."
+}
