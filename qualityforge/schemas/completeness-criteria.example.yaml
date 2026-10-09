@@ -1,0 +1,76 @@
+# QualityForge completeness criteria — versioned configuration (spec section 8.2).
+# Machine-readable acceptance criteria for the SOAP note completeness evaluator
+# (workload of spec section 8.1). The evaluator consumes THIS file, not a
+# hardcoded copy of the rules, so criteria can change without rewriting the
+# evaluator.
+---
+criteria_version: "0.1.0"
+name: soap-note-completeness
+description: >
+  Starting set of documentation-completeness criteria from spec section 8.2.
+  These are documented documentation-completeness rules, not clinical judgments.
+
+# Review R3: pinned evidence-span semantics, inherited by every downstream agent.
+evidence_span_semantics:
+  offset_base: character
+  index_origin: zero
+  end_exclusive: true
+  reference_text: raw note_text from the request
+  normalization: none
+
+# Review R5: section-identification strategy, versioned with this file.
+section_detection:
+  strategy: header_markers_with_fallback
+  header_markers:
+    S: ["S:", "Subjective:", "Subjective -"]
+    O: ["O:", "Objective:", "Objective -"]
+    A: ["A:", "Assessment:", "Assessment -"]
+    P: ["P:", "Plan:", "Plan -"]
+  fallback: >
+    If no header marker for a section is found, identify the section by scanning
+    the note in document order for content matching the section's known data
+    categories (S: complaint and history narrative; O: measurements and observed
+    findings; A: diagnoses and assessments; P: ordered actions and follow-ups).
+    An ambiguous note is reported as "partial" against the Structure criterion
+    rather than guessed.
+criteria:
+  - id: S-01
+    statement: Chief complaint is present in the Subjective section.
+    section: S
+    check_type: behavior_check
+    source: requirement
+  - id: S-02
+    statement: History of present illness is present in the Subjective section.
+    section: S
+    check_type: behavior_check
+    source: requirement
+  - id: O-01
+    statement: Vital signs are present in the Objective section.
+    section: O
+    check_type: behavior_check
+    source: requirement
+  - id: O-02
+    statement: At least one exam or objective finding is present in the Objective section.
+    section: O
+    check_type: behavior_check
+    source: requirement
+  - id: A-01
+    statement: At least one diagnosis or assessment statement is present in the Assessment section.
+    section: A
+    check_type: behavior_check
+    source: requirement
+  - id: P-01
+    statement: At least one plan item is present in the Plan section.
+    section: P
+    check_type: behavior_check
+    source: requirement
+  - id: P-02
+    statement: Plan items relate to a stated assessment.
+    section: P
+    check_type: behavior_check
+    source: requirement
+  - id: X-01
+    statement: All four SOAP sections (Subjective, Objective, Assessment, Plan) are identifiable.
+    section: null
+    check_type: behavior_check
+    source: requirement

@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QualityForge completeness-criteria configuration",
+  "description": "Versioned configuration of SOAP note completeness criteria (spec section 8.2). The criteria file is machine-readable acceptance criteria: the evaluator and every downstream agent consume it directly, so it can change without rewriting the evaluator. Evidence-span semantics (review R3) and the section-identification strategy (review R5) are pinned here and versioned with the criteria.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "criteria_version",
+    "name",
+    "evidence_span_semantics",
+    "section_detection",
+    "criteria"
+  ],
+  "properties": {
+    "criteria_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the criteria set. Bumped on any criteria or detection-logic change (spec section 8.2: criteria live in a versioned configuration file)."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable name of the criteria set, e.g. soap-note-completeness."
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable scope statement. Criteria are documented documentation-completeness rules, not clinical judgments (spec section 8.2)."
+    },
+    "evidence_span_semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "offset_base",
+        "index_origin",
+        "end_exclusive",
+        "reference_text",
+        "normalization"
+      ],
+      "description": "Pinned per review R3 so every downstream agent inherits one definition: zero-based character offsets into the exact note_text string from the request, end-exclusive, no whitespace or unicode normalization.",
+      "properties": {
+        "offset_base": {
+          "const": "character",
+          "description": "Offsets count characters, not tokens or bytes."
+        },
+        "index_origin": {
+          "const": "zero",
+          "description": "The first character of note_text is at offset 0."
+        },
+        "end_exclusive": {
+          "const": true,
+          "description": "`end` is exclusive: the span covers note_text[start:end]."
+        },
+        "reference_text": {
+          "const": "raw note_text from the request",
+          "description": "Offsets index the exact note_text string from the request, never a normalized copy."
+        },
+        "normalization": {
+          "const": "none",
+          "description": "No whitespace or unicode normalization before indexing."
+        }
+      }
+    },
+    "section_detection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "header_markers", "fallback"],
+      "description": "Section-identification strategy, versioned with this file per review R5: changing detection logic is a criteria-version change, not an evaluator rewrite.",
+      "properties": {
+        "strategy": {
+          "const": "header_markers_with_fallback",
+          "description": "Header markers first, documented fallback heuristic second."
+        },
+        "header_markers": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["S", "O", "A", "P"],
+          "properties": {
+            "S": { "$ref": "#/$defs/headerMarkerList" },
+            "O": { "$ref": "#/$defs/headerMarkerList" },
+            "A": { "$ref": "#/$defs/headerMarkerList" },
+            "P": { "$ref": "#/$defs/headerMarkerList" }
+          }
+        },
+        "fallback": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The documented fallback heuristic used when no header marker matches; versioned with this file (review R5)."
+        }
+      }
+    },
+    "criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/criterion" }
+    }
+  },
+  "$defs": {
+    "headerMarkerList": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "criterion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "statement", "section", "check_type", "source"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z]+-[0-9]{2,}$",
+          "description": "Stable criterion ID, e.g. S-01. Referenced by generated tests, repair justifications, and criteria-ref commit markers (review R2)."
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Plain, verifiable statement (spec section 7.1)."
+        },
+        "section": {
+          "enum": ["S", "O", "A", "P", null],
+          "description": "The SOAP section this criterion applies to, or null for run-wide criteria such as the Structure rules of spec section 8.2."
+        },
+        "check_type": {
+          "enum": ["unit_test", "schema_check", "behavior_check"],
+          "description": "Verifiable check type (spec section 7.1)."
+        },
+        "source": {
+          "enum": ["requirement", "assumption"],
+          "description": "Where the criterion came from (spec section 9, Criterion.source)."
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Required when source is 'assumption': the assumption recorded explicitly (spec section 7.1 rules). Enforced by tools/validate.py."
+        }
+      }
+    }
+  }
+}
