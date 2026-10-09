@@ -14,7 +14,8 @@
  *   --max-iterations N         max total iterations per run (default 8)
  *   --time-budget-minutes N    per-run time budget (default 15, spec §10)
  *   --credit-budget N          per-run credit budget (default 60)
- *   --executor NAME            suggested executor for stage tasks:
+ *   --executor NAME            executor hint recorded in the run plan
+ *                              (advisory only — live creates don't carry it):
  *                              obvious | autobuild | human (default obvious)
  *   -h, --help                 show usage
  *
@@ -503,7 +504,11 @@ async function createRun({ plan, sdkClient, rootParentId = 'self' }) {
       params.humanKind = 'review';
       params.attention = { summary: `Human review gate for run ${plan.runId}: approve, request changes, or reject (§7.9).` };
     } else {
-      params.suggestedExecutor = plan.executor;
+      // Live tasks.create contract: suggestedExecutor only applies to
+      // proposal creates (Run 2's first live dispatch failed on it —
+      // SDKError, recorded in the fix PR). The executor hint stays
+      // advisory — carried in the node description instead.
+      params.description = `${params.description}\n\nSuggested executor: ${plan.executor}.`;
     }
     const created = await sdkClient.tasks.create(params);
     if (!created || !created.id) {
@@ -560,7 +565,8 @@ Options:
   --max-iterations N         max total iterations per run (default 8)
   --time-budget-minutes N    per-run time budget (default 15, spec §10)
   --credit-budget N          per-run credit budget (default 60)
-  --executor NAME            suggested executor for stage tasks:
+  --executor NAME            executor hint recorded in the run plan
+                             (advisory only — live creates don't carry it):
                              obvious | autobuild | human (default obvious)
   --root-parent TASK-ID      parent of the run root task. Default 'self'
                              (interactive use); a delegated agent must pass its

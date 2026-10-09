@@ -277,8 +277,12 @@ test('createRun: dispatches the DAG with real ids, budgets, and the human gate (
   assert.equal(review.assignee, 'human');
   assert.equal(review.humanKind, 'review');
   assert.match(review.attention.summary, /Human review gate/);
-  // Stage tasks are planned work with a suggested executor, not fake humans.
-  assert.equal(createFor('coding').suggestedExecutor, 'obvious');
+  // Stage tasks are planned work, not fake humans; the executor hint is
+  // advisory plan metadata — live creates must not carry suggestedExecutor
+  // (SDK rejects it on non-proposal creates; Run 2 dispatch).
+  const codingCreate = createFor('coding');
+  assert.equal(codingCreate.suggestedExecutor, undefined);
+  assert.match(codingCreate.description, /Suggested executor: obvious/);
 
   // Opening run status written through the R8 writer.
   assert.equal(calls.feedback.length, 1);
