@@ -189,7 +189,10 @@ async function writeRunStatus({ sdkClient, runTaskId, current, next, reason = ''
   assertTransition(current, next);
 
   const line = `QualityForge run status → ${next}${reason ? ` — ${reason}` : ''}`;
-  await sdkClient.tasks.feedback.create({ taskId: runTaskId, body: line.slice(0, 10000) });
+  // The JS SDK exposes feedback writers as FLAT keys on tasks — there is no
+  // nested `tasks.feedback` object (live introspection, SDK v3.66.3). Run 2
+  // dispatch crashed here via nested access after all ten tasks were created.
+  await sdkClient.tasks['feedback.create']({ taskId: runTaskId, body: line.slice(0, 10000) });
 
   if (isTerminalStatus(next)) {
     await sdkClient.tasks.update({
