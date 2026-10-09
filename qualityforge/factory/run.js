@@ -670,7 +670,7 @@ async function main({ argv, env, requireFn = require } = {}) {
   const { sdk } = requireFn('obvious');
   sdk.configure({ tokenRefresh: async () => env.API_TOKEN });
   const rootParentId = options.rootParentId || env.QUALITYFORGE_BOUND_TASK_ID || 'self';
-  const result = await createRun({ plan, sdkClient, rootParentId });
+  const result = await createRun({ plan, sdkClient: sdk, rootParentId });
   console.log(JSON.stringify({ dispatched: true, ...result }, null, 2));
   return { plan, dispatched: result };
 }
