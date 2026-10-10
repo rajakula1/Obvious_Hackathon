@@ -1,0 +1,2 @@
+injection round: operator=flip-finding-statuses suite=/home/user/work/Obvious_Hackathon/qualityforge/generated/tests config=/home/user/work/Obvious_Hackathon/qualityforge/workloads/soap-evaluator/criteria-v1.yaml probes=24
+summary: baseline 10 passed / 0 failed; detection 1/1; r1_threshold_met=True

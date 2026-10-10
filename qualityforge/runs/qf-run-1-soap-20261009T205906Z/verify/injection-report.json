@@ -1,0 +1,66 @@
+{
+  "report_type": "defect_injection_detection",
+  "run_id": "qf-run-1-soap-20261009T205906Z",
+  "criteria_name": "soap-note-completeness",
+  "criteria_version": "1.0.0",
+  "criteria_tested": [],
+  "contract_targets": [
+    "status field of every finding, with overall_status recomputed"
+  ],
+  "baseline": {
+    "passed": 10,
+    "failed": 0
+  },
+  "mutants": [
+    {
+      "op_id": "flip-finding-statuses",
+      "title": "Flip finding statuses",
+      "description": "Every finding has its status flipped between present and missing (partial is untouched) and overall_status is recomputed from the flipped findings.",
+      "targets": "status field of every finding, with overall_status recomputed",
+      "criterion_refs": [],
+      "spec": {
+        "module": "qualityforge.generated.soap_evaluator",
+        "factory": "create_evaluator",
+        "config_path": "/home/user/work/Obvious_Hackathon/qualityforge/workloads/soap-evaluator/criteria-v1.yaml",
+        "operators": [
+          {
+            "op": "flip_finding_statuses",
+            "args": {}
+          }
+        ]
+      },
+      "detected": true,
+      "vacuous": false,
+      "probes_different": 24,
+      "suite": {
+        "passed": 1,
+        "failed": 9,
+        "failed_test_ids": [
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_S_01",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_S_02",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_O_01",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_O_02",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_A_01",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_P_01",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_P_02",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_X_01",
+          "qualityforge/generated/tests/test_soap_evaluator.py::test_api_contract_422_health_and_seam_consistency"
+        ],
+        "summary_line": "9 failed, 1 passed, 1 warning in 0.15s"
+      }
+    }
+  ],
+  "mutants_total": 1,
+  "mutants_detected": 1,
+  "detection_share": 1.0,
+  "r1_threshold": 0.8,
+  "r1_threshold_met": true,
+  "repair_attempts": [],
+  "limitations": [
+    "Mutants inject defects at the evaluation seam fixed by the API contract (spec section 8.3); for any suite that consumes only the contract, a seam-level mutant is observationally equivalent to a source-level implementation with the same behavior.",
+    "The injection round measures detection only and records no repair attempts; detect, repair, retest evidence is produced by the Debug stage (spec sections 6 and 7.7).",
+    "The detection share is measured against the probe requests supplied to the round and the suite under test; a suite may also detect a mutant on inputs outside the probe set.",
+    "Vacuous mutants \u2014 identical output to the validated implementation on every probe \u2014 are reported and excluded from the share denominator; a vacuous mutant means the probe set or the operator's targeting is too narrow."
+  ],
+  "disclaimer": "Results reflect software correctness against stated criteria, not clinical validity."
+}

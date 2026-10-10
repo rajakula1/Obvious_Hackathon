@@ -1,0 +1,9 @@
+=== restored run 1: generated suite, seam UNSET (loader default) ===
+QUALITYFORGE_EVALUATOR_SPEC=[<unset>]
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+10 passed, 1 warning in 0.15s
+GENERATED_EXIT=0
+=== restored run 2: FULL repository suite ===
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+175 passed, 1 warning in 11.25s
+FULL_EXIT=0

@@ -1,0 +1,107 @@
+=== injected run: QUALITYFORGE_EVALUATOR_SPEC = flip_finding_statuses mutant ===
+=== suite: qualityforge/generated/tests (UNCHANGED files) ===
+FFFFFFFF.F                                                               [100%]
+=================================== FAILURES ===================================
+__________________________________ test_S_01 ___________________________________
+qualityforge/generated/tests/test_soap_evaluator.py:126: in test_S_01
+    assert_criterion_matches_labels(
+qualityforge/generated/tests/test_soap_evaluator.py:107: in assert_criterion_matches_labels
+    assert finding["status"] == labeled, (
+E   AssertionError: soap-001: S-01 labeled present, got missing
+E   assert 'missing' == 'present'
+E     
+E     - present
+E     + missing
+__________________________________ test_S_02 ___________________________________
+qualityforge/generated/tests/test_soap_evaluator.py:142: in test_S_02
+    assert_criterion_matches_labels(
+qualityforge/generated/tests/test_soap_evaluator.py:107: in assert_criterion_matches_labels
+    assert finding["status"] == labeled, (
+E   AssertionError: soap-001: S-02 labeled present, got missing
+E   assert 'missing' == 'present'
+E     
+E     - present
+E     + missing
+__________________________________ test_O_01 ___________________________________
+qualityforge/generated/tests/test_soap_evaluator.py:156: in test_O_01
+    assert_criterion_matches_labels(
+qualityforge/generated/tests/test_soap_evaluator.py:107: in assert_criterion_matches_labels
+    assert finding["status"] == labeled, (
+E   AssertionError: soap-001: O-01 labeled present, got missing
+E   assert 'missing' == 'present'
+E     
+E     - present
+E     + missing
+__________________________________ test_O_02 ___________________________________
+qualityforge/generated/tests/test_soap_evaluator.py:171: in test_O_02
+    assert_criterion_matches_labels(
+qualityforge/generated/tests/test_soap_evaluator.py:107: in assert_criterion_matches_labels
+    assert finding["status"] == labeled, (
+E   AssertionError: soap-001: O-02 labeled present, got missing
+E   assert 'missing' == 'present'
+E     
+E     - present
+E     + missing
+__________________________________ test_A_01 ___________________________________
+qualityforge/generated/tests/test_soap_evaluator.py:186: in test_A_01
+    assert_criterion_matches_labels(
+qualityforge/generated/tests/test_soap_evaluator.py:107: in assert_criterion_matches_labels
+    assert finding["status"] == labeled, (
+E   AssertionError: soap-001: A-01 labeled present, got missing
+E   assert 'missing' == 'present'
+E     
+E     - present
+E     + missing
+__________________________________ test_P_01 ___________________________________
+qualityforge/generated/tests/test_soap_evaluator.py:200: in test_P_01
+    assert_criterion_matches_labels(
+qualityforge/generated/tests/test_soap_evaluator.py:107: in assert_criterion_matches_labels
+    assert finding["status"] == labeled, (
+E   AssertionError: soap-001: P-01 labeled present, got missing
+E   assert 'missing' == 'present'
+E     
+E     - present
+E     + missing
+__________________________________ test_P_02 ___________________________________
+qualityforge/generated/tests/test_soap_evaluator.py:216: in test_P_02
+    assert_criterion_matches_labels(
+qualityforge/generated/tests/test_soap_evaluator.py:107: in assert_criterion_matches_labels
+    assert finding["status"] == labeled, (
+E   AssertionError: soap-001: P-02 labeled present, got missing
+E   assert 'missing' == 'present'
+E     
+E     - present
+E     + missing
+__________________________________ test_X_01 ___________________________________
+qualityforge/generated/tests/test_soap_evaluator.py:238: in test_X_01
+    assert_criterion_matches_labels(
+qualityforge/generated/tests/test_soap_evaluator.py:107: in assert_criterion_matches_labels
+    assert finding["status"] == labeled, (
+E   AssertionError: soap-001: X-01 labeled present, got missing
+E   assert 'missing' == 'present'
+E     
+E     - present
+E     + missing
+______________ test_api_contract_422_health_and_seam_consistency _______________
+qualityforge/generated/tests/test_soap_evaluator.py:333: in test_api_contract_422_health_and_seam_consistency
+    assert not violations, "API contract floor violations: " + "; ".join(violations)
+E   AssertionError: API contract floor violations: endpoint body must equal the seam evaluator's response (one seam, no drift)
+E   assert not ["endpoint body must equal the seam evaluator's response (one seam, no drift)"]
+=============================== warnings summary ===============================
+../../../../usr/local/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /usr/local/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED qualityforge/generated/tests/test_soap_evaluator.py::test_S_01 - Asser...
+FAILED qualityforge/generated/tests/test_soap_evaluator.py::test_S_02 - Asser...
+FAILED qualityforge/generated/tests/test_soap_evaluator.py::test_O_01 - Asser...
+FAILED qualityforge/generated/tests/test_soap_evaluator.py::test_O_02 - Asser...
+FAILED qualityforge/generated/tests/test_soap_evaluator.py::test_A_01 - Asser...
+FAILED qualityforge/generated/tests/test_soap_evaluator.py::test_P_01 - Asser...
+FAILED qualityforge/generated/tests/test_soap_evaluator.py::test_P_02 - Asser...
+FAILED qualityforge/generated/tests/test_soap_evaluator.py::test_X_01 - Asser...
+FAILED qualityforge/generated/tests/test_soap_evaluator.py::test_api_contract_422_health_and_seam_consistency
+9 failed, 1 passed, 1 warning in 0.22s
+INJECTED_EXIT=1

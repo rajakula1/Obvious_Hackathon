@@ -1,0 +1,9 @@
+=== criteria config schema: stage-1 acceptance-criteria.yaml ===
+OK: qualityforge/runs/qf-run-1-soap-20261009T205906Z/requirements/acceptance-criteria.yaml (criteria)
+EXIT=0
+=== criteria config schema: of-record criteria-v1.yaml ===
+OK: qualityforge/workloads/soap-evaluator/criteria-v1.yaml (criteria)
+EXIT=0
+=== dataset: labels, integrity, PHI screen ===
+OK: qualityforge/workloads/soap-evaluator/data (24 notes, criteria 1.0.0, phi hits: 0)
+EXIT=0

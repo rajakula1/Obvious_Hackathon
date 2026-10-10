@@ -1,0 +1,438 @@
+{
+  "artifact_type": "verification_walk",
+  "run_id": "qf-run-1-soap-20261009T205906Z",
+  "stage": "7. Verify (\u00a77.8 Quality Agent, V1 criteria walk)",
+  "corpus_notes": 24,
+  "evaluations": 192,
+  "seam": {
+    "module": "qualityforge.generated.soap_evaluator",
+    "factory": "create_evaluator",
+    "of_record_config": "qualityforge/workloads/soap-evaluator/criteria-v1.yaml",
+    "resolved": true,
+    "loader_default_resolves": true
+  },
+  "config_identity": {
+    "stage1_path": "qualityforge/runs/qf-run-1-soap-20261009T205906Z/requirements/acceptance-criteria.yaml",
+    "of_record_path": "qualityforge/workloads/soap-evaluator/criteria-v1.yaml",
+    "semantically_identical": true,
+    "criteria_version": "1.0.0",
+    "name": "soap-note-completeness"
+  },
+  "determinism": {
+    "byte_identical_repeat_and_fresh": true,
+    "failing_notes": []
+  },
+  "dispatch_order": {
+    "config_order_on_every_response": true,
+    "failures": []
+  },
+  "config_drivenness_probes": [
+    {
+      "probe": "criteria reordered in memory",
+      "expected": "findings order follows the new config order",
+      "base_order": [
+        "S-01",
+        "S-02",
+        "O-01",
+        "O-02",
+        "A-01",
+        "P-01",
+        "P-02",
+        "X-01"
+      ],
+      "reordered_config_order": [
+        "X-01",
+        "P-02",
+        "P-01",
+        "A-01",
+        "O-02",
+        "O-01",
+        "S-02",
+        "S-01"
+      ],
+      "follows_config": true
+    },
+    {
+      "probe": "criterion O-01 removed from an in-memory config copy",
+      "expected": "no O-01 finding; remaining order preserved",
+      "finding_ids": [
+        "S-01",
+        "S-02",
+        "O-02",
+        "A-01",
+        "P-01",
+        "P-02",
+        "X-01"
+      ],
+      "follows_config": true
+    },
+    {
+      "probe": "S header markers altered in an in-memory config copy",
+      "expected": "section detection follows the config markers: X-01 present under the of-record markers, partial under altered markers (S content matches no fallback category, so only the marker can identify it)",
+      "x01_base": "present",
+      "x01_altered": "partial",
+      "follows_config": true
+    }
+  ],
+  "criteria": [
+    {
+      "id": "S-01",
+      "statement": "Chief complaint is present in the Subjective section.",
+      "section": "S",
+      "check_type": "behavior_check",
+      "notes_evaluated": 24,
+      "behavior_matches": 24,
+      "labeled_cases": {
+        "present": [
+          "soap-001",
+          "soap-002",
+          "soap-003",
+          "soap-004",
+          "soap-006",
+          "soap-007",
+          "soap-008",
+          "soap-010",
+          "soap-011",
+          "soap-012",
+          "soap-014",
+          "soap-015",
+          "soap-016",
+          "soap-017",
+          "soap-018",
+          "soap-019",
+          "soap-021",
+          "soap-022",
+          "soap-023"
+        ],
+        "missing": [
+          "soap-005",
+          "soap-009",
+          "soap-013",
+          "soap-020",
+          "soap-024"
+        ]
+      },
+      "mismatches": [],
+      "span_errors": [],
+      "evidence_rule_errors": [],
+      "order_errors": [],
+      "version_echo_errors": [],
+      "verdict": "PASS"
+    },
+    {
+      "id": "S-02",
+      "statement": "History of present illness is present in the Subjective section.",
+      "section": "S",
+      "check_type": "behavior_check",
+      "notes_evaluated": 24,
+      "behavior_matches": 24,
+      "labeled_cases": {
+        "present": [
+          "soap-001",
+          "soap-002",
+          "soap-003",
+          "soap-004",
+          "soap-006",
+          "soap-007",
+          "soap-008",
+          "soap-010",
+          "soap-012",
+          "soap-013",
+          "soap-014",
+          "soap-015",
+          "soap-016",
+          "soap-017",
+          "soap-018",
+          "soap-019",
+          "soap-021",
+          "soap-022",
+          "soap-023"
+        ],
+        "missing": [
+          "soap-005",
+          "soap-009",
+          "soap-020",
+          "soap-024"
+        ],
+        "partial": [
+          "soap-011"
+        ]
+      },
+      "mismatches": [],
+      "span_errors": [],
+      "evidence_rule_errors": [],
+      "order_errors": [],
+      "version_echo_errors": [],
+      "verdict": "PASS"
+    },
+    {
+      "id": "O-01",
+      "statement": "Vital signs are present in the Objective section.",
+      "section": "O",
+      "check_type": "behavior_check",
+      "notes_evaluated": 24,
+      "behavior_matches": 24,
+      "labeled_cases": {
+        "present": [
+          "soap-001",
+          "soap-002",
+          "soap-003",
+          "soap-004",
+          "soap-005",
+          "soap-007",
+          "soap-008",
+          "soap-009",
+          "soap-010",
+          "soap-011",
+          "soap-013",
+          "soap-015",
+          "soap-016",
+          "soap-017",
+          "soap-018",
+          "soap-019",
+          "soap-021",
+          "soap-022",
+          "soap-023"
+        ],
+        "missing": [
+          "soap-006",
+          "soap-012",
+          "soap-014",
+          "soap-020",
+          "soap-024"
+        ]
+      },
+      "mismatches": [],
+      "span_errors": [],
+      "evidence_rule_errors": [],
+      "order_errors": [],
+      "version_echo_errors": [],
+      "verdict": "PASS"
+    },
+    {
+      "id": "O-02",
+      "statement": "At least one exam or objective finding is present in the Objective section.",
+      "section": "O",
+      "check_type": "behavior_check",
+      "notes_evaluated": 24,
+      "behavior_matches": 24,
+      "labeled_cases": {
+        "present": [
+          "soap-001",
+          "soap-002",
+          "soap-003",
+          "soap-004",
+          "soap-005",
+          "soap-007",
+          "soap-008",
+          "soap-009",
+          "soap-010",
+          "soap-011",
+          "soap-013",
+          "soap-014",
+          "soap-016",
+          "soap-017",
+          "soap-018",
+          "soap-019",
+          "soap-021",
+          "soap-022",
+          "soap-023"
+        ],
+        "missing": [
+          "soap-006",
+          "soap-012",
+          "soap-015",
+          "soap-020",
+          "soap-024"
+        ]
+      },
+      "mismatches": [],
+      "span_errors": [],
+      "evidence_rule_errors": [],
+      "order_errors": [],
+      "version_echo_errors": [],
+      "verdict": "PASS"
+    },
+    {
+      "id": "A-01",
+      "statement": "At least one diagnosis or assessment statement is present in the Assessment section.",
+      "section": "A",
+      "check_type": "behavior_check",
+      "notes_evaluated": 24,
+      "behavior_matches": 24,
+      "labeled_cases": {
+        "present": [
+          "soap-001",
+          "soap-002",
+          "soap-003",
+          "soap-004",
+          "soap-005",
+          "soap-006",
+          "soap-008",
+          "soap-009",
+          "soap-010",
+          "soap-011",
+          "soap-012",
+          "soap-013",
+          "soap-014",
+          "soap-015",
+          "soap-016",
+          "soap-017",
+          "soap-018",
+          "soap-019",
+          "soap-021",
+          "soap-022",
+          "soap-023"
+        ],
+        "missing": [
+          "soap-007",
+          "soap-020",
+          "soap-024"
+        ]
+      },
+      "mismatches": [],
+      "span_errors": [],
+      "evidence_rule_errors": [],
+      "order_errors": [],
+      "version_echo_errors": [],
+      "verdict": "PASS"
+    },
+    {
+      "id": "P-01",
+      "statement": "At least one plan item is present in the Plan section.",
+      "section": "P",
+      "check_type": "behavior_check",
+      "notes_evaluated": 24,
+      "behavior_matches": 24,
+      "labeled_cases": {
+        "present": [
+          "soap-001",
+          "soap-002",
+          "soap-003",
+          "soap-004",
+          "soap-005",
+          "soap-006",
+          "soap-007",
+          "soap-009",
+          "soap-011",
+          "soap-012",
+          "soap-013",
+          "soap-014",
+          "soap-015",
+          "soap-016",
+          "soap-017",
+          "soap-018",
+          "soap-019",
+          "soap-021",
+          "soap-022",
+          "soap-023"
+        ],
+        "missing": [
+          "soap-008",
+          "soap-010",
+          "soap-020",
+          "soap-024"
+        ]
+      },
+      "mismatches": [],
+      "span_errors": [],
+      "evidence_rule_errors": [],
+      "order_errors": [],
+      "version_echo_errors": [],
+      "verdict": "PASS"
+    },
+    {
+      "id": "P-02",
+      "statement": "Plan items relate to a stated assessment.",
+      "section": "P",
+      "check_type": "behavior_check",
+      "notes_evaluated": 24,
+      "behavior_matches": 24,
+      "labeled_cases": {
+        "present": [
+          "soap-001",
+          "soap-002",
+          "soap-003",
+          "soap-004",
+          "soap-005",
+          "soap-006",
+          "soap-009",
+          "soap-011",
+          "soap-012",
+          "soap-013",
+          "soap-014",
+          "soap-015",
+          "soap-016",
+          "soap-021",
+          "soap-022",
+          "soap-023"
+        ],
+        "missing": [
+          "soap-007",
+          "soap-008",
+          "soap-010",
+          "soap-018",
+          "soap-020",
+          "soap-024"
+        ],
+        "partial": [
+          "soap-017",
+          "soap-019"
+        ]
+      },
+      "mismatches": [],
+      "span_errors": [],
+      "evidence_rule_errors": [],
+      "order_errors": [],
+      "version_echo_errors": [],
+      "verdict": "PASS"
+    },
+    {
+      "id": "X-01",
+      "statement": "All four SOAP sections (Subjective, Objective, Assessment, Plan) are identifiable.",
+      "section": null,
+      "check_type": "behavior_check",
+      "notes_evaluated": 24,
+      "behavior_matches": 24,
+      "labeled_cases": {
+        "present": [
+          "soap-001",
+          "soap-002",
+          "soap-003",
+          "soap-004",
+          "soap-009",
+          "soap-010",
+          "soap-011",
+          "soap-012",
+          "soap-013",
+          "soap-014",
+          "soap-015",
+          "soap-016",
+          "soap-017",
+          "soap-018",
+          "soap-019",
+          "soap-021",
+          "soap-022",
+          "soap-023",
+          "soap-024"
+        ],
+        "missing": [
+          "soap-005",
+          "soap-006",
+          "soap-007",
+          "soap-008"
+        ],
+        "partial": [
+          "soap-020"
+        ]
+      },
+      "mismatches": [],
+      "span_errors": [],
+      "evidence_rule_errors": [],
+      "order_errors": [],
+      "version_echo_errors": [],
+      "verdict": "PASS"
+    }
+  ],
+  "round_verdict": "PASS"
+}

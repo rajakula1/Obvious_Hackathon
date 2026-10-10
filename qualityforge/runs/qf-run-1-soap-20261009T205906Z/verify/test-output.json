@@ -1,0 +1,129 @@
+{
+  "artifact_type": "test_output",
+  "run_id": "qf-run-1-soap-20261009T205906Z",
+  "stage": "7. Verify (\u00a77.8 Quality Agent) \u2014 V1 re-verification + I1 injection round",
+  "recorded_at": "2026-10-09T23:58:55Z",
+  "baseline": {
+    "generated_suite": {
+      "command": "python3 -m pytest qualityforge/generated/tests -q (loader default, seam unset; harness baseline gate)",
+      "passed": 10,
+      "failed": 0,
+      "summary_line": "10 passed, 1 warning in 0.15s"
+    },
+    "full_suite": {
+      "command": "python3 -m pytest qualityforge/ -q --tb=short -p no:cacheprovider",
+      "passed": 175,
+      "failed": 0,
+      "summary_line": "175 passed, 1 warning in 11.38s",
+      "raw": "baseline-pytest-full.txt"
+    },
+    "quality_checks": {
+      "ruff_check": {
+        "command": "ruff check qualityforge/",
+        "pin": "0.16.10",
+        "result": "All checks passed!",
+        "raw": "baseline-ruff.txt"
+      },
+      "ruff_format_check": {
+        "result": "4 files would be reformatted (pre-existing at 523b34f, before the stage-6 repair; formatter preference vs the repo's line-length=100 config \u2014 not a \u00a77.8 item, recorded as an observation)",
+        "raw": "baseline-ruff.txt"
+      },
+      "manifest_rehash": {
+        "command": "python3 -m qualityforge.tools.validate manifest qualityforge/runs/qf-run-1-soap-20261009T205906Z/testing/test-manifest.json --repo-root .",
+        "result": "OK (zero drift)",
+        "raw": "baseline-manifest-rehash.txt"
+      },
+      "criteria_config": {
+        "result": "stage-1 acceptance-criteria.yaml OK; of-record criteria-v1.yaml OK",
+        "raw": "baseline-config-dataset.txt"
+      },
+      "dataset": {
+        "result": "OK \u2014 24 notes, criteria 1.0.0, 0 PHI hits",
+        "raw": "baseline-config-dataset.txt"
+      }
+    },
+    "criteria_walk": {
+      "artifact": "verification-walk.json",
+      "round_verdict": "PASS",
+      "evaluations": 192,
+      "per_criterion": {
+        "S-01": "PASS",
+        "S-02": "PASS",
+        "O-01": "PASS",
+        "O-02": "PASS",
+        "A-01": "PASS",
+        "P-01": "PASS",
+        "P-02": "PASS",
+        "X-01": "PASS"
+      }
+    }
+  },
+  "injected": {
+    "mechanism": "QUALITYFORGE_EVALUATOR_SPEC seam (loader.py) \u2014 serialized mutant spec; implementation and suite files untouched",
+    "mutant_spec": {
+      "module": "qualityforge.generated.soap_evaluator",
+      "factory": "create_evaluator",
+      "config_path": "/home/user/work/Obvious_Hackathon/qualityforge/workloads/soap-evaluator/criteria-v1.yaml",
+      "operators": [
+        {
+          "op": "flip_finding_statuses",
+          "args": {}
+        }
+      ]
+    },
+    "operator": "flip-finding-statuses",
+    "vacuity_probes": {
+      "probes_different": 24,
+      "vacuous": false
+    },
+    "suite": {
+      "command": "harness PytestSuiteRunner + direct: QUALITYFORGE_EVALUATOR_SPEC=$SPEC python3 -m pytest qualityforge/generated/tests -q --tb=short -rf",
+      "passed": 1,
+      "failed": 9,
+      "summary_line": "9 failed, 1 passed, 1 warning in 0.15s",
+      "raw": "injected-pytest.txt"
+    },
+    "detected_by": [
+      "test_S_01",
+      "test_S_02",
+      "test_O_01",
+      "test_O_02",
+      "test_A_01",
+      "test_P_01",
+      "test_P_02",
+      "test_X_01",
+      "test_api_contract_422_health_and_seam_consistency"
+    ],
+    "passed_despite_mutant": [
+      "test_R4_repeat_calls_byte_identical"
+    ],
+    "detection_how": [
+      "criterion tests: corpus-label assertions \u2014 e.g. 'soap-001: S-01 labeled present, got missing' (the mutant recomputes overall_status, so only label-derived assertions can catch it \u2014 the \u00a712.3 self-confirmation trap)",
+      "contract-floor test: 'endpoint body must equal the seam evaluator's response (one seam, no drift)' \u2014 the app built from the pristine config diverged from the seam-resolved mutant"
+    ],
+    "detection_share": 1.0,
+    "r1_threshold": 0.8,
+    "r1_threshold_met": true
+  },
+  "restored": {
+    "action": "seam unset in fresh subprocesses (mutant exists only in the serialized spec; nothing to revert on disk)",
+    "generated_suite": {
+      "passed": 10,
+      "failed": 0,
+      "summary_line": "10 passed, 1 warning in 0.15s",
+      "raw": "restored-pytest.txt"
+    },
+    "full_suite": {
+      "passed": 175,
+      "failed": 0,
+      "summary_line": "175 passed, 1 warning in 11.25s",
+      "raw": "restored-pytest.txt"
+    },
+    "integrity": {
+      "git_diff_vs_c0f0084_impl_test_paths": "empty \u2014 zero changes to implementation or test files",
+      "test_files_untouched": true
+    }
+  },
+  "machine_readable_injection_report": "injection-report.json",
+  "disclaimer": "Results reflect software correctness against stated criteria, not clinical validity."
+}

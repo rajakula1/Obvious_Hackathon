@@ -1,0 +1,94 @@
+=== ruff check (pinned 0.16.10) ===
+ruff 0.16.10
+All checks passed!
+EXIT=0
+=== ruff format --check ===
+unformatted: File would be reformatted
+  --> qualityforge/generated/soap_evaluator/config.py:24:40
+   |
+23 | DEFAULT_CONFIG_PATH = (
+   -     Path(__file__).resolve().parents[3]
+   -     / "qualityforge/workloads/soap-evaluator/criteria-v1.yaml"
+24 +     Path(__file__).resolve().parents[3] / "qualityforge/workloads/soap-evaluator/criteria-v1.yaml"
+25 | )
+--------------------------------------------------------------------------------
+38 |     if not isinstance(config, Mapping):
+   -         raise CriteriaConfigError(
+   -             f"criteria config must be a mapping, got {type(config).__name__}"
+   -         )
+39 +         raise CriteriaConfigError(f"criteria config must be a mapping, got {type(config).__name__}")
+40 |     missing = [key for key in REQUIRED_TOP_LEVEL_KEYS if key not in config]
+--------------------------------------------------------------------------------
+50 |         raise CriteriaConfigError("section_detection must be a mapping")
+   -     missing_detection = [
+   -         key for key in REQUIRED_SECTION_DETECTION_KEYS if key not in detection
+   -     ]
+51 +     missing_detection = [key for key in REQUIRED_SECTION_DETECTION_KEYS if key not in detection]
+52 |     if missing_detection:
+--------------------------------------------------------------------------------
+57 |     if not isinstance(markers, Mapping) or not markers:
+   -         raise CriteriaConfigError(
+   -             "section_detection.header_markers must be a non-empty mapping"
+   -         )
+58 +         raise CriteriaConfigError("section_detection.header_markers must be a non-empty mapping")
+59 |
+   |
+
+unformatted: File would be reformatted
+   --> qualityforge/generated/soap_evaluator/sections.py:335:19
+    |
+334 |
+    - def _header_spans(
+    -     text: str, header_markers: Mapping[str, Sequence[str]]
+    - ) -> dict[str, list[Span]]:
+335 + def _header_spans(text: str, header_markers: Mapping[str, Sequence[str]]) -> dict[str, list[Span]]:
+336 |     """Occurrence spans per section from header markers alone.
+    |
+
+unformatted: File would be reformatted
+ --> qualityforge/generated/tests/__init__.py:2:1
+  |
+1 | """Run 2 generated test suite (Testing Agent, §6 stage 5)."""
+  -
+  |
+
+unformatted: File would be reformatted
+   --> qualityforge/generated/tests/test_soap_evaluator.py:95:20
+    |
+94  | def assert_criterion_matches_labels(
+    -     evaluator: Any, config: Any, corpus: list[dict],
+    -     criterion_id: str, note_ids: tuple[str, ...],
+95  +     evaluator: Any,
+96  +     config: Any,
+97  +     corpus: list[dict],
+98  +     criterion_id: str,
+99  +     note_ids: tuple[str, ...],
+100 | ) -> None:
+--------------------------------------------------------------------------------
+129 |     assert_criterion_matches_labels(
+    -         evaluator, config, corpus, "S-01",
+130 +         evaluator,
+131 +         config,
+132 +         corpus,
+133 +         "S-01",
+134 |         ("soap-001", "soap-002", "soap-016", "soap-022", "soap-005", "soap-009", "soap-013"),
+--------------------------------------------------------------------------------
+222 |     assert_criterion_matches_labels(
+    -         evaluator, config, corpus, "P-02",
+223 +         evaluator,
+224 +         config,
+225 +         corpus,
+226 +         "P-02",
+227 |         ("soap-001", "soap-019", "soap-017", "soap-018", "soap-010", "soap-007"),
+--------------------------------------------------------------------------------
+247 |     assert_criterion_matches_labels(
+    -         evaluator, config, corpus, "X-01",
+248 +         evaluator,
+249 +         config,
+250 +         corpus,
+251 +         "X-01",
+252 |         ("soap-001", "soap-009", "soap-010", "soap-021", "soap-022", "soap-023", "soap-024"),
+    |
+
+4 files would be reformatted, 80 files already formatted
+EXIT=1
